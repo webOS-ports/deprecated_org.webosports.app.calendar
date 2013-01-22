@@ -66,14 +66,18 @@ enyo.kind({
 	},
 	caller: function(){
 		var i = this.getIndex();
+		var c = this.getComponents();
 		//When the index is zero, we load the previous view:
 		if(i <= 0){
 			this.bubble("onPrev");
 		}
 		//When the index is two, we load the next view:
-		else if(i >= 2){
+		else if(i >= c.length+1){
 			this.bubble("onNext");
 		}
+	},
+	manageMemory: function(){
+
 	}
 	//TODO: Manage Memory
 });
