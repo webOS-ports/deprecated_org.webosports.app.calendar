@@ -66,18 +66,31 @@ enyo.kind({
 	},
 	caller: function(){
 		var i = this.getIndex();
-		var c = this.getComponents();
+		var c = this.getControls();
 		//When the index is zero, we load the previous view:
 		if(i <= 0){
 			this.bubble("onPrev");
 		}
-		//When the index is two, we load the next view:
-		else if(i >= c.length+1){
+		//When the index is the last one, load the next view:
+		else if(i >= c.length-1){
 			this.bubble("onNext");
 		}
-	},
-	manageMemory: function(){
 
+		//this.manageMemory();
+	},
+	//This function needs some work. We should keep a local copy of the panels that you've defined.
+	//We should also maintain a count that we pass to the next and previous panels so that they can know what days to load.
+	//This count can also be used to load panels from memory.
+	manageMemory: function(){
+		var i = this.getIndex();
+		var c = this.getControls();
+		for(var j = 0; j < c.length; j++){
+			//Check if it's a neighbor:
+			if(j > i+1 || j < i-1){
+				c[j].hide();
+			}else{
+				c[j].show();
+			}
+		}
 	}
-	//TODO: Manage Memory
 });
