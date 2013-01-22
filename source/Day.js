@@ -8,9 +8,9 @@ enyo.kind({
 	},
 	components: [
 		{kind: "vi.Inf", name: "inf", fit: true, coreNavi: true, style: "background: white", components: [
-			{content: "Yesterday", kind: "DayItem"},
-			{content: "Today", kind: "DayItem", ontap: "test"},
-			{content: "Tomorrow", kind: "DayItem"}
+			{content: "Yesterday", kind: "DayPage"},
+			{content: "Today", kind: "DayPage", ontap: "test"},
+			{content: "Tomorrow", kind: "DayPage"}
 		]}
 	],
 	
@@ -27,7 +27,4 @@ enyo.kind({
 	name: "DayPage",
 	kind: "FittableColumns",
 	style: "width: 100%",
-	components: [
-		{content: "Hello!", fit: true}
-	]
 });

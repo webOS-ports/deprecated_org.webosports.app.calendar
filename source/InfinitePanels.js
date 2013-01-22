@@ -5,6 +5,8 @@ enyo.kind({
 	arrangerKind: "CarouselArranger",
 	//We want the index to be 1:
 	index: 1,
+	//Current keeps track of where we are
+	current: 0,
 	properties: {
 		coreNavi: true
 	},
@@ -66,31 +68,38 @@ enyo.kind({
 	caller: function(){
 		var i = this.getIndex();
 		var c = this.getControls();
+
 		//When the index is zero, we load the previous view:
 		if(i <= 0){
-			this.bubble("onPrev");
+			this.current--;
+			this.bubble("onPrev", {current: this.current});
 		}
 		//When the index is the last one, load the next view:
 		else if(i >= c.length-1){
-			this.bubble("onNext");
+			this.current++;
+			this.bubble("onNext", {current: this.current});
 		}
 
 		//this.manageMemory();
 	},
-	//This function needs some work. We should keep a local copy of the panels that you've defined.
-	//We should also maintain a count that we pass to the next and previous panels so that they can know what days to load.
-	//This count can also be used to load panels from memory.
-	//Once we get past 5 panels, we start to see serious performance issues, so hopefully we can solve these by finishing this function to clear out unused dom nodes:
+	//This function makes sure that there are only 3 panels at any given time.
 	manageMemory: function(){
 		var i = this.getIndex();
 		var c = this.getControls();
-		for(var j = 0; j < c.length; j++){
-			//Check if it's a neighbor:
-			if(j > i+1 || j < i-1){
-				c[j].hide();
-			}else{
-				c[j].show();
+
+		//Destroy controls at the end:
+		if(c.length > 3){
+			var ii = this.getIndex();
+			for(var k = 0; k < ii-1; k++){
+				console.log(k);
+				c[k].destroy();
+			}
+			for(var k = ii+2; k < c.length; k++){
+				console.log(k);
+				c[k].destroy();
 			}
 		}
+
+		this.si(1);
 	}
 });
