@@ -15,11 +15,12 @@ enyo.kind({
 		onPrev: ""
 	},
 	handlers: {
-		//TODO: Test calling on transition start:
-		onTransitionStart: "scaller",
 		onTransitionFinish: "caller"
 	},
 	create: function(){
+		for(var i = 0; i < 3; i++){
+			this.components[i].currIndex = i - 1;
+		}
 		this.inherited(arguments);
 		this.createComponent({kind: "Signals", onCoreNaviDragStart: "handleCoreNaviDragStart", onCoreNaviDrag: "handleCoreNaviDrag", onCoreNaviDragFinish: "handleCoreNaviDragFinish"});
 	},
@@ -42,6 +43,8 @@ enyo.kind({
 	},
 	//Provide the next panel:
 	provideNext: function(panel){
+		//Simple ordering:
+		panel.currIndex = this.current + 1;
 		//Create/render it:
 		this.createComponent(panel);
 		//Re-render the control:
@@ -49,6 +52,8 @@ enyo.kind({
 	},
 	//Provide the previous panel:
 	providePrev: function(panel){
+		//Simple ordering:
+		panel.currIndex = this.current - 1;
 		//Render the panel before everything:
 		panel.addBefore = null;
 		//Create/render it:
@@ -65,41 +70,55 @@ enyo.kind({
 		this.setAnimate(true);
 	},
 	//Called when the transition ends to get the next/previous panels if they are needed.
-	caller: function(){
-		var i = this.getIndex();
-		var c = this.getControls();
+	caller: function(inSender, inEvent){
+		//Some simple prevention:
+		if(this.preventCaller || !inEvent || !("toIndex" in inEvent) || !("fromIndex" in inEvent) || inEvent.toIndex === inEvent.fromIndex){
+			//Don't do anything.
 
-		//When the index is zero, we load the previous view:
-		if(i <= 0){
-			this.current--;
-			this.bubble("onPrev", {current: this.current});
-		}
-		//When the index is the last one, load the next view:
-		else if(i >= c.length-1){
-			this.current++;
-			this.bubble("onNext", {current: this.current});
-		}
+		}else{
+			var i = this.getIndex();
+			var c = this.getControls();
 
-		//this.manageMemory();
+			this.preventCaller = true;
+
+			//When the index is zero, we load the previous view:
+			if(i <= 0){
+				this.current--;
+				this.bubble("onPrev", {current: this.current});
+			}
+			//When the index is the last one, load the next view:
+			else if(i >= c.length-1){
+				this.current++;
+				this.bubble("onNext", {current: this.current});
+			}
+
+			this.manageMemory();
+			this.preventCaller = false;
+		}
 	},
 	//This function makes sure that there are only 3 panels at any given time.
 	manageMemory: function(){
 		var i = this.getIndex();
 		var c = this.getControls();
 
+		//Fix sorting issue:
+		c = c.sort(function(a,b) {
+			if (a.currIndex < b.currIndex)
+				return -1;
+			if (a.currIndex > b.currIndex)
+				return 1;
+			return 0;
+		});
 		//Destroy controls at the end:
 		if(c.length > 3){
-			var ii = this.getIndex();
-			for(var k = 0; k < ii-1; k++){
-				console.log(k);
+			for(var k = 0; k < i-1; k++){
 				c[k].destroy();
 			}
-			for(var k = ii+2; k < c.length; k++){
-				console.log(k);
+			for(var k = i+2; k < c.length; k++){
 				c[k].destroy();
 			}
 		}
-
+		this.render();
 		this.si(1);
 	}
 });
