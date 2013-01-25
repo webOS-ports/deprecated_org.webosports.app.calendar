@@ -32,6 +32,7 @@ enyo.kind({
 		this.$.inf.providePrev({kind: "DayPage", date: moment().add("days", inEvent.current-1)});
 	}
 });
+
 //The actual page for one day.
 enyo.kind({
 	name: "DayPage",
@@ -47,7 +48,8 @@ enyo.kind({
 				{name: "title", classes: "day-title", content: ""}
 			]},
 			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
-				//TODO
+				//Dynamically loaded.
+				//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
 			]}
 		]}
 	],
@@ -76,9 +78,20 @@ enyo.kind({
 		for(var i = 0; i < 24; i++){
 			this.$.times.createComponent({kind: "DayRow", time: i});
 		}
+	},
+	rendered: function(){
+		this.inherited(arguments);
+		//Scroll the current time into view:
+		//TODO: Only do this if the date is today?
+		//TODO: Only do this on create.
+		var c = this.$.times.getClientControls();
+		var ts = this.$.times;
+		ts.scrollToControl(c[moment().hours()], true);
+		ts.scrollTo(0, ts.getScrollTop()-15)
 	}
 });
 
+//The row for the list.
 enyo.kind({
 	name: "DayRow",
 	classes: "day-row",
@@ -101,4 +114,10 @@ enyo.kind({
 		this.$.ampm.setContent(this.time >= 12 ? "pm" : "am");
 		//TODO: Replace 12 PM with "NOON"?
 	}
-})
+});
+
+//An event for the day.
+//Note that this is only visual right now. We'll probably have to rework this based on the calendar data is actually formatted on webOS.
+enyo.kind({
+	name: "DayEvent"
+});
