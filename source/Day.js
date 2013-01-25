@@ -87,7 +87,7 @@ enyo.kind({
 		var c = this.$.times.getClientControls();
 		var ts = this.$.times;
 		ts.scrollToControl(c[moment().hours()], true);
-		ts.scrollTo(0, ts.getScrollTop()-15)
+		ts.setScrollTop(ts.getScrollTop()-15);
 	}
 });
 

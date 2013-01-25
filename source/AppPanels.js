@@ -34,7 +34,11 @@ enyo.kind({
 		}
 	},
 	changeView: function(inSender, inEvent){
-		this.$.timeViews.setIndex(inSender.index);
+		if(this.$.timeViews.getIndex() === inSender.index){
+			this.updateView();
+		}else{
+			this.$.timeViews.setIndex(inSender.index);
+		}
 	},
 	updateView: function(){
 		//Call the visited page's "navigated" function, if it exists.
