@@ -46,7 +46,7 @@ enyo.kind({
 				{name: "istoday", showing: false, classes: "day-istoday", content: "Today"},
 				{name: "title", classes: "day-title", content: ""}
 			]},
-			{kind: "Scroller", classes: "day-scroller", fit: true, touch: true, thumb: false, components: [
+			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
 				//TODO
 			]}
 		]}
@@ -71,5 +71,34 @@ enyo.kind({
 		//TODO: Not sure if we want to display the date number this way.
 		//Possibly look into removing the "th", "nd", etc. after numbers.
 		this.$.title.setContent(this.date.format("dddd, MMMM Do, YYYY"));
+
+		//Create all of the date rows:
+		for(var i = 0; i < 24; i++){
+			this.$.times.createComponent({kind: "DayRow", time: i});
+		}
 	}
 });
+
+enyo.kind({
+	name: "DayRow",
+	classes: "day-row",
+	published: {
+		time: 0
+	},
+	components: [
+		{classes: "day-row-label", components: [
+			{content: "", name: "time"},
+			{content: "", name: "ampm", classes: "day-row-label-ampm"}
+		]}
+	],
+	create: function(){
+		this.inherited(arguments);
+		var time = this.time % 12;
+		if(time === 0){
+			time = 12;
+		}
+		this.$.time.setContent(time);
+		this.$.ampm.setContent(this.time >= 12 ? "pm" : "am");
+		//TODO: Replace 12 PM with "NOON"?
+	}
+})

@@ -25,7 +25,8 @@
 
 .day-page-inner {
 	border: 1px solid rgba(0, 0, 0, 0.2);
-	background-color: rgba(0, 0, 0, 0.05);
+	/*background-color: rgba(0, 0, 0, 0.05);*/
+	background-color: #F5F5F5;
 	box-shadow: inset 0px 2px 0px #fff;
 }
 
@@ -47,4 +48,37 @@
 .day-title {
 	font-size: 2em;
 	font-weight: 100;
+}
+
+.day-row {
+	height: 10%;
+	max-height: 60px;
+	min-height: 40px;
+	border-top: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.day-row:first-child {
+	margin-top: 20px;
+}
+
+.day-row-label {
+	font-size: 0.8em;
+	font-weight: bold;
+	width: 50px;
+	background: #F5F5F5;
+	margin-top: -10px;
+	margin-left: 15px;
+	padding-left: 5px;
+}
+.day-row-label > * {
+	display: inline-block;
+}
+
+.day-row-label-ampm {
+	font-weight: normal;
+	font-size: 0.6em;
+	margin-left: 4px;
+	position: relative;
+	top: -2px;
+	text-transform: uppercase;
 }
