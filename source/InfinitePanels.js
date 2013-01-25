@@ -47,9 +47,9 @@ enyo.kind({
 		//Simple ordering:
 		panel.currIndex = this.current + 1;
 		//Create/render it:
-		this.createComponent(panel);
+		this.createComponent(panel).render();
 		//Re-render the control:
-		this.render();
+		//this.render();
 	},
 	//Provide the previous panel:
 	providePrev: function(panel){
@@ -58,9 +58,9 @@ enyo.kind({
 		//Render the panel before everything:
 		panel.addBefore = null;
 		//Create/render it:
-		this.createComponent(panel);
+		this.createComponent(panel).render();
 		//Re-render the control:
-		this.render();
+		//this.render();
 		//We now have to change the index because there's one behind us:
 		this.si(this.getIndex()+1);
 	},
@@ -74,9 +74,8 @@ enyo.kind({
 	caller: function(inSender, inEvent){
 		this.inherited(arguments);
 		//Some simple prevention:
-		if(this.preventCaller || !inEvent || !("toIndex" in inEvent) || !("fromIndex" in inEvent) || inEvent.toIndex === inEvent.fromIndex){
-			//Don't do anything.
-
+		if(this.preventCaller || !inEvent || !("toIndex" in inEvent) || !("fromIndex" in inEvent) || (inEvent.toIndex === 1 && inEvent.fromIndex === 1)){
+			//Do Nothing
 		}else{
 			var i = this.getIndex();
 			var c = this.getControls();
@@ -89,13 +88,31 @@ enyo.kind({
 				this.bubble("onPrev", {current: this.current});
 			}
 			//When the index is the last one, load the next view:
-			else if(i >= c.length-1){
+			else if(i >= 2){
 				this.current++;
 				this.bubble("onNext", {current: this.current});
 			}
+			//These cases should never exist:
+			else if(i === 1){
+				c = this.getControls();
+				//If the view is 1, but there's no previous view:
+				if(!c[0]){
+					console.log("PREV NOT EXISTS");
+					this.bubble("onPrev", {current: this.current-1});
+				}
+				//If the view is 1, but there's no next view:
+				if(!c[2]){
+					console.log("NEXT NOT EXISTS");
+					this.bubble("onNext", {current: this.current+1});
+				}
+			}
 
+			//Dump old panels:
 			this.manageMemory();
+			//Unlock the caller:
 			this.preventCaller = false;
+			//Re-render control:
+			this.render();
 		}
 		return true;
 	},
@@ -136,7 +153,6 @@ enyo.kind({
 				c[k].destroy();
 			}
 		}
-		this.render();
 		this.si(1);
 	}
 });
