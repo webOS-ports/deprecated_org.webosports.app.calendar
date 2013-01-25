@@ -17,3 +17,34 @@
 .scroller-slide {
   display: inline-block;
 }
+
+.day-page {
+	width: 100%;
+	padding: 15px;
+}
+
+.day-page-inner {
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0px 2px 0px #fff;
+}
+
+.day-header {
+	padding: 10px;
+}
+
+.day-scroller {
+	border-top: 1px dashed rgba(0, 0, 0, 0.2);
+}
+
+.day-istoday {
+	float: right !important;
+	font-weight: bold;
+	padding: 14px 20px;
+	font-size: 0.8em;
+}
+
+.day-title {
+	font-size: 2em;
+	font-weight: 100;
+}

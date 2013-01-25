@@ -18,6 +18,7 @@ enyo.kind({
 		onTransitionFinish: "caller"
 	},
 	create: function(){
+		//Load up first three panels:
 		for(var i = 0; i < 3; i++){
 			this.components[i].currIndex = i - 1;
 		}
@@ -71,6 +72,7 @@ enyo.kind({
 	},
 	//Called when the transition ends to get the next/previous panels if they are needed.
 	caller: function(inSender, inEvent){
+		this.inherited(arguments);
 		//Some simple prevention:
 		if(this.preventCaller || !inEvent || !("toIndex" in inEvent) || !("fromIndex" in inEvent) || inEvent.toIndex === inEvent.fromIndex){
 			//Don't do anything.
@@ -95,6 +97,21 @@ enyo.kind({
 			this.manageMemory();
 			this.preventCaller = false;
 		}
+	},
+	//This lets you reset the entire panel kind. This should start it over with whatever components you define.
+	reset: function(components){
+		//Set the currIndex on the first three panels:
+		for(var i = 0; i < 3; i++){
+			components[i].currIndex = i - 1;
+		}
+		//Set current:
+		this.current = 0;
+		//Destroy all controls:
+		this.destroyClientControls();
+		//Bring in the new ones:
+		this.createComponents(components);
+		//Re-render
+		this.render();
 	},
 	//This function makes sure that there are only 3 panels at any given time.
 	manageMemory: function(){
