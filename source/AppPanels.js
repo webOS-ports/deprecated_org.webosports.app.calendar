@@ -3,7 +3,7 @@ enyo.kind({
 	kind: "FittableRows",
 	components: [
 		{kind: "onyx.Toolbar", content: "Calendar"},
-		{kind: "Panels", name: "timeViews", draggable: false, classes: "main", fit: true, components: [
+		{kind: "Panels", name: "timeViews", onTransitionFinish: "updateView", draggable: false, classes: "main", fit: true, components: [
 			{kind: "Day"},
 			{content: "Week"},
 			{content: "Month"}
@@ -35,6 +35,8 @@ enyo.kind({
 	},
 	changeView: function(inSender, inEvent){
 		this.$.timeViews.setIndex(inSender.index);
+	},
+	updateView: function(){
 		//Call the visited page's "navigated" function, if it exists.
 		var a = this.$.timeViews.getActive();
 		if(a.navigated){

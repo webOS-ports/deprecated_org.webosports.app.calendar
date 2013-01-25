@@ -97,6 +97,7 @@ enyo.kind({
 			this.manageMemory();
 			this.preventCaller = false;
 		}
+		return true;
 	},
 	//This lets you reset the entire panel kind. This should start it over with whatever components you define.
 	reset: function(components){
