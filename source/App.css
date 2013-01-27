@@ -50,16 +50,42 @@
 	font-weight: 100;
 }
 
+.day-current-time {
+	width: 100%;
+	position: relative;
+	top: 0px;
+	border-top: 2px solid rgba(201, 68, 48, 0.5);
+	height: 0px;
+}
+/* We could make this a bar if we want? Also, experiment with the left being some orange indicator and the line being gray*/
+/* Also x2, we could just match the style to how webOS 3.0 does it.
+/*
+.day-current-time:before {
+	content: "";
+	display: block;
+	margin-top: -10px;
+	margin-left: 0px;
+	border-right: 2px solid rgba(201, 68, 48, 0.5);
+	border-radius: 100px;
+	width: 20px;
+	height: 20px;
+	background: #F5F5F5;
+}
+*/
+
 .day-row {
-	height: 10%;
+	/*height: 10%;
 	max-height: 60px;
-	min-height: 40px;
+	min-height: 40px;*/
+	height: 55px;
 	border-top: 1px solid rgba(0, 0, 0, 0.3);
 }
 
+/*
 .day-row:first-child {
 	margin-top: 20px;
 }
+*/
 
 .day-row-label {
 	font-size: 0.8em;
@@ -81,4 +107,11 @@
 	position: relative;
 	top: -2px;
 	text-transform: uppercase;
+}
+
+.day-row-half {
+	width: 100%;
+	position: relative;
+	top: 50%;
+	border-top: 1px dashed rgba(0, 0, 0, 0.07);
 }

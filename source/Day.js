@@ -39,7 +39,9 @@ enyo.kind({
 	kind: "FittableRows",
 	classes: "day-page",
 	published: {
-		date: ""
+		date: "",
+		//TODO: Adjust for smaller screens:
+		rowHeight: 56
 	},
 	components: [
 		{classes: "day-page-inner", kind: "FittableRows", fit: true, components: [
@@ -48,6 +50,8 @@ enyo.kind({
 				{name: "title", classes: "day-title", content: ""}
 			]},
 			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
+				{style: "height: 20px"},
+				{name: "CurrentTime", classes: "day-current-time", showing: false}
 				//Dynamically loaded.
 				//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
 			]}
@@ -81,13 +85,40 @@ enyo.kind({
 	},
 	rendered: function(){
 		this.inherited(arguments);
+		//Set the time bar initially
+		if(moment().diff(this.date, "days") === 0){
+			this.$.CurrentTime.show();
+			this.setTimeBar();
+		}else{
+			this.$.CurrentTime.hide();
+		}
 		//Scroll the current time into view:
 		//TODO: Only do this if the date is today?
 		//TODO: Only do this on create.
+		this.scrollToDay();
+	},
+	setTimeBar: function(){
+		var height = moment().hours() * this.getRowHeight();
+		height += Math.floor((this.getRowHeight())*((moment().minutes()/60)));
+		this.$.CurrentTime.applyStyle("top", height + "px");
+		if(this.timer){
+			window.clearTimeout(this.timer);
+		}
+		this.timer = window.setTimeout(enyo.bind(this, "setTimeBar"), 120000);
+	},
+	destroy: function(){
+		window.clearTimeout(this.timer);
+		this.inherited(arguments);
+	},
+	scrollToDay: function(){
 		var c = this.$.times.getClientControls();
 		var ts = this.$.times;
-		ts.scrollToControl(c[moment().hours()], true);
-		ts.setScrollTop(ts.getScrollTop()-15);
+		ts.scrollToControl(c[moment().hours() + 2], true);
+		var st = ts.getScrollTop();
+		ts.setScrollTop(st+1);
+		if(st !== ts.getScrollTop()){
+			ts.setScrollTop(ts.getScrollTop()-15);
+		}
 	}
 });
 
@@ -99,6 +130,7 @@ enyo.kind({
 		time: 0
 	},
 	components: [
+		{classes: "day-row-half"},
 		{classes: "day-row-label", components: [
 			{content: "", name: "time"},
 			{content: "", name: "ampm", classes: "day-row-label-ampm"}
