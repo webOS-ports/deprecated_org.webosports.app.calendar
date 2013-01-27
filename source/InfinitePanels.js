@@ -19,8 +19,10 @@ enyo.kind({
 	},
 	create: function(){
 		//Load up first three panels:
-		for(var i = 0; i < 3; i++){
-			this.components[i].currIndex = i - 1;
+		if(this.components){
+			for(var i = 0; i < 3; i++){
+				this.components[i].currIndex = i - 1;
+			}
 		}
 		this.inherited(arguments);
 		this.createComponent({kind: "Signals", onCoreNaviDragStart: "handleCoreNaviDragStart", onCoreNaviDrag: "handleCoreNaviDrag", onCoreNaviDragFinish: "handleCoreNaviDragFinish"});
@@ -128,6 +130,7 @@ enyo.kind({
 		this.destroyClientControls();
 		//Bring in the new ones:
 		this.createComponents(components);
+		this.si(1);
 		//Re-render
 		this.render();
 	},

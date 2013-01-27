@@ -7,29 +7,44 @@ enyo.kind({
 		onPrev: "loadPrev"
 	},
 	components: [
-		{kind: "vi.Inf", name: "inf", fit: true, coreNavi: true, style: "background: white", components: [
-			{kind: "DayPage", date: moment().subtract("days", 1)},
-			{kind: "DayPage", date: moment()},
-			{kind: "DayPage", date: moment().add("days", 1)}
-		]}
+		{kind: "vi.Inf", name: "inf", fit: true, coreNavi: true, style: "background: white"}
 	],
+
+	now: moment(),
 
 	//This function is called whenever the page is navigated to using the tab button.
 	navigated: function(){
+		this.now = moment();
 		//Tell the infinite panels kind to go back to where we started:
 		this.$.inf.reset([
-			{kind: "DayPage", date: moment().subtract("days", 1)},
-			{kind: "DayPage", date: moment()},
-			{kind: "DayPage", date: moment().add("days", 1)}
+			{kind: "DayPage", date: moment(this.now).subtract("days", 1)},
+			{kind: "DayPage", date: moment(this.now)},
+			{kind: "DayPage", date: moment(this.now).add("days", 1)}
+		]);
+	},
+
+	//Jumps to a specific date:
+	jumpToDate: function(date){
+		this.now = moment(new Date(date));
+
+		var ref1 = moment(this.now).subtract("days", 1);
+		var ref2 = moment(this.now);
+		var ref3 = moment(this.now).add("days", 1);
+
+		//Set it up:
+		this.$.inf.reset([
+			{kind: "DayPage", date: ref1},
+			{kind: "DayPage", date: ref2},
+			{kind: "DayPage", date: ref3}
 		]);
 	},
 	
 	//Load up different days based on where we are in the panels:
 	loadNext: function(inSender, inEvent){
-		this.$.inf.provideNext({kind: "DayPage", date: moment().add("days", inEvent.current+1)});
+		this.$.inf.provideNext({kind: "DayPage", date: moment(this.now).add("days", inEvent.current+1)});
 	},
 	loadPrev: function(inSender, inEvent){
-		this.$.inf.providePrev({kind: "DayPage", date: moment().add("days", inEvent.current-1)});
+		this.$.inf.providePrev({kind: "DayPage", date: moment(this.now).add("days", inEvent.current-1)});
 	}
 });
 
@@ -51,7 +66,8 @@ enyo.kind({
 			]},
 			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
 				{style: "height: 20px"},
-				{name: "CurrentTime", classes: "day-current-time", showing: false}
+				{name: "CurrentTime", classes: "day-current-time", showing: false},
+				{name: "eventLayer", classes: "day-events"}
 				//Dynamically loaded.
 				//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
 			]}
@@ -105,6 +121,7 @@ enyo.kind({
 	setTimeBar: function(){
 		//Don't keep setting the time bar if the date moves off this day:
 		if(moment().diff(this.date, "days") === 0){
+			//Set Bar:
 			var height = moment().hours() * this.getRowHeight();
 			height += Math.floor((this.getRowHeight())*((moment().minutes()/60)));
 			this.$.CurrentTime.applyStyle("top", height + "px");
@@ -126,7 +143,7 @@ enyo.kind({
 	scrollToDay: function(){
 		var c = this.$.times.getClientControls();
 		var ts = this.$.times;
-		ts.scrollToControl(c[moment().hours() + 2], true);
+		ts.scrollToControl(c[moment().hours() + 3], true);
 		var st = ts.getScrollTop();
 		ts.setScrollTop(st+1);
 		if(st !== ts.getScrollTop()){
@@ -140,8 +157,7 @@ enyo.kind({
 	name: "DayRow",
 	classes: "day-row",
 	published: {
-		time: 0,
-		isNow: false
+		time: 0
 	},
 	components: [
 		{classes: "day-row-half"},

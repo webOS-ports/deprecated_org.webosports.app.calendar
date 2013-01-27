@@ -1,6 +1,9 @@
 enyo.kind({
 	name: "MainApp",
 	kind: "FittableRows",
+	handlers: {
+		onJumpTo: "jumpTo"
+	},
 	components: [
 		{kind: "onyx.Toolbar", content: "Calendar"},
 		{kind: "Panels", name: "timeViews", onTransitionFinish: "updateView", draggable: false, classes: "main", fit: true, components: [
@@ -35,6 +38,12 @@ enyo.kind({
 			this.$.timeViews.setArrangerKind("CardArranger");
 		}
 	},
+	jumpTo: function(inSender, inEvent){
+		var a = this.$.timeViews.getActive();
+		if(a.jumpToDate){
+			a.jumpToDate(inEvent);
+		}
+	},
 	showJumpTo: function(){
 		this.$.jumptodialog.show();
 	},
@@ -57,17 +66,16 @@ enyo.kind({
 enyo.kind({
 	name: "JumpToDialog",
 	kind: "onyx.Popup",
-	events: {
-		onJumpTo: ""
-	},
-	style: "background: #eee;color: black;",
+	style: "background: #eee; color: black;",
 	centered: true,
 	floating: true,
 	scrim: true,
 	modal: true,
 	components: [
-		{name: "picker", kind: "onyx.DatePicker"},
-		{kind: "onyx.Button", classes: "onyx-affirmative", content: "Okay", style: "width: 100%; margin-top: 20px;", ontap: "changeDate"}
+		{name: "pickerHolder", components: [
+			{name: "picker", kind: "onyx.DatePicker"}
+		]},
+		{kind: "onyx.Button", classes: "onyx-affirmative", content: "Okay", style: "width: 100%; margin-top: 10px; background-color: green;", ontap: "changeDate"}
 	],
 	changeDate: function(){
 		this.bubble("onJumpTo", this.$.picker.getValue());
