@@ -11,13 +11,18 @@
 	width: 80px;
 }
 
+/*Fixes bugs: */
 .pickerFix {
-    z-index: 9999 !important;            
+    z-index: 9999 !important;
 }
 
 .day-page {
 	width: 100%;
 	padding: 15px;
+}
+
+.day-allday {
+	border-top: 1px dashed rgba(0, 0, 0, 0.2);
 }
 
 .day-page-inner {
@@ -111,4 +116,19 @@
 	position: relative;
 	top: 50%;
 	border-top: 1px dashed rgba(0, 0, 0, 0.07);
+}
+
+
+
+.day-event {
+	position: relative;
+}
+.day-event-allday {
+	font-size: 0.5em;
+	margin: 6px;
+	padding: 5px;
+	display: inline-block;
+	width: 100px;
+	border-radius: 5px;
+	background: rgba(0, 0, 0, 0.2);
 }

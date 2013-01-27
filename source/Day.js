@@ -64,10 +64,6 @@ enyo.kind({
 		}
 	},
 
-	create: function(){
-		this.inherited(arguments);
-	},
-
 	//Jumps to a specific date:
 	jumpToDate: function(date){
 		this.now = moment(date);
@@ -103,6 +99,9 @@ enyo.kind({
 			{classes: "day-header", components: [
 				{name: "istoday", showing: false, classes: "day-istoday", content: "Today"},
 				{name: "title", classes: "day-title", content: ""}
+			]},
+			{classes: "day-allday", name: "allday", showing: false, components: [
+
 			]},
 			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
 				{style: "height: 20px"},
@@ -145,9 +144,15 @@ enyo.kind({
 		for(var i = 0; i < 24; i++){
 			this.$.times.createComponent({kind: "DayRow", time: i, is12Hour: is12Hour});
 		}
+
+		//TODO: This shouldn't only be here:
+		this.displayEvents();
 	},
 	displayEvents: function(){
-
+		//this.$.allday.hide();
+		this.$.allday.createComponent({kind: "DayEvent", evt: {allDay: true}});
+		this.$.allday.render();
+		this.$.allday.show();
 	},
 	//This let's us only scroll to the day once:
 	hasScrolled: -1,
@@ -235,5 +240,18 @@ enyo.kind({
 //An event for the day.
 //Note that this is only visual right now. We'll probably have to rework this based on the calendar data is actually formatted on webOS.
 enyo.kind({
-	name: "DayEvent"
+	name: "DayEvent",
+	classes: "day-event",
+	published: {
+		evt: {}
+	},
+	components: [
+		{content: "Some Event!"}
+	],
+	create: function(){
+		this.inherited(arguments);
+		if(this.evt.allDay){
+			this.addClass("day-event-allday");
+		}
+	}
 });
