@@ -18,12 +18,14 @@ enyo.kind({
 				]}
 			]},
 			//Taken from the webOS 3.0 Calendar app (as was the new event button location:
-			{kind: "onyx.Button", name: "jumpto", content: "Jump to..."}
-		]}
+			{kind: "onyx.Button", name: "jumpto", content: "Jump to...", ontap: "showJumpTo"}
+		]},
+		{kind: "JumpToDialog", name: "jumptodialog"}
 	],
 	reflow: function(){
 		this.inherited(arguments);
 		if(enyo.Panels.isScreenNarrow()){
+			//TODO: Show add event iconbutton?
 			this.$.timeViews.setArrangerKind("CoreNaviArranger");
 			this.$.jumpto.hide();
 			this.$.newevent.hide();
@@ -32,6 +34,9 @@ enyo.kind({
 			this.$.newevent.show();
 			this.$.timeViews.setArrangerKind("CardArranger");
 		}
+	},
+	showJumpTo: function(){
+		this.$.jumptodialog.show();
 	},
 	changeView: function(inSender, inEvent){
 		if(this.$.timeViews.getIndex() === inSender.index){
@@ -46,5 +51,26 @@ enyo.kind({
 		if(a.navigated){
 			a.navigated();
 		}
+	}
+});
+
+enyo.kind({
+	name: "JumpToDialog",
+	kind: "onyx.Popup",
+	events: {
+		onJumpTo: ""
+	},
+	style: "background: #eee;color: black;",
+	centered: true,
+	floating: true,
+	//Scrim breaks this. Need to fix:
+	scrim: false,
+	components: [
+		{name: "picker", kind: "onyx.DatePicker"},
+		{kind: "onyx.Button", classes: "onyx-affirmative", content: "Okay", style: "width: 100%; margin-top: 20px;", ontap: "changeDate"}
+	],
+	changeDate: function(){
+		this.bubble("onJumpTo", this.$.picker.getValue());
+		this.hide();
 	}
 });

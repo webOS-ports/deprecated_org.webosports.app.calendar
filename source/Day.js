@@ -83,6 +83,8 @@ enyo.kind({
 			this.$.times.createComponent({kind: "DayRow", time: i});
 		}
 	},
+	//This let's us only scroll to the day once:
+	hasScrolled: -1,
 	rendered: function(){
 		this.inherited(arguments);
 		//Set the time bar initially
@@ -94,17 +96,28 @@ enyo.kind({
 		}
 		//Scroll the current time into view:
 		//TODO: Only do this if the date is today?
-		//TODO: Only do this on create.
-		this.scrollToDay();
+		if(this.hasScrolled < 1){
+			//The render method gets called a little bit more than I would like, so we have to do it this way.
+			this.hasScrolled++;
+			this.scrollToDay();
+		}
 	},
 	setTimeBar: function(){
-		var height = moment().hours() * this.getRowHeight();
-		height += Math.floor((this.getRowHeight())*((moment().minutes()/60)));
-		this.$.CurrentTime.applyStyle("top", height + "px");
-		if(this.timer){
-			window.clearTimeout(this.timer);
+		//Don't keep setting the time bar if the date moves off this day:
+		if(moment().diff(this.date, "days") === 0){
+			var height = moment().hours() * this.getRowHeight();
+			height += Math.floor((this.getRowHeight())*((moment().minutes()/60)));
+			this.$.CurrentTime.applyStyle("top", height + "px");
+			if(this.timer){
+				window.clearTimeout(this.timer);
+			}
+			this.timer = window.setTimeout(enyo.bind(this, "setTimeBar"), 120000);
+		}else{
+			if(this.timer){
+				window.clearTimeout(this.timer);
+			}
+			this.$.CurrentTime.hide();
 		}
-		this.timer = window.setTimeout(enyo.bind(this, "setTimeBar"), 120000);
 	},
 	destroy: function(){
 		window.clearTimeout(this.timer);
