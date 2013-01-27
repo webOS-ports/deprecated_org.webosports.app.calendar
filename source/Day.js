@@ -135,6 +135,9 @@ enyo.kind({
 			this.$.times.createComponent({kind: "DayRow", time: i});
 		}
 	},
+	displayEvents: function(){
+
+	},
 	//This let's us only scroll to the day once:
 	hasScrolled: -1,
 	rendered: function(){

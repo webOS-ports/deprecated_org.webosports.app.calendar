@@ -45,6 +45,10 @@ enyo.kind({
 		}
 	},
 	showJumpTo: function(){
+		this.$.jumptodialog.render();
+		this.$.jumptodialog.capture();
+		this.$.jumptodialog.reflow();
+
 		this.$.jumptodialog.show();
 	},
 	changeView: function(inSender, inEvent){
@@ -70,10 +74,11 @@ enyo.kind({
 	centered: true,
 	floating: true,
 	scrim: true,
-	modal: true,
+	//Breaks because popups in pickers are lame:
+	modal: false,
 	components: [
 		{name: "pickerHolder", components: [
-			{name: "picker", kind: "onyx.DatePicker"}
+			{name: "picker", classes: "pickerFix", kind: "onyx.DatePicker"}
 		]},
 		{kind: "onyx.Button", classes: "onyx-affirmative", content: "Okay", style: "width: 100%; margin-top: 10px; background-color: green;", ontap: "changeDate"}
 	],
