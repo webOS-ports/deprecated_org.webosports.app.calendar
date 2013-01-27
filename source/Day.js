@@ -59,9 +59,13 @@ enyo.kind({
 
 	//This function is called whenever the page is navigated to using the tab button.
 	navigated: function(){
-		if(!this.$.inf.getActive() || !(moment().diff(this.$.inf.getActive().date, "days") === 0)){
+		if(!this.$.inf.getActive() || moment().diff(this.$.inf.getActive().date, "days") !== 0){
 			this.jumpToDate(moment());
 		}
+	},
+
+	create: function(){
+		this.inherited(arguments);
 	},
 
 	//Jumps to a specific date:
@@ -111,6 +115,11 @@ enyo.kind({
 	],
 	create: function(){
 		this.inherited(arguments);
+
+		//Get date formatter:
+		this.locale = enyo.g11n.currentLocale().getLocale();
+		this.formatter = new enyo.g11n.DateFmt({locale: this.locale});
+
 		//If no date is provided, create a new moment:
 		if(!this.date){
 			this.date = moment();
@@ -130,9 +139,11 @@ enyo.kind({
 		//Possibly look into removing the "th", "nd", etc. after numbers.
 		this.$.title.setContent(this.date.format("dddd, MMMM Do, YYYY"));
 
+		var is12Hour = this.formatter.isAmPm();
+
 		//Create all of the date rows:
 		for(var i = 0; i < 24; i++){
-			this.$.times.createComponent({kind: "DayRow", time: i});
+			this.$.times.createComponent({kind: "DayRow", time: i, is12Hour: is12Hour});
 		}
 	},
 	displayEvents: function(){
@@ -196,7 +207,8 @@ enyo.kind({
 	name: "DayRow",
 	classes: "day-row",
 	published: {
-		time: 0
+		time: 0,
+		is12Hour: true
 	},
 	components: [
 		{classes: "day-row-half"},
@@ -207,13 +219,16 @@ enyo.kind({
 	],
 	create: function(){
 		this.inherited(arguments);
-		var time = this.time % 12;
-		if(time === 0){
-			time = 12;
+		if(this.is12Hour){
+			var time = this.time % 12;
+			if(time === 0){
+				time = 12;
+			}
+			this.$.time.setContent(time);
+			this.$.ampm.setContent(this.time >= 12 ? "pm" : "am");
+		}else{
+			this.$.time.setContent(this.time + ":00");
 		}
-		this.$.time.setContent(time);
-		this.$.ampm.setContent(this.time >= 12 ? "pm" : "am");
-		//TODO: Replace 12 PM with "NOON"?
 	}
 });
 
