@@ -130,6 +130,7 @@ enyo.kind({
 		this.destroyClientControls();
 		//Bring in the new ones:
 		this.createComponents(components);
+		//Set index:
 		this.si(1);
 	},
 	//This function makes sure that there are only 3 panels at any given time.

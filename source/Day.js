@@ -47,36 +47,32 @@ enyo.kind({
 		onPrev: "loadPrev"
 	},
 	components: [
-		{kind: "vi.Inf", name: "inf", fit: true, coreNavi: true, style: "background: white"}
+		{kind: "vi.Inf", name: "inf", fit: true, coreNavi: true, style: "background: white", components: [
+			{kind: "DayPage", date: moment().subtract("days", 1)},
+			{kind: "DayPage", date: moment()},
+			{kind: "DayPage", date: moment().add("days", 1)}
+		]}
 	],
 
+	//Set up current viewed date:
 	now: moment(),
 
 	//This function is called whenever the page is navigated to using the tab button.
 	navigated: function(){
-		this.now = moment();
-		//Tell the infinite panels kind to go back to where we started:
+		if(!this.$.inf.getActive() || !(moment().diff(this.$.inf.getActive().date, "days") === 0)){
+			this.jumpToDate(moment());
+		}
+	},
+
+	//Jumps to a specific date:
+	jumpToDate: function(date){
+		this.now = moment(date);
 		this.$.inf.reset([
 			{kind: "DayPage", date: moment(this.now).subtract("days", 1)},
 			{kind: "DayPage", date: moment(this.now)},
 			{kind: "DayPage", date: moment(this.now).add("days", 1)}
 		]);
-	},
-
-	//Jumps to a specific date:
-	jumpToDate: function(date){
-		this.now = moment(new Date(date));
-
-		var ref1 = moment(this.now).subtract("days", 1);
-		var ref2 = moment(this.now);
-		var ref3 = moment(this.now).add("days", 1);
-
-		//Set it up:
-		this.$.inf.reset([
-			{kind: "DayPage", date: ref1},
-			{kind: "DayPage", date: ref2},
-			{kind: "DayPage", date: ref3}
-		]);
+		this.$.inf.render();
 	},
 	
 	//Load up different days based on where we are in the panels:
