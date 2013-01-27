@@ -1,3 +1,43 @@
+var eventsforday = [
+	{
+		"alarm": [],
+		"allDay": false,
+		"attach": [],
+		"attendees": [],
+		"calendarId": "Palm Profile",
+		"categories": "",
+		"classification": "PUBLIC",
+		"comment": "",
+		"contact": "",
+		"created": moment().unix(),
+		"dtend": moment().add("hours", 1).unix(),
+		"dtstart": moment().unix(),
+		"dtstamp": "",
+		"exdates": [],
+		"geo": "",
+		"lastModified": moment().unix(),
+		"location": "Olive garden",
+		"note": "",
+		"parentDtstart": 0,
+		"parentId": 0,
+		"priority": 0,
+		"rdates": [],
+		"recurrenceId": "",
+		"relatedTo": "",
+		"requestStatus": "",
+		"resources": "",
+		"rrule": {
+			"freq": "DAILY",
+			"interval": 1
+		},
+		"sequence": 0,
+		"subject": "",
+		"transp": "",
+		"tzId": "",
+		"url": ""
+	}
+];
+
 //The day layout is easy. There's always 24 hours, and it's just a list.
 enyo.kind({
 	name: "Day",

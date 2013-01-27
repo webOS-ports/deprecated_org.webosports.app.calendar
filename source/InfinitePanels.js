@@ -131,8 +131,6 @@ enyo.kind({
 		//Bring in the new ones:
 		this.createComponents(components);
 		this.si(1);
-		//Re-render
-		this.render();
 	},
 	//This function makes sure that there are only 3 panels at any given time.
 	manageMemory: function(){
