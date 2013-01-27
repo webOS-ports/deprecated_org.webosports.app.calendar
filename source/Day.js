@@ -140,7 +140,8 @@ enyo.kind({
 	name: "DayRow",
 	classes: "day-row",
 	published: {
-		time: 0
+		time: 0,
+		isNow: false
 	},
 	components: [
 		{classes: "day-row-half"},

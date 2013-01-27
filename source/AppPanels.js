@@ -63,8 +63,8 @@ enyo.kind({
 	style: "background: #eee;color: black;",
 	centered: true,
 	floating: true,
-	//Scrim breaks this. Need to fix:
-	scrim: false,
+	scrim: true,
+	modal: true,
 	components: [
 		{name: "picker", kind: "onyx.DatePicker"},
 		{kind: "onyx.Button", classes: "onyx-affirmative", content: "Okay", style: "width: 100%; margin-top: 20px;", ontap: "changeDate"}

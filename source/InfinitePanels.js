@@ -27,13 +27,13 @@ enyo.kind({
 	},
 	//Lets you slowly pan through the different days:
 	handleCoreNaviDragStart: function(inSender, inEvent) {
-		this.dragstartTransition(this.draggable == false ? this.reverseDrag(inEvent) : inEvent);
+		this.dragstartTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
 	},
 	handleCoreNaviDrag: function(inSender, inEvent) {
-		this.dragTransition(this.draggable == false ? this.reverseDrag(inEvent) : inEvent);
+		this.dragTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
 	},
 	handleCoreNaviDragFinish: function(inSender, inEvent) {
-		this.dragfinishTransition(this.draggable == false ? this.reverseDrag(inEvent) : inEvent);
+		this.dragfinishTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
 	},
 	//Utility Functions
 	reverseDrag: function(inEvent) {

@@ -54,7 +54,7 @@
 	width: 100%;
 	position: relative;
 	top: 0px;
-	border-top: 2px solid rgba(201, 68, 48, 0.5);
+	border-top: 2px solid rgba(201, 68, 48, 0.7);
 	height: 0px;
 }
 /* We could make this a bar if we want? Also, experiment with the left being some orange indicator and the line being gray*/
