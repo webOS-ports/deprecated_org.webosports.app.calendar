@@ -141,7 +141,7 @@ enyo.kind({
 			}
 			for(var i = 0; i < 7; i++){
 				var now = moment(temp).add("days", i - start);
-				var el = this.createComponent({content: now.format("D"), tag: "td", classes: "month-item enyo-border-box"});
+				var el = this.createComponent({kind: "MonthItem", date: now, content: now.format("D")});
 					
 				if(this.date.month() !== now.month()){
 					el.addClass("month-other");
@@ -152,6 +152,18 @@ enyo.kind({
 				}
 			}
 		}
+	}
+});
+
+enyo.kind({
+	name: "MonthItem",
+	tag: "td",
+	classes: "month-item enyo-border-box",
+	published: {
+		date: ""
+	},
+	tap: function(){
+		this.bubble("onSwapView", {index: 0, supress: true, inEvent: this.date});
 	}
 });
 
