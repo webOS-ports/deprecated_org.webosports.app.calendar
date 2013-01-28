@@ -18,8 +18,11 @@ enyo.kind({
 	now: moment(),
 
 	//This function is called whenever the page is navigated to using the tab button.
-	navigated: function(){
+	navigated: function(reload){
 		this.$.inf.setCoreNavi(true);
+		if(reload === true && moment().diff(this.$.inf.getActive().date, "days") !== 0){
+			this.jumpToDate(moment());
+		}
 		//This jumps to today's date whenever the page is viewed:
 		/*if(!this.$.inf.getActive() || moment().diff(this.$.inf.getActive().date, "days") !== 0){
 			this.jumpToDate(moment());
