@@ -207,7 +207,7 @@ enyo.kind({
 
 					var top, height;
 					if(this.date.diff(elstart, "days") === 0){
-						top = elstart.hours() * this.rowHeight;
+						top = (elstart.hours() * this.getRowHeight()) + Math.floor(((elstart.minutes()/60) * this.getRowHeight()));
 					}else{
 						//Event started before today, Show it for the entire day:
 						top = 0;
@@ -300,7 +300,7 @@ enyo.kind({
 			this.$.time.setContent(time);
 			this.$.ampm.setContent(this.time >= 12 ? "pm" : "am");
 		}else{
-			this.$.time.setContent(this.time + ":00");
+			this.$.time.setContent(((this.time + "").length > 1 ? this.time : "0" + this.time) + ":00");
 		}
 	}
 });
