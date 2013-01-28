@@ -35,6 +35,15 @@
 .month-row {
 }
 
+.month-row-narrow > td {
+	text-align: center;
+	font-weight: bold;
+	vertical-align: middle;
+}
+.month-row-narrow > th {
+	text-align: center;
+}
+
 .month-other {
 	color: rgba(0, 0, 0, 0.2) !important;
 }

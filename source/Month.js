@@ -88,9 +88,6 @@ enyo.kind({
 	
 	displayEvents: function(){
 		
-	},
-	rendered: function(){
-		this.inherited(arguments);
 	}
 });
 
@@ -104,12 +101,30 @@ enyo.kind({
 		date: "",
 		row: 0
 	},
+	reflow: function(){
+		if(enyo.Panels.isScreenNarrow()){
+			if(this.isHeader){
+				enyo.forEach(this.getControls(), function(c, i){
+					c.setContent(this.smallFormatter.format(moment().day(this.smallFormatter.getFirstDayOfWeek() + i).toDate()));
+				}, this);
+			}
+			this.addClass("month-row-narrow");
+		}else{
+			if(this.isHeader){
+				enyo.forEach(this.getControls(), function(c, i){
+					c.setContent(this.formatter.format(moment().day(this.formatter.getFirstDayOfWeek() + i).toDate()));
+				}, this);
+			}
+			this.removeClass("month-row-narrow");
+		}
+	},
 	create: function(){
 		this.inherited(arguments);
 		if(this.isHeader){
 			//Get date formatter:
 			this.locale = enyo.g11n.currentLocale().getLocale();
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE", locale: this.locale});
+			this.smallFormatter = new enyo.g11n.DateFmt({format: "E", locale: this.locale});
 			for(var i = 0; i < 7; i++){
 				this.createComponent({content: this.formatter.format(moment().day(this.formatter.getFirstDayOfWeek() + i).toDate()), tag: "th", classes: "month-item-header"});
 			}
