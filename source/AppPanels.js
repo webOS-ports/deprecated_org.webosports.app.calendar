@@ -62,16 +62,20 @@ enyo.kind({
 	},
 	changeView: function(inSender, inEvent){
 		if(this.$.timeViews.getIndex() === inSender.index){
-			this.updateView();
+			this.updateView(true);
 		}else{
+			var a = this.$.timeViews.getActive();
+			if(a.away){
+				a.away(inEvent);
+			}
 			this.$.timeViews.setIndex(inSender.index);
 		}
 	},
-	updateView: function(){
+	updateView: function(reload){
 		//Call the visited page's "navigated" function, if it exists.
 		var a = this.$.timeViews.getActive();
 		if(a.navigated && !this.supress){
-			a.navigated();
+			a.navigated(reload);
 		}
 		this.supress = false;
 	}
