@@ -64,6 +64,10 @@ enyo.kind({
 		if(this.$.timeViews.getIndex() === inSender.index){
 			this.updateView();
 		}else{
+			var a = this.$.timeViews.getActive();
+			if(a.away){
+				a.away(inEvent);
+			}
 			this.$.timeViews.setIndex(inSender.index);
 		}
 	},

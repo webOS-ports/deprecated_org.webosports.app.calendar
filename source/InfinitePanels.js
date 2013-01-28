@@ -7,7 +7,7 @@ enyo.kind({
 	index: 1,
 	//Current keeps track of where we are
 	current: 0,
-	properties: {
+	published: {
 		coreNavi: true
 	},
 	events: {
@@ -29,13 +29,19 @@ enyo.kind({
 	},
 	//Lets you slowly pan through the different days:
 	handleCoreNaviDragStart: function(inSender, inEvent) {
-		this.dragstartTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
+		if(this.coreNavi){
+			this.dragstartTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
+		}
 	},
 	handleCoreNaviDrag: function(inSender, inEvent) {
-		this.dragTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
+		if(this.coreNavi){
+			this.dragTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
+		}
 	},
 	handleCoreNaviDragFinish: function(inSender, inEvent) {
-		this.dragfinishTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
+		if(this.coreNavi){
+			this.dragfinishTransition(this.draggable == false ? (inEvent) : this.reverseDrag(inEvent));
+		}
 	},
 	//Utility Functions
 	reverseDrag: function(inEvent) {
