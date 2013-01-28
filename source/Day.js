@@ -402,7 +402,7 @@ var eventsforday = [
 		"comment": "",
 		"contact": "",
 		"created": moment().unix(),
-		"dtend": moment().add("hours", 1).unix(),
+		"dtend": moment().unix(),
 		"dtstart": moment().unix(),
 		"dtstamp": "",
 		"exdates": [],
