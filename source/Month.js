@@ -162,8 +162,20 @@ enyo.kind({
 	published: {
 		date: ""
 	},
+	handlers: {
+		onhold: "hold",
+		onmove: "leave",
+		onup: "leave"
+	},
+	hold: function(){
+		this.addClass("month-item-active");
+	},
+	leave: function(){
+		this.removeClass("month-item-active");
+	},
 	tap: function(){
 		this.bubble("onSwapView", {index: 0, supress: true, inEvent: this.date});
+		this.removeClass("month-item-active");
 	}
 });
 
