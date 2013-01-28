@@ -11,13 +11,23 @@
 	width: 80px;
 }
 
+/*Fixes bugs: */
 .pickerFix {
-    z-index: 9999 !important;            
+    z-index: 9999 !important;
 }
 
 .day-page {
 	width: 100%;
 	padding: 15px;
+}
+
+.day-allday {
+	border-top: 1px dashed rgba(0, 0, 0, 0.2);
+}
+.day-allday-label {
+	display: inline-block;
+	margin-left: 20px;
+	font-size: 0.6em;
 }
 
 .day-page-inner {
@@ -53,6 +63,7 @@
 	top: 0px;
 	border-top: 2px solid rgba(201, 68, 48, 0.7);
 	height: 0px;
+	z-index: 50;
 }
 /* We could make this a bar if we want? Also, experiment with the left being some orange indicator and the line being gray*/
 /* Also x2, we could just match the style to how webOS 3.0 does it.
@@ -111,4 +122,61 @@
 	position: relative;
 	top: 50%;
 	border-top: 1px dashed rgba(0, 0, 0, 0.07);
+}
+
+
+.day-events {
+	position: relative;
+	/* We don't want to change the height of the scroller, so we do this. Probably not ideal, but it works: */
+	height: 0px;
+	overflow: visible;
+	top: 0px;
+	margin-left: 70px;
+	z-index: 40;
+}
+
+.day-event-container {
+	position: absolute;
+	width: 100%;
+	padding: 0px 5px;
+	min-height: 20px;
+}
+
+.day-event {
+	background: #98C9FA;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 7px;
+	box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.4), inset 0px -1px 0px rgba(255, 255, 255, 0.4), inset 0px 1px 15px rgba(255, 255, 255, 0.5);
+	padding: 5px 10px;
+	overflow: hidden;
+	height: 100%;
+	color: rgba(0, 0, 0, 0.9);
+}
+.day-event-label {
+	font-size: 0.7em;
+	font-weight: bold;
+}
+.day-event-location {
+	font-size: 0.6em;
+	margin-top: 2px;
+	color: rgba(0, 0, 0, 0.7);
+}
+
+/* All Day Event Classes */
+.day-event-allday {
+	position: relative;
+	margin: 6px;
+	padding: 5px 8px;
+	display: inline-block;
+	max-width: 150px;
+	overflow: hidden;
+	border-radius: 7px;
+	background: rgba(0, 0, 0, 0.2);
+}
+.day-event-allday .day-event-label {
+	font-weight: bold;
+	font-size: 0.5em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
