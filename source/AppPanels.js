@@ -15,7 +15,7 @@ enyo.kind({
 		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout",  /*Fix a bug in Enyo 2 that causes a bottom gap:*/ style: "height: 56px;", components: [
 			{kind: "onyx.Button", name: "newevent", content: "New Event"},
 			{fit: true, components: [
-				{kind: "onyx.RadioGroup", classes: "view-select", controlClasses: "view-select-button", components: [
+				{kind: "onyx.RadioGroup", name: "viewSelect", classes: "view-select", controlClasses: "view-select-button", components: [
 					{content: "Day", index: 0, ontap: "changeView", active: true},
 					{content: "Week", index: 1, ontap: "changeView"},
 					{content: "Month", index: 2, ontap: "changeView"}
@@ -45,6 +45,7 @@ enyo.kind({
 		if(inEvent.supress){
 			this.supress = true;
 		}
+		this.$.viewSelect.getControls()[inEvent.index].setActive(true);
 	},
 	jumpTo: function(inSender, inEvent){
 		var a = this.$.timeViews.getActive();
