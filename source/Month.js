@@ -102,6 +102,7 @@ enyo.kind({
 		row: 0
 	},
 	reflow: function(){
+		this.inherited(arguments);
 		if(enyo.Panels.isScreenNarrow()){
 			if(this.isHeader){
 				enyo.forEach(this.getControls(), function(c, i){
@@ -131,37 +132,24 @@ enyo.kind({
 		}else{
 			this.locale = enyo.g11n.currentLocale().getLocale();
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE", locale: this.locale});
+			var temp = moment(this.date).startOf("month").add("weeks", this.row);
+			var start;
 			if(this.formatter.getFirstDayOfWeek() === 0){
-				var temp = moment(this.date).startOf("month").add("weeks", this.row);
-				var start = temp.day();
-				for(var i = 0; i < 7; i++){
-					var now = moment(temp).add("days", i - start);
-					var el = this.createComponent({content: now.format("D"), tag: "td", classes: "month-item enyo-border-box"});
-					
-					if(this.date.month() !== now.month()){
-						el.addClass("month-other");
-					}
-
-					if(moment().diff(now, "days") === 0){
-						el.addClass("month-active");
-					}
-				}
+				start = temp.day();
 			}else{
-				var temp = moment(this.date).startOf("month").add("weeks", this.row);
-				var start = temp.isoday();
-				for(var i = 0; i < 7; i++){
-					var now = moment(temp).add("days", i - start);
-					var el = this.createComponent({content: now.format("D"), tag: "td", classes: "month-item enyo-border-box"});
+				start = temp.isoday() - 1;
+			}
+			for(var i = 0; i < 7; i++){
+				var now = moment(temp).add("days", i - start);
+				var el = this.createComponent({content: now.format("D"), tag: "td", classes: "month-item enyo-border-box"});
 					
-					if(this.date.month() !== now.month()){
-						el.addClass("month-other");
-					}
-
-					if(moment().diff(now, "days") === 0){
-						el.addClass("month-active");
-					}
+				if(this.date.month() !== now.month()){
+					el.addClass("month-other");
 				}
-				
+
+				if(moment().diff(now, "days") === 0){
+					el.addClass("month-active");
+				}
 			}
 		}
 	}
