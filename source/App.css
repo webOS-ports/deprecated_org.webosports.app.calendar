@@ -24,6 +24,11 @@
 .day-allday {
 	border-top: 1px dashed rgba(0, 0, 0, 0.2);
 }
+.day-allday-label {
+	display: inline-block;
+	margin-left: 20px;
+	font-size: 0.6em;
+}
 
 .day-page-inner {
 	border: 1px solid rgba(0, 0, 0, 0.2);
@@ -119,16 +124,31 @@
 }
 
 
+.day-events {
+	position: relative;
+	/* We don't want to change the height of the scroller, so we do this. Probably not ideal, but it works: */
+	height: 0px;
+	overflow: visible;
+	top: 0px;
+}
 
 .day-event {
 	position: relative;
+	background: rgba(0, 0, 0, 0.2);
 }
 .day-event-allday {
-	font-size: 0.5em;
 	margin: 6px;
 	padding: 5px;
 	display: inline-block;
-	width: 100px;
-	border-radius: 5px;
+	max-width: 150px;
+	overflow: hidden;
+	border-radius: 7px;
 	background: rgba(0, 0, 0, 0.2);
+}
+.day-event-allday .day-event-label {
+	font-weight: bold;
+	font-size: 0.5em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
