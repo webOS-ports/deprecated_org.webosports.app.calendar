@@ -16,6 +16,11 @@
     z-index: 9999 !important;
 }
 
+.month-title {
+	font-size: 2em;
+	font-weight: 100;
+}
+
 .month-page {
 	width: 100%;
 	padding: 15px;
@@ -28,6 +33,15 @@
 }
 
 .month-row {
+}
+
+.month-row-narrow > td {
+	text-align: center;
+	font-weight: bold;
+	vertical-align: middle;
+}
+.month-row-narrow > th {
+	text-align: center;
 }
 
 .month-other {

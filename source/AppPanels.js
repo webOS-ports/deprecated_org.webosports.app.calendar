@@ -2,7 +2,8 @@ enyo.kind({
 	name: "MainApp",
 	kind: "FittableRows",
 	handlers: {
-		onJumpTo: "jumpTo"
+		onJumpTo: "jumpTo",
+		onSwapView: "swapView"
 	},
 	components: [
 		{kind: "onyx.Toolbar", content: "Calendar"},
@@ -38,6 +39,13 @@ enyo.kind({
 			this.$.timeViews.setArrangerKind("CardArranger");
 		}
 	},
+	swapView: function(inSender, inEvent){
+		this.changeView(inEvent, {});
+		this.jumpTo({}, inEvent.inEvent);
+		if(inEvent.supress){
+			this.supress = true;
+		}
+	},
 	jumpTo: function(inSender, inEvent){
 		var a = this.$.timeViews.getActive();
 		if(a.jumpToDate){
@@ -61,9 +69,10 @@ enyo.kind({
 	updateView: function(){
 		//Call the visited page's "navigated" function, if it exists.
 		var a = this.$.timeViews.getActive();
-		if(a.navigated){
+		if(a.navigated && !this.supress){
 			a.navigated();
 		}
+		this.supress = false;
 	}
 });
 

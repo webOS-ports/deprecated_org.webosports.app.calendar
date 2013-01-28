@@ -77,7 +77,8 @@ enyo.kind({
 		this.inherited(arguments);
 
 		//Get date formatter:
-		this.formatter = new enyo.g11n.DateFmt({format: "EEEE, MMMM d, yyyy"});
+		this.locale = enyo.g11n.currentLocale().getLocale();
+		this.formatter = new enyo.g11n.DateFmt({format: "EEEE, MMMM d, yyyy", locale: this.locale});
 
 		//If no date is provided, create a new moment:
 		if(!this.date){
