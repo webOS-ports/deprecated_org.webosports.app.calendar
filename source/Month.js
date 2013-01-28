@@ -180,7 +180,11 @@ enyo.kind({
 		onup: "leave"
 	},
 	components: [
-		{name: "number"}
+		{name: "number"},
+		{name: "eventLayer", classes: "month-event-layer enyo-border-box", components: [
+			{classes: "month-event", content: "Some Event"},
+			{classes: "month-event", content: "Thank you may I have another."}
+		]}
 	],
 	create: function(){
 		this.inherited(arguments);

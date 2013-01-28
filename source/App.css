@@ -27,9 +27,10 @@
 }
 
 .month-table {
-	border-spacing:0;
-	border-collapse:collapse;
+	border-spacing: 0;
+	border-collapse: collapse;
 	width: 100%;
+	table-layout: fixed;
 }
 
 .month-row {
@@ -75,4 +76,37 @@
 
 .month-item-active {
 	background-color: #E4EDF2;
+}
+
+/* TODO: Change background color when narrow and events. */
+.month-row-narrow .month-event-layer {
+	display: none;
+}
+
+.month-event-layer {
+	padding: 4px;
+	overflow: hidden;
+	display: block;
+}
+
+.month-event {
+	color: rgba(0, 0, 0, 0.9) !important;
+	font-size: 0.6em !important;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 100%;
+	overflow: hidden;
+	margin: 4px 0;
+}
+
+.month-event:before {
+	display: inline-block;
+	content: "";
+	padding: 0px;
+	margin: 0px;
+	width: 1em;
+	height: 1em;
+	margin-right: 5px;
+	border-radius: 10px;
+	background: #98C9FA;
 }
