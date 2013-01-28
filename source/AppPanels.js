@@ -9,7 +9,7 @@ enyo.kind({
 		{kind: "Panels", name: "timeViews", onTransitionFinish: "updateView", draggable: false, classes: "main", fit: true, components: [
 			{kind: "Day"},
 			{content: "Week"},
-			{content: "Month"}
+			{kind: "Month"},
 		]},
 		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout",  /*Fix a bug in Enyo 2 that causes a bottom gap:*/ style: "height: 56px;", components: [
 			{kind: "onyx.Button", name: "newevent", content: "New Event"},
