@@ -54,14 +54,7 @@ enyo.kind({
 	},
 	components: [
 		{name: "title", classes: "day-title", content: ""},
-		{tag: "table", fit: true, classes: "month-table", components: [
-			{kind: "MonthRow", isHeader: true},
-			{kind: "MonthRow"},
-			{kind: "MonthRow"},
-			{kind: "MonthRow"},
-			{kind: "MonthRow"},
-			{kind: "MonthRow"},
-			{kind: "MonthRow"}
+		{tag: "table", name: "monthView", fit: true, classes: "month-table", components: [
 		]}
 	],
 	create: function(){
@@ -81,7 +74,12 @@ enyo.kind({
 		//Display the title:
 		this.$.title.setContent(this.formatter.format(this.date.toDate()));
 
-		//Create all of the date rows:
+		//Create month header:
+		this.$.monthView.createComponent({kind: "MonthRow", isHeader: true});
+		//Create all of the month rows:
+		for(var i = 0; i < 6; i++){
+			this.$.monthView.createComponent({kind: "MonthRow", date: this.date, row: i});
+		}
 
 		//TODO: Should call this somehow to update the events
 		this.displayEvents();
@@ -102,6 +100,8 @@ enyo.kind({
 	tag: "tr",
 	published: {
 		isHeader: false,
+		date: "",
+		row: 0
 	},
 	create: function(){
 		this.inherited(arguments);
@@ -112,8 +112,22 @@ enyo.kind({
 				this.createComponent({content: this.formatter.format(moment().day(this.formatter.getFirstDayOfWeek() + i).toDate()), tag: "th", classes: "month-item-header"});
 			}
 		}else{
-			for(var i = 1; i <= 7; i++){
-				this.createComponent({content: i, tag: "td", classes: "month-item enyo-border-box"});
+			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
+			if(this.formatter.getFirstDayOfWeek() === 0){
+				var temp = moment(this.date).startOf("month").add("weeks", this.row);
+				var start = temp.day();
+				for(var i = 0; i < 7; i++){
+					var now = moment(temp).add("days", i - start);
+					var el = this.createComponent({content: now.format("D"), tag: "td", classes: "month-item enyo-border-box"});
+					
+					if(this.date.month() !== now.month()){
+						el.addClass("month-other");
+					}
+
+					if(moment().diff(now, "days") === 0){
+						el.addClass("month-active");
+					}
+				}
 			}
 		}
 	}

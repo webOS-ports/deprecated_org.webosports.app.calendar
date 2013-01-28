@@ -30,16 +30,26 @@
 .month-row {
 }
 
+.month-other {
+	color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.month-active {
+	background: #E4EDF2 !important;
+	color: rgba(0, 0, 0, 0.9) !important;
+}
+
 .month-item-header {
 	text-align: left;
 	height: 30px;
 	font-weight: 300;
 	text-transform: uppercase;
 	font-size: 0.75em;
-	color: rgba(0, 0, 0, 0.8);
 }
 
 .month-item {
+	font-size: 0.9em;
+	color: rgba(0, 0, 0, 0.6);
 	background-color: #F5F5F5;
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	box-shadow: inset 0px 1px 0px #fff;
