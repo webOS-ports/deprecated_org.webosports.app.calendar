@@ -1,80 +1,3 @@
-var eventsforday = [
-	{
-		"alarm": [],
-		"allDay": false,
-		"attach": [],
-		"attendees": [],
-		"calendarId": "Palm Profile",
-		"categories": "",
-		"classification": "PUBLIC",
-		"comment": "",
-		"contact": "",
-		"created": moment().unix(),
-		"dtend": moment().add("hours", 1.5).unix(),
-		"dtstart": moment().unix(),
-		"dtstamp": "",
-		"exdates": [],
-		"geo": "",
-		"lastModified": moment().unix(),
-		"location": "Olive garden",
-		"note": "",
-		"parentDtstart": 0,
-		"parentId": 0,
-		"priority": 0,
-		"rdates": [],
-		"recurrenceId": "",
-		"relatedTo": "",
-		"requestStatus": "",
-		"resources": "",
-		"rrule": {
-			"freq": "DAILY",
-			"interval": 1
-		},
-		"sequence": 0,
-		"subject": "Some Event",
-		"transp": "",
-		"tzId": "",
-		"url": ""
-	},
-	{
-		"alarm": [],
-		"allDay": true,
-		"attach": [],
-		"attendees": [],
-		"calendarId": "Palm Profile",
-		"categories": "",
-		"classification": "PUBLIC",
-		"comment": "",
-		"contact": "",
-		"created": moment().unix(),
-		"dtend": moment().add("hours", 1).unix(),
-		"dtstart": moment().unix(),
-		"dtstamp": "",
-		"exdates": [],
-		"geo": "",
-		"lastModified": moment().unix(),
-		"location": "Olive garden",
-		"note": "",
-		"parentDtstart": 0,
-		"parentId": 0,
-		"priority": 0,
-		"rdates": [],
-		"recurrenceId": "",
-		"relatedTo": "",
-		"requestStatus": "",
-		"resources": "",
-		"rrule": {
-			"freq": "DAILY",
-			"interval": 1
-		},
-		"sequence": 0,
-		"subject": "Some All Day Event That Also Is Super Long And Should Test The Overflow",
-		"transp": "",
-		"tzId": "",
-		"url": ""
-	}
-];
-
 //The day layout is easy. There's always 24 hours, and it's just a list.
 enyo.kind({
 	name: "Day",
@@ -180,7 +103,7 @@ enyo.kind({
 			this.$.times.createComponent({kind: "DayRow", time: i, is12Hour: is12Hour});
 		}
 
-		//TODO: Should call this somehow to update the 
+		//TODO: Should call this somehow to update the events
 		this.displayEvents();
 	},
 	//TODO: Dates spanning multiple days generally will break the checker that makes sure the date is in range.
@@ -188,6 +111,10 @@ enyo.kind({
 	displayEvents: function(){
 		this.$.allday.hide();
 		var showAllDay = false;
+
+		//Used to determine when to scale events:
+		var conflicts = [];
+
 		enyo.forEach(eventsforday, function(evt){
 			//Clone date:
 			var checker = moment(this.date);
@@ -198,6 +125,7 @@ enyo.kind({
 					showAllDay = true;
 					this.$.alldayevents.createComponent({kind: "DayEvent", date: this.date, evt: evt});
 				}else{
+
 					//Create the event in the event layer:
 					var el = this.$.eventLayer.createComponent({kind: "DayEvent", date: this.date, evt: evt});
 					
@@ -207,25 +135,43 @@ enyo.kind({
 
 					var top, height;
 					//Set up the top of the event:
-					if(this.date.diff(elstart, "days") === 0){
+					var dstart = this.date.sod().diff(elstart.sod(), "days");
+					if(dstart === 0){
 						top = (elstart.hours() * this.getRowHeight()) + Math.floor(((elstart.minutes()/60) * this.getRowHeight()));
 					}else{
 						//Event started before today, Show it for the entire day:
 						top = 0;
+						//This also breaks the standard height handling: 
+						height = (elend.diff(this.date.sod(), "minutes")/60) * this.getRowHeight();
 					}
 					//Set up the height:
-					if(this.date.diff(elend, "days") === 0){
+					var dend = this.date.sod().diff(elend.sod(), "days");
+					if(dend === 0 && !height){
 						height = (elend.diff(elstart, "minutes")/60) * this.getRowHeight();
 					}else{
-						//Event doesn't end today, run to the end:
-						height = (24 * this.getRowHeight()) - top;
+						if(!height){
+							//Event doesn't end today, run to the end:
+							height = (24 * this.getRowHeight()) - top;
+						}
 					}
 
 					el.applyStyle("top", top + "px");
 					el.applyStyle("height", height + "px");
+
+					//Resolve conflicts:
+					enyo.forEach(conflicts, function(conflict){
+						if((top >= conflict.top && top <= conflict.bottom) || ((top + height) >= conflict.top && (top + height) <= conflict.bottom)){
+							conflict.el.addConflict(1);
+							el.addConflict(1, conflict.el.offsetElements + 1);
+						}
+					}, this);
+
+					//Add events to possible conflicts:
+					conflicts.push({top: top, bottom: top + height, el: el});
 				}
 			}
 		}, this);
+
 		//Show the all day events bar at the top if there are events that last all day today.
 		if(showAllDay){
 			this.$.allday.render();
@@ -319,7 +265,7 @@ enyo.kind({
 //Note that this is only visual right now. We'll probably have to rework this based on the calendar data is actually formatted on webOS.
 enyo.kind({
 	name: "DayEvent",
-	classes: "day-event",
+	classes: "day-event enyo-border-box",
 	published: {
 		evt: {},
 		date: ""
@@ -327,6 +273,21 @@ enyo.kind({
 	components: [
 		{name: "label", classes: "day-event-label"}
 	],
+	conflictingElements: 1,
+	offsetElements: 0,
+	addConflict: function(number, offset){
+		this.conflictingElements += number;
+		if(offset){
+			this.offsetElements = offset;
+		}
+	},
+	rendered: function(){
+		this.inherited(arguments);
+		this.applyStyle("width", (100 / this.conflictingElements) + "%");
+		if(this.offsetElements > 0){
+			this.applyStyle("left", ((this.offsetElements/this.conflictingElements) * 100) + "%");
+		}
+	},
 	create: function(){
 		this.inherited(arguments);
 		var checker = moment(this.date);
@@ -341,3 +302,130 @@ enyo.kind({
 		}
 	}
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var eventsforday = [
+	{
+		"alarm": [],
+		"allDay": false,
+		"attach": [],
+		"attendees": [],
+		"calendarId": "Palm Profile",
+		"categories": "",
+		"classification": "PUBLIC",
+		"comment": "",
+		"contact": "",
+		"created": moment().unix(),
+		"dtend": moment().add("hours", 0.5).unix(),
+		"dtstart": moment().subtract("hours", 0.5).unix(),
+		"dtstamp": "",
+		"exdates": [],
+		"geo": "",
+		"lastModified": moment().unix(),
+		"location": "Olive garden",
+		"note": "",
+		"parentDtstart": 0,
+		"parentId": 0,
+		"priority": 0,
+		"rdates": [],
+		"recurrenceId": "",
+		"relatedTo": "",
+		"requestStatus": "",
+		"resources": "",
+		"rrule": {
+			"freq": "DAILY",
+			"interval": 1
+		},
+		"sequence": 0,
+		"subject": "Some Event",
+		"transp": "",
+		"tzId": "",
+		"url": ""
+	},
+	{
+		"alarm": [],
+		"allDay": false,
+		"attach": [],
+		"attendees": [],
+		"calendarId": "Palm Profile",
+		"categories": "",
+		"classification": "PUBLIC",
+		"comment": "",
+		"contact": "",
+		"created": moment().unix(),
+		"dtend": moment().add("hours", 1).unix(),
+		"dtstart": moment().unix(),
+		"dtstamp": "",
+		"exdates": [],
+		"geo": "",
+		"lastModified": moment().unix(),
+		"location": "Olive garden",
+		"note": "",
+		"parentDtstart": 0,
+		"parentId": 0,
+		"priority": 0,
+		"rdates": [],
+		"recurrenceId": "",
+		"relatedTo": "",
+		"requestStatus": "",
+		"resources": "",
+		"rrule": {
+			"freq": "DAILY",
+			"interval": 1
+		},
+		"sequence": 0,
+		"subject": "Some Event",
+		"transp": "",
+		"tzId": "",
+		"url": ""
+	},
+	{
+		"alarm": [],
+		"allDay": true,
+		"attach": [],
+		"attendees": [],
+		"calendarId": "Palm Profile",
+		"categories": "",
+		"classification": "PUBLIC",
+		"comment": "",
+		"contact": "",
+		"created": moment().unix(),
+		"dtend": moment().add("hours", 1).unix(),
+		"dtstart": moment().unix(),
+		"dtstamp": "",
+		"exdates": [],
+		"geo": "",
+		"lastModified": moment().unix(),
+		"location": "Olive garden",
+		"note": "",
+		"parentDtstart": 0,
+		"parentId": 0,
+		"priority": 0,
+		"rdates": [],
+		"recurrenceId": "",
+		"relatedTo": "",
+		"requestStatus": "",
+		"resources": "",
+		"rrule": {
+			"freq": "DAILY",
+			"interval": 1
+		},
+		"sequence": 0,
+		"subject": "Some All Day Event That Also Is Super Long And Should Test The Overflow",
+		"transp": "",
+		"tzId": "",
+		"url": ""
+	}
+];

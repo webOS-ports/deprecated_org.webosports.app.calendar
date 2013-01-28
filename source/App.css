@@ -63,6 +63,7 @@
 	top: 0px;
 	border-top: 2px solid rgba(201, 68, 48, 0.7);
 	height: 0px;
+	z-index: 50;
 }
 /* We could make this a bar if we want? Also, experiment with the left being some orange indicator and the line being gray*/
 /* Also x2, we could just match the style to how webOS 3.0 does it.
@@ -130,13 +131,24 @@
 	height: 0px;
 	overflow: visible;
 	top: 0px;
+	margin-left: 70px;
+	z-index: 40;
 }
 
 .day-event {
-	position: relative;
+	position: absolute;
+	display: inline-block;
+	width: 100%;
 	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid red;
+	overflow: hidden;
+	/*min-height: 20px;*/
 }
+
+/* All Day Event Classes */
 .day-event-allday {
+	border: none;
+	position: relative;
 	margin: 6px;
 	padding: 5px;
 	display: inline-block;
