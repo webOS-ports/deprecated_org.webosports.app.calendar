@@ -18,14 +18,25 @@ enyo.kind({
 	now: moment(),
 
 	//This function is called whenever the page is navigated to using the tab button.
-	navigated: function(){
-		if(!this.$.inf.getActive() || moment().diff(this.$.inf.getActive().date, "months") !== 0){
+	navigated: function(reload){
+		this.$.inf.setCoreNavi(true);
+		if(reload === true && moment().diff(this.$.inf.getActive().date, "months") !== 0){
 			this.jumpToDate(moment());
 		}
+		//Optionally enable to scroll to current month when viewed:
+		/*
+		if(!this.$.inf.getActive() || moment().diff(this.$.inf.getActive().date, "months") !== 0){
+			this.jumpToDate(moment());
+		}*/
+	},
+
+	away: function(){
+		this.$.inf.setCoreNavi(false);
 	},
 
 	//Jumps to a specific month:
 	jumpToDate: function(date){
+		this.$.inf.setCoreNavi(true);
 		this.now = moment(date);
 		this.$.inf.reset([
 			{kind: "MonthPage", date: moment(this.now).subtract("months", 1)},
@@ -141,7 +152,7 @@ enyo.kind({
 			}
 			for(var i = 0; i < 7; i++){
 				var now = moment(temp).add("days", i - start);
-				var el = this.createComponent({kind: "MonthItem", date: now, content: now.format("D")});
+				var el = this.createComponent({kind: "MonthItem", date: now, number: now.format("D")});
 					
 				if(this.date.month() !== now.month()){
 					el.addClass("month-other");
@@ -160,12 +171,24 @@ enyo.kind({
 	tag: "td",
 	classes: "month-item enyo-border-box",
 	published: {
-		date: ""
+		date: "",
+		number: 0
 	},
 	handlers: {
 		onhold: "hold",
 		onmove: "leave",
 		onup: "leave"
+	},
+	components: [
+		{name: "number"},
+		{name: "eventLayer", classes: "month-event-layer enyo-border-box", components: [
+			{classes: "month-event", content: "Some Event"},
+			{classes: "month-event", content: "Thank you may I have another."}
+		]}
+	],
+	create: function(){
+		this.inherited(arguments);
+		this.$.number.setContent(this.number);
 	},
 	hold: function(){
 		this.addClass("month-item-active");

@@ -18,14 +18,25 @@ enyo.kind({
 	now: moment(),
 
 	//This function is called whenever the page is navigated to using the tab button.
-	navigated: function(){
-		if(!this.$.inf.getActive() || moment().diff(this.$.inf.getActive().date, "days") !== 0){
+	navigated: function(reload){
+		this.$.inf.setCoreNavi(true);
+		if(reload === true && moment().diff(this.$.inf.getActive().date, "days") !== 0){
 			this.jumpToDate(moment());
 		}
+		//This jumps to today's date whenever the page is viewed:
+		/*if(!this.$.inf.getActive() || moment().diff(this.$.inf.getActive().date, "days") !== 0){
+			this.jumpToDate(moment());
+		}*/
+	},
+
+	//Called whenever the function is navigated away:
+	away: function(){
+		this.$.inf.setCoreNavi(false);
 	},
 
 	//Jumps to a specific date:
 	jumpToDate: function(date){
+		this.$.inf.setCoreNavi(true);
 		this.now = moment(date);
 		this.$.inf.reset([
 			{kind: "DayPage", date: moment(this.now).subtract("days", 1)},
