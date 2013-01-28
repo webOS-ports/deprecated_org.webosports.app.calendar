@@ -10,7 +10,7 @@ var eventsforday = [
 		"comment": "",
 		"contact": "",
 		"created": moment().unix(),
-		"dtend": moment().add("hours", 1).unix(),
+		"dtend": moment().add("hours", 1.5).unix(),
 		"dtstart": moment().unix(),
 		"dtstamp": "",
 		"exdates": [],
@@ -206,13 +206,23 @@ enyo.kind({
 					var elend = moment.unix(evt.dtend);
 
 					var top, height;
+					//Set up the top of the event:
 					if(this.date.diff(elstart, "days") === 0){
 						top = (elstart.hours() * this.getRowHeight()) + Math.floor(((elstart.minutes()/60) * this.getRowHeight()));
 					}else{
 						//Event started before today, Show it for the entire day:
 						top = 0;
 					}
+					//Set up the height:
+					if(this.date.diff(elend, "days") === 0){
+						height = (elend.diff(elstart, "minutes")/60) * this.getRowHeight();
+					}else{
+						//Event doesn't end today, run to the end:
+						height = (24 * this.getRowHeight()) - top;
+					}
+
 					el.applyStyle("top", top + "px");
+					el.applyStyle("height", height + "px");
 				}
 			}
 		}, this);
