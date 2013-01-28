@@ -265,13 +265,16 @@ enyo.kind({
 //Note that this is only visual right now. We'll probably have to rework this based on the calendar data is actually formatted on webOS.
 enyo.kind({
 	name: "DayEvent",
-	classes: "day-event enyo-border-box",
+	classes: "day-event-container enyo-border-box",
 	published: {
 		evt: {},
 		date: ""
 	},
 	components: [
-		{name: "label", classes: "day-event-label"}
+		{name: "event", classes: "day-event enyo-border-box", components: [
+			{name: "label", classes: "day-event-label"},
+			{name: "location", classes: "day-event-location"}
+		]}
 	],
 	conflictingElements: 1,
 	offsetElements: 0,
@@ -294,9 +297,13 @@ enyo.kind({
 		//Make sure that either the start time or end time are on the same day as the page:
 		if(checker.sod().diff(moment.unix(this.evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment.unix(this.evt.dtend).sod(), "days") === 0){
 			if(this.evt.allDay){
-				this.addClass("day-event-allday");
+				this.removeClass("day-event-container");
+				this.$.event.removeClass("day-event");
+				this.$.event.addClass("day-event-allday");
+				this.$.location.hide();
 			}
-			this.$.label.setContent(this.evt.subject);
+			this.$.label.setContent(this.evt.subject || "No Subject");
+			this.$.location.setContent(this.evt.location || "");
 		}else{
 			this.destroy();
 		}
