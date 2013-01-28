@@ -11,5 +11,7 @@ enyo.depends(
 	//The kind used to manage displaying an infinite amount of panels:
 	"InfinitePanels.js",
 	//Now the different view type kinds:
-	"Day.js"
+	"Day.js",
+	"Day.css",
+	"Month.js"
 );
