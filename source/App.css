@@ -84,7 +84,7 @@
 }
 
 .month-event-layer {
-	padding: 4px;
+	padding: 0px 4px;
 	overflow: hidden;
 	display: block;
 }
@@ -97,6 +97,7 @@
 	width: 100%;
 	overflow: hidden;
 	margin: 4px 0;
+	margin-top: none;
 }
 
 .month-event:before {
@@ -104,8 +105,8 @@
 	content: "";
 	padding: 0px;
 	margin: 0px;
-	width: 1em;
-	height: 1em;
+	width: 0.8em;
+	height: 0.8em;
 	margin-right: 5px;
 	border-radius: 10px;
 	background: #98C9FA;

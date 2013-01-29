@@ -179,13 +179,20 @@ enyo.kind({
 	components: [
 		{name: "number"},
 		{name: "eventLayer", classes: "month-event-layer enyo-border-box", components: [
-			{classes: "month-event", content: "Some Event"},
+			{kind: "MonthEvent", evt: {subject: "Some Event"}},
 			{classes: "month-event", content: "Thank you may I have another."}
 		]}
 	],
 	create: function(){
 		this.inherited(arguments);
 		this.$.number.setContent(this.number);
+	},
+	addEvent: function(evt){
+		if(this.$.eventLayer.getControls().length < 3){
+			this.$.eventLayer.createComponent({kind: "MonthEvent", evt: evt, date: this.date});
+		}else{
+			
+		}
 	},
 	hold: function(){
 		this.addClass("month-item-active");
@@ -203,47 +210,9 @@ enyo.kind({
 //Note that this is only visual right now. We'll probably have to rework this based on the calendar data is actually formatted on webOS.
 enyo.kind({
 	name: "MonthEvent",
-	classes: "day-event-container enyo-border-box",
+	classes: "month-event enyo-border-box",
 	published: {
 		evt: {},
 		date: ""
-	},
-	components: [
-		{name: "event", classes: "day-event enyo-border-box", components: [
-			{name: "label", classes: "day-event-label"},
-			{name: "location", classes: "day-event-location"}
-		]}
-	],
-	conflictingElements: 1,
-	offsetElements: 0,
-	addConflict: function(number, offset){
-		this.conflictingElements += number;
-		if(offset){
-			this.offsetElements = offset;
-		}
-	},
-	rendered: function(){
-		this.inherited(arguments);
-		this.applyStyle("width", (100 / this.conflictingElements) + "%");
-		if(this.offsetElements > 0){
-			this.applyStyle("left", ((this.offsetElements/this.conflictingElements) * 100) + "%");
-		}
-	},
-	create: function(){
-		this.inherited(arguments);
-		var checker = moment(this.date);
-		//Make sure that either the start time or end time are on the same day as the page:
-		if(checker.sod().diff(moment.unix(this.evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment.unix(this.evt.dtend).sod(), "days") === 0){
-			if(this.evt.allDay){
-				this.removeClass("day-event-container");
-				this.$.event.removeClass("day-event");
-				this.$.event.addClass("day-event-allday");
-				this.$.location.hide();
-			}
-			this.$.label.setContent(this.evt.subject || "No Subject");
-			this.$.location.setContent(this.evt.location || "");
-		}else{
-			this.destroy();
-		}
 	}
 });
