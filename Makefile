@@ -15,4 +15,4 @@ build:
 	@palm-package -o deploy/ deploy/org.webosports.app.calendar/
 	@echo "Application IPK Created"
 	
-.PHONY: build 
+.PHONY: build

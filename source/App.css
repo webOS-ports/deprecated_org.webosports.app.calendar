@@ -111,3 +111,14 @@
 	border-radius: 10px;
 	background: #98C9FA;
 }
+
+.month-and-other {
+	font-size: 0.5em;
+	float: right;
+	right: 0px;
+	bottom: 0px;
+	color: gray;
+}
+.month-row-narrow .month-and-other {
+	display: none;
+}

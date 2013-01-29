@@ -150,6 +150,11 @@ enyo.kind({
 			for(var i = 0; i < 7; i++){
 				var now = moment(temp).add("days", i - start);
 				var el = this.createComponent({kind: "MonthItem", date: now, number: now.format("D")});
+				
+				el.addEvent();
+				el.addEvent();
+				el.addEvent();
+				el.addEvent();
 					
 				if(this.date.month() !== now.month()){
 					el.addClass("month-other");
@@ -179,10 +184,9 @@ enyo.kind({
 	components: [
 		{name: "number"},
 		{name: "eventLayer", classes: "month-event-layer enyo-border-box", components: [
-			{kind: "MonthEvent", evt: {subject: "Some Event"}},
-			{classes: "month-event", content: "Thank you may I have another."},
-			{name: "other", classes: "month-and-other", showing: false}
-		]}
+			
+		]},
+		{name: "other", classes: "month-and-other", showing: false}
 	],
 	other: 0,
 	create: function(){
@@ -190,7 +194,7 @@ enyo.kind({
 		this.$.number.setContent(this.number);
 	},
 	addEvent: function(evt){
-		if(this.$.eventLayer.getControls().length < 3){
+		if(this.$.eventLayer.getControls().length < 2){
 			this.$.eventLayer.createComponent({kind: "MonthEvent", evt: evt, date: this.date});
 		}else{
 			this.other++;
@@ -218,5 +222,6 @@ enyo.kind({
 	published: {
 		evt: {},
 		date: ""
-	}
+	},
+	content: "Some Event (To Set)"
 });
