@@ -18,3 +18,22 @@ else
 	echo "No node found in path"
 	exit 1
 fi
+
+# copy files and package if deploying to cordova webos
+while [ "$1" != "" ]; do
+	case $1 in
+		-w | --cordova-webos )
+														# copy appinfo.json and cordova*.js files
+														SRC="$TOOLS/../"
+														DEST="$TOOLS/../deploy/"${PWD##*/}
+
+														cp -v "$SRC"appinfo.json $DEST
+														cp -v "$SRC"cordova*.js $DEST
+
+														# package it up
+														mkdir -p "$DEST/bin"
+														palm-package "$DEST/bin"
+														;;
+	esac
+	shift
+done
