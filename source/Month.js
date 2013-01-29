@@ -72,8 +72,7 @@ enyo.kind({
 		this.inherited(arguments);
 
 		//Get date formatter:
-		this.locale = enyo.g11n.currentLocale().getLocale();
-		this.formatter = new enyo.g11n.DateFmt({format: "MMMM yyyy", locale: this.locale});
+		this.formatter = new enyo.g11n.DateFmt({format: "MMMM yyyy"});
 
 		//If no date is provided, create a new moment:
 		if(!this.date){
@@ -134,15 +133,13 @@ enyo.kind({
 		this.inherited(arguments);
 		if(this.isHeader){
 			//Get date formatter:
-			this.locale = enyo.g11n.currentLocale().getLocale();
-			this.formatter = new enyo.g11n.DateFmt({format: "EEEE", locale: this.locale});
-			this.smallFormatter = new enyo.g11n.DateFmt({format: "E", locale: this.locale});
+			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
+			this.smallFormatter = new enyo.g11n.DateFmt({format: "E"});
 			for(var i = 0; i < 7; i++){
 				this.createComponent({content: this.formatter.format(moment().day(this.formatter.getFirstDayOfWeek() + i).toDate()), tag: "th", classes: "month-item-header"});
 			}
 		}else{
-			this.locale = enyo.g11n.currentLocale().getLocale();
-			this.formatter = new enyo.g11n.DateFmt({format: "EEEE", locale: this.locale});
+			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
 			var temp = moment(this.date).startOf("month").add("weeks", this.row);
 			var start;
 			if(this.formatter.getFirstDayOfWeek() === 0){
