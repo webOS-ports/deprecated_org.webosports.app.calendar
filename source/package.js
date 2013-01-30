@@ -14,6 +14,9 @@ enyo.depends(
 	"App.js",
 	"AppPanels.js",
 
+	//First Use Manager:
+	"firstuse",
+
 	//The kind used to manage displaying an infinite amount of panels:
 	"InfinitePanels.js",
 
