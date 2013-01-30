@@ -1,11 +1,49 @@
 {
-	"title": "Calendar",
-	"id": "org.webosports.app.calendar",
-	"version": "0.0.1",
-	"vendor": "WebOS Ports",
+	"id"             : "org.webosports.app.calendar",
+	"title"          : "Calendar",
+	"version"        : "0.0.1",
+	"vendor"         : "WebOS Ports",
 	"vendor_url": "https://github.com/webOS-ports/org.webosports.app.calendar",
-	"type": "web",
-	"main": "index.html",
-	"icon": "icon.png",
-	"uiRevision": "2"
+	//Need to enable this when we start getting to dashboards.
+	"noWindow"       : false,
+	"uiRevision"     : 2,
+	"main"           : "index.html",
+	"icon"           : "icon.png",
+	//TODO:
+	//"splashicon"     : "images/icon-256x256.png",
+	"type"           : "web",
+	//TODO: Should this be true?
+	"removable"      : false,
+	"keywords"       : ["Anniversaries", "Appointments", "Birthdays", "Datebook", "Events", "Meetings", "Reminders"],
+	"universalSearch": {
+		"action"  : {
+			"displayName": "New Event",
+			"launchParam": "quickLaunchText",
+			"url"        : "org.webosports.app.calendar"
+		},
+		"dbsearch": {
+			"displayName"       : "Calendar Events",
+			"url"               : "org.webosports.app.calendar",
+			"launchParam"       : "showEventDetail",
+			"launchParamDbField": "_id",
+			"displayFields"     : ["subject", {
+				"name": "dtstart",
+				"type": "timestamp"
+			}],
+			"dbQuery"           : {
+				"from"   : "com.palm.calendarevent:1",
+				"where"  : [
+					{
+						"prop"   : "searchText",
+						"op"     : "?",
+						"val"    : "",
+						"collate": "primary"
+					}
+				],
+				"orderBy": "subject",
+				"desc"   : false,
+				"limit"  : 20
+			}
+		}
+	}
 }

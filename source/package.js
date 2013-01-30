@@ -3,6 +3,7 @@ enyo.depends(
 	"$lib/g11n",
 	"$lib/onyx",
 	"$lib/webos-ports-lib",
+	"$lib/util"
 	"$lib/moment",
 	
 	"App.css",
