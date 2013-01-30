@@ -25,6 +25,12 @@ enyo.kind({
 	],
 
 	doneFirstUse: function(){
+		navigator.notification.alert(
+		    'You are the winner!',  // message
+		    function(){},         // callback
+		    'Game Over',            // title
+		    'Done'                  // buttonName
+		);
 		this.$.raw.setIndex(1);
 	},
 
