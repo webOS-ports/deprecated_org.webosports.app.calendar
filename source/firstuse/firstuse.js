@@ -2,7 +2,7 @@ enyo.kind({
 	name: "FirstUse",
 	kind: "FittableRows",
 	components: [
-		{kind: "onyx.Toolbar", content: "Calendar"},
+		{kind: "onyx.Toolbar", content: "Calendar First Use"},
 		{fit: true, style: "padding-top: 20px;", components: [
 			{style: "display: block; text-align: center; margin: 0px auto;", components: [
 				{content: "Open webOS currently only supports local accounts."},
