@@ -65,7 +65,13 @@ enyo.kind({
 	},
 	components: [
 		{name: "title", classes: "day-title", content: ""},
-		{tag: "table", name: "monthView", fit: true, classes: "month-table", components: [
+		{tag: "table", classes: "month-table", fit: true, components: [
+			{tag: "thead", name: "monthViewHeader", components: [
+				{kind: "MonthRow", isHeader: true}
+			]},
+			{tag: "tbody", classes: "month-tbody", name: "monthView", components: [
+				//Dynamically generated rows.
+			]}
 		]}
 	],
 	create: function(){
@@ -85,8 +91,6 @@ enyo.kind({
 		//Display the title:
 		this.$.title.setContent(this.formatter.format(this.date.toDate()));
 
-		//Create month header:
-		this.$.monthView.createComponent({kind: "MonthRow", isHeader: true});
 		//Create all of the month rows:
 		for(var i = 0; i < 6; i++){
 			this.$.monthView.createComponent({kind: "MonthRow", date: this.date, row: i});
@@ -132,6 +136,7 @@ enyo.kind({
 	create: function(){
 		this.inherited(arguments);
 		if(this.isHeader){
+			this.removeClass("month-row");
 			//Get date formatter:
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
 			this.smallFormatter = new enyo.g11n.DateFmt({format: "E"});
@@ -149,7 +154,7 @@ enyo.kind({
 			}
 			for(var i = 0; i < 7; i++){
 				var now = moment(temp).add("days", i - start);
-				var el = this.createComponent({kind: "MonthItem", date: now, number: now.format("D")});
+				var el = this.createComponent({kind: "MonthItem", date: now, viewed: this.date, number: now.format("D")});
 				
 				el.addEvent();
 				el.addEvent();
@@ -174,6 +179,7 @@ enyo.kind({
 	classes: "month-item enyo-border-box",
 	published: {
 		date: "",
+		viewed: "",
 		number: 0
 	},
 	handlers: {
@@ -189,17 +195,21 @@ enyo.kind({
 		{name: "other", classes: "month-and-other", showing: false}
 	],
 	other: 0,
+	threshold: 2,
 	create: function(){
 		this.inherited(arguments);
 		this.$.number.setContent(this.number);
 	},
 	addEvent: function(evt){
-		if(this.$.eventLayer.getControls().length < 2){
-			this.$.eventLayer.createComponent({kind: "MonthEvent", evt: evt, date: this.date});
-		}else{
-			this.other++;
-			this.$.other.show();
-			this.$.other.setContent("plus " + this.other + " more events");
+		//You can only create events on the viewed month:
+		if(this.date.month() === this.viewed.month()){
+			if(this.$.eventLayer.getControls().length < this.threshold){
+				this.$.eventLayer.createComponent({kind: "MonthEvent", evt: evt, date: this.date});
+			}else{
+				this.other++;
+				this.$.other.show();
+				this.$.other.setContent("plus " + this.other + " more events");
+			}
 		}
 	},
 	hold: function(){
