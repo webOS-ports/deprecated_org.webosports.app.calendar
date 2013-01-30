@@ -1,18 +1,15 @@
 {
 	"id"             : "org.webosports.app.calendar",
 	"title"          : "Calendar",
-	"version"        : "0.0.1",
+	"version"        : "0.0.2",
 	"vendor"         : "WebOS Ports",
 	"vendor_url": "https://github.com/webOS-ports/org.webosports.app.calendar",
-	//Need to enable this when we start getting to dashboards.
 	"noWindow"       : false,
 	"uiRevision"     : 2,
 	"main"           : "index.html",
 	"icon"           : "icon.png",
-	//TODO:
-	//"splashicon"     : "images/icon-256x256.png",
+	"splashicon"     : "images/icon-256x256.png",
 	"type"           : "web",
-	//TODO: Should this be true?
 	"removable"      : false,
 	"keywords"       : ["Anniversaries", "Appointments", "Birthdays", "Datebook", "Events", "Meetings", "Reminders"],
 	"universalSearch": {

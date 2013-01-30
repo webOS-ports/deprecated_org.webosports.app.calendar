@@ -26,10 +26,6 @@ if not "%1" == "" (
 			  for %%A in ("%~dp0./..") do SET DEST=%TOOLS%..\deploy\%%~nA
 			  copy %SRC%appinfo.json %DEST%
 			  copy %SRC%cordova*.js %DEST%
-
-			  REM package it up
-				if not exist %SRC%bin mkdir %SRC%bin
-				palm-package.bat %DEST% --outdir=%SRC%bin
     )
 
     shift

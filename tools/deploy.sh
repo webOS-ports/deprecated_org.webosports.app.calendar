@@ -26,13 +26,10 @@ while [ "$1" != "" ]; do
 														# copy appinfo.json and cordova*.js files
 														SRC="$TOOLS/../"
 														DEST="$TOOLS/../deploy/"${PWD##*/}
-
-														cp -v "$SRC"appinfo.json $DEST
-														cp -v "$SRC"cordova*.js $DEST
-
-														# package it up
-														mkdir -p "$DEST/bin"
-														palm-package "$DEST/bin"
+														
+														cp "$SRC"appinfo.json $DEST
+														cp "$SRC"cordova*.js $DEST
+														
 														;;
 	esac
 	shift
