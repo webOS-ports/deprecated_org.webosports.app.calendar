@@ -1,0 +1,6 @@
+{
+	"id":"org.webosports.calendarprefs:1",
+	"owner":"org.webosports.app.calendar",
+	"sync":true,
+	"indexes":[]
+}
