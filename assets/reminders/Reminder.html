@@ -1,0 +1,126 @@
+<html>
+	<head>
+		<script type="text/javascript">
+		if(window.PalmSystem){
+			PalmSystem.stageReady();
+			//Document not ready at load:
+			window.setTimeout(function(){
+				document.getElementById("snooze").addEventListener("click", function(){
+					console.log("SNOOZE");
+					window.close();
+				}, false);
+			}, 500);
+		}
+		</script>
+		
+		<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-size: 1.1em;
+			cursor: default;
+			-webkit-user-select: none;
+			-moz-user-select: -moz-none;
+			user-select: none;
+		}
+		.butt {
+			width: 50%;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+			padding: 5px;
+			display: inline-block;
+		}
+		.butt.right {
+			padding-right: 2px;
+		}
+		.butt.left {
+			padding-left: 2px;
+		}
+		.button {
+			width: 100%;
+			padding: 10px;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+			display: block;
+			text-align: center;
+			font-weight: bold;
+			color: white;
+			
+			/* Borrowed from Onyx: */
+			background: url(../../lib/onyx/images/gradient.png) repeat-x bottom;
+			background-size: contain;
+			box-shadow: inset 0px 1px 0px rgba(255,255,255,0.3);
+			
+			border: 1px solid rgba(0, 0, 0, 0.6);
+			
+			font-size: 1.1em;
+			
+			border-radius: 7px;
+			
+		}
+		.button:active {
+			box-shadow: inset 0px 0px 20px rgba(0, 0, 0, 0.5);
+			background-image: url(../../lib/onyx/images/gradient-invert.png) !important;
+			background-position: top;
+		}
+		.snooze {
+			float: left;
+			background-color: orange;
+		}
+		.dismiss {
+			float: right;
+			background-color: green;
+		}
+		
+		.icon {
+			height: 48px;
+			width: 48px;
+			float:left;
+			background-size: contain;
+			background-image: url(../../icon.png);
+		}
+		.info {
+			padding: 5px;
+			padding-top: 0px;
+			margin-left: 55px;
+			color: white;
+		}
+		.title {
+			font-weight: bold;
+		}
+		.location {
+			
+		}
+		.clear {
+			clear: both;
+		}
+		</style>
+	</head>
+	<body>
+		<div>
+			<div class="icon"></div>
+			<div class="info">
+				<div class="title">
+					No location
+				</div>
+				<div class="location">
+					No Subject
+				</div>
+				<div class="date">
+					No location
+				</div>
+			</div>
+		</div>
+		<div style="min-height: 76px;" class="clear">
+			<div class="butt left">
+				<div id="snooze" class="button snooze">
+					Snooze
+				</div>
+			</div><div class="butt right">
+				<div id="snooze" class="button dismiss">
+					Dismiss
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

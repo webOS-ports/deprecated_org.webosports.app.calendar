@@ -25,14 +25,6 @@ enyo.kind({
 	],
 
 	doneFirstUse: function(){
-		navigator.notification.beep(1);
-		//TODO: Abstract the cordova function to our own function that does the same thing, just prettier.
-		navigator.notification.alert(
-		    'Testing',  // message
-		    function(){},         // callback
-		    'Game Over',            // title
-		    'Done'                  // buttonName
-		);
 		this.$.raw.setIndex(1);
 	},
 

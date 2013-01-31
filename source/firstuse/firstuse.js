@@ -1,3 +1,4 @@
+//Right now this is used as the testing ground for stuff because it's easy to manage here. Things will likely break out of here once they're stable or at least usable.
 enyo.kind({
 	name: "FirstUse",
 	kind: "FittableRows",
@@ -11,6 +12,11 @@ enyo.kind({
 		]}
 	],
 	firstUseDone: function(){
+		this.showAlert();
 		this.bubble("onFirstUseDone");
+	},
+	showAlert: function(){
+		//navigator.notification.beep(1);
+		navigator.notification.openWindow("assets/reminders/Reminder.html", "PopupAlert", {}, {"window": "popupalert"}, "height=120");
 	}
 });

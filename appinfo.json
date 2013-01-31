@@ -1,7 +1,7 @@
 {
 	"id"             : "org.webosports.app.calendar",
 	"title"          : "Calendar",
-	"version"        : "0.0.2",
+	"version"        : "0.0.3",
 	"vendor"         : "WebOS Ports",
 	"vendor_url": "https://github.com/webOS-ports/org.webosports.app.calendar",
 	"noWindow"       : false,
@@ -10,7 +10,7 @@
 	"icon"           : "icon.png",
 	"splashicon"     : "images/icon-256x256.png",
 	"type"           : "web",
-	"removable"      : false,
+	"removable"      : true,
 	"keywords"       : ["Anniversaries", "Appointments", "Birthdays", "Datebook", "Events", "Meetings", "Reminders"],
 	"universalSearch": {
 		"action"  : {

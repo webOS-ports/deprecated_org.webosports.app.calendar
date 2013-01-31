@@ -23,7 +23,7 @@ First, runs `build`, then installs and launches the application on a connected d
 
 #### make debug
 
-Doesn't exist yet, but will start logging.
+Runs `build` and `make`, and then follows logs on the device the application launched on.
 
 Todo
 ----

@@ -1,9 +1,17 @@
 SHELL=/bin/sh
-VERSION=0.0.2
+VERSION=0.0.3
 
 debug: run
 	@echo "Debugging the application"
 	@palm-log -f org.webosports.app.calendar
+	
+clean: 
+	@echo "Removing Deploy Locations"
+	@rm -r build
+	@rm -r deploy
+	@echo "Removing Application"
+	@palm-install -r org.webosports.app.calendar
+	@echo "Application Removed"
 
 run: build
 	@echo "Installing org.webosports.app.calendar_$(VERSION)_all"
