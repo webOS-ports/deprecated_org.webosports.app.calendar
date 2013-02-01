@@ -10,33 +10,14 @@ enyo.kind({
 				{kind: "onyx.Button", ontap: "firstUseDone", content: "Continue", style: "width: 50%; margin-top: 20px; color: white; background-color: green;"}
 			]}
 		]},
-		{kind: enyo.Signals, ondeviceready: "managePrefs"}
+		{kind: "Signals", onSettingsChange: "settingsChanged"}
 	],
 	firstUseDone: function(){
 		this.bubble("onFirstUseDone");
 	},
-	managePrefs: function(){
-		this.dbQuery();
+	settingsChanged: function(){
+		console.log("SETTINGS: " + calendar.Preferences.prefs);
 		this.showAlert();
-	},
-	dbQuery: function(){
-		var that = this;
-		navigator.service.Request("palm://com.palm.db/", {
-			"method": "find",
-			"parameters": {
-				"query": {
-					"from": "org.webosports.calendarprefs:1"
-				}
-			},
-			onSuccess: function(inSender){
-				console.log(JSON.stringify(inSender));
-				that.destroy();
-			},
-			onFailure: function(inSender){
-				console.log("F");
-				console.log(JSON.stringify(inSender));
-			}	
-		});
 	},
 	showAlert: function(){
 		//navigator.notification.beep(1);

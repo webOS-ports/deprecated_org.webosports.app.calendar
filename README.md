@@ -31,7 +31,8 @@ Installs the db8 configurations on the currently connected webOS device. The con
 
 Todo
 ----
-Figure out the appinfo.json settings.
+Figure out the appinfo.json values.
+Nowindow?
 Make everything work.
 Week view.
 First use DB setup.
