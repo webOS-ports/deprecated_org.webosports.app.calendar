@@ -1,5 +1,5 @@
 enyo.kind({
-	name: "MainApp",
+	name: "calendar.MainApp",
 	kind: "FittableRows",
 	handlers: {
 		onJumpTo: "jumpTo",
@@ -8,9 +8,9 @@ enyo.kind({
 	components: [
 		{kind: "onyx.Toolbar", content: "Calendar"},
 		{kind: "Panels", name: "timeViews", onTransitionFinish: "updateView", draggable: false, classes: "main", fit: true, components: [
-			{kind: "Day"},
+			{kind: "calendar.Day"},
 			{content: "Week"},
-			{kind: "Month"},
+			{kind: "calendar.Month"},
 		]},
 		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout",  /*Fix a bug in Enyo 2 that causes a bottom gap:*/ style: "height: 56px;", components: [
 			{kind: "onyx.Button", name: "newevent", content: "New Event"},
@@ -24,7 +24,7 @@ enyo.kind({
 			//Taken from the webOS 3.0 Calendar app (as was the new event button location:
 			{kind: "onyx.Button", name: "jumpto", content: "Jump to...", ontap: "showJumpTo"}
 		]},
-		{kind: "JumpToDialog", name: "jumptodialog"}
+		{kind: "calendar.JumpToDialog", name: "jumptodialog"}
 	],
 	reflow: function(){
 		this.inherited(arguments);
@@ -82,7 +82,7 @@ enyo.kind({
 });
 
 enyo.kind({
-	name: "JumpToDialog",
+	name: "calendar.JumpToDialog",
 	kind: "onyx.Popup",
 	style: "background: #eee; color: black;",
 	centered: true,

@@ -1,6 +1,6 @@
 //The day layout is easy. There's always 24 hours, and it's just a list.
 enyo.kind({
-	name: "Day",
+	name: "calendar.Day",
 	kind: "FittableRows",
 	handlers: {
 		onNext: "loadNext",
@@ -8,9 +8,9 @@ enyo.kind({
 	},
 	components: [
 		{kind: "vi.Inf", name: "inf", fit: true, coreNavi: true, style: "background: white", components: [
-			{kind: "DayPage", date: moment().subtract("days", 1)},
-			{kind: "DayPage", date: moment()},
-			{kind: "DayPage", date: moment().add("days", 1)}
+			{kind: "calendar.DayPage", date: moment().subtract("days", 1)},
+			{kind: "calendar.DayPage", date: moment()},
+			{kind: "calendar.DayPage", date: moment().add("days", 1)}
 		]}
 	],
 
@@ -39,25 +39,25 @@ enyo.kind({
 		this.$.inf.setCoreNavi(true);
 		this.now = moment(date);
 		this.$.inf.reset([
-			{kind: "DayPage", date: moment(this.now).subtract("days", 1)},
-			{kind: "DayPage", date: moment(this.now)},
-			{kind: "DayPage", date: moment(this.now).add("days", 1)}
+			{kind: "calendar.DayPage", date: moment(this.now).subtract("days", 1)},
+			{kind: "calendar.DayPage", date: moment(this.now)},
+			{kind: "calendar.DayPage", date: moment(this.now).add("days", 1)}
 		]);
 		this.$.inf.render();
 	},
 	
 	//Load up different days based on where we are in the panels:
 	loadNext: function(inSender, inEvent){
-		this.$.inf.provideNext({kind: "DayPage", date: moment(this.now).add("days", inEvent.current+1)});
+		this.$.inf.provideNext({kind: "calendar.DayPage", date: moment(this.now).add("days", inEvent.current+1)});
 	},
 	loadPrev: function(inSender, inEvent){
-		this.$.inf.providePrev({kind: "DayPage", date: moment(this.now).add("days", inEvent.current-1)});
+		this.$.inf.providePrev({kind: "calendar.DayPage", date: moment(this.now).add("days", inEvent.current-1)});
 	}
 });
 
 //The actual page for one day.
 enyo.kind({
-	name: "DayPage",
+	name: "calendar.DayPage",
 	kind: "FittableRows",
 	classes: "day-page",
 	published: {
@@ -111,7 +111,7 @@ enyo.kind({
 
 		//Create all of the date rows:
 		for(var i = 0; i < 24; i++){
-			this.$.times.createComponent({kind: "DayRow", time: i, is12Hour: is12Hour});
+			this.$.times.createComponent({kind: "calendar.DayRow", time: i, is12Hour: is12Hour});
 		}
 
 		//TODO: Should call this somehow to update the events
@@ -134,11 +134,11 @@ enyo.kind({
 				//Render all day events: 
 				if(evt.allDay){
 					showAllDay = true;
-					this.$.alldayevents.createComponent({kind: "DayEvent", date: this.date, evt: evt});
+					this.$.alldayevents.createComponent({kind: "calendar.DayEvent", date: this.date, evt: evt});
 				}else{
 
 					//Create the event in the event layer:
-					var el = this.$.eventLayer.createComponent({kind: "DayEvent", date: this.date, evt: evt});
+					var el = this.$.eventLayer.createComponent({kind: "calendar.DayEvent", date: this.date, evt: evt});
 					
 					//Create a moment for the event start time and end time:
 					var elstart = moment.unix(evt.dtstart);
@@ -244,7 +244,7 @@ enyo.kind({
 
 //The row for the list.
 enyo.kind({
-	name: "DayRow",
+	name: "calendar.DayRow",
 	classes: "day-row",
 	published: {
 		time: 0,
@@ -275,7 +275,7 @@ enyo.kind({
 //An event for the day.
 //Note that this is only visual right now. We'll probably have to rework this based on the calendar data is actually formatted on webOS.
 enyo.kind({
-	name: "DayEvent",
+	name: "calendar.DayEvent",
 	classes: "day-event-container enyo-border-box",
 	published: {
 		evt: {},

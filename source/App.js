@@ -17,8 +17,8 @@ enyo.kind({
 
 		{kind: "Panels", draggable: false, name: "raw", fit: true, components: [
 			//TODO: Splash?
-			{name: "firstuse", kind: "FirstUse", fit: true},
-			{name: "MainApp", kind: "MainApp", fit: true}
+			{name: "firstuse", kind: "calendar.FirstUse", fit: true},
+			{name: "MainApp", kind: "calendar.MainApp", fit: true}
 		]},
 
 		{kind: "CoreNavi", fingerTracking: true}

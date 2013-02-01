@@ -9,6 +9,9 @@ enyo.depends(
 	
 	//Main app css. Views have their own CSS files too.
 	"App.css",
+	
+	//Preferences Manager
+	"Preferences.js",
 
 	//Core UI JavaScript:
 	"App.js",
