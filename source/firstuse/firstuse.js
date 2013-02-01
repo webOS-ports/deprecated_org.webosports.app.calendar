@@ -22,9 +22,8 @@ enyo.kind({
 		this.bubble("onFirstUseDone");
 	},
 	//Called when the settings are first loaded:
-	settingsLoad: function(){
-		//Grab the preferences:
-		var prefs = calendar.Preferences.prefs;
+	settingsLoad: function(inSender, inPrefs){
+		//The current preferences are passed through the event, which we store in "inPrefs".
 		//Let them press the button now:
 		this.$.continue.setDisabled(false);
 	},

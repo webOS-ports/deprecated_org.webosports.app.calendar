@@ -8,7 +8,7 @@
 	"uiRevision"     : 2,
 	"main"           : "index.html",
 	"icon"           : "icon.png",
-	"splashicon"     : "images/icon-256x256.png",
+	"splashicon"     : "assets/icon-256x256.png",
 	"type"           : "web",
 	"removable"      : true,
 	"keywords"       : ["Anniversaries", "Appointments", "Birthdays", "Datebook", "Events", "Meetings", "Reminders"],

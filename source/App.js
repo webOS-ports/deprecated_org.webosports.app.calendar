@@ -18,7 +18,9 @@ enyo.kind({
 
 		{kind: "Panels", draggable: false, name: "raw", fit: true, components: [
 			//TODO: Splash:
-			{content: "Loading..."},
+			{fit: true, name: "splash", components: [
+				{kind: "Image", src: "assets/icon-256x256.png", style: "margin: 0px auto; display: block; position: relative; top: 50%; margin-top: -128px;"}
+			]},
 			{name: "firstuse", kind: "calendar.FirstUse", fit: true},
 			{name: "MainApp", kind: "calendar.MainApp", fit: true}
 		]},
@@ -27,7 +29,7 @@ enyo.kind({
 	],
 
 	doneFirstUse: function(){
-		this.$.raw.setIndex(1);
+		this.$.raw.setIndex(2);
 	},
 	
 	loadSettings: function(inSender, inPrefs){
@@ -39,10 +41,5 @@ enyo.kind({
 			//Databased have already been set up.
 			this.$.raw.setIndex(2);
 		}
-	},
-
-	create: function(){
-		this.inherited(arguments);
 	}
-
 });

@@ -3,16 +3,37 @@
 enyo.singleton({
 	name: "calendar.Preferences",
 	kind: "Control",
+    prefDefaults: {
+        _kind                     : "org.webosports.calendarprefs:1",
+        alarmSoundOn              : 1, // systemSound
+        autoDefaultCalendarID     : 0,
+        defaultAllDayEventReminder: "-P1D",
+        defaultCalendarID         : 0,
+        defaultEventDuration      : 60,
+        defaultEventReminder      : "-PT15M",
+        endTimeOfDay              : -111599994, // This is based on UTC
+        firstlaunch: true,
+        startOfWeek               : 1, // Sunday
+        startTimeOfDay            : -226799992, // This is based on UTC
+        userChangedStartOfWeek    : false
+    },
+	prefs: {},
 	components: [
 		{kind: "Signals", ondeviceready: "deviceready"}
 	],
 	//Sets multiple properties from the object by mixing them into the current preferences.
 	set: function(object){
-		
+		var prefs = enyo.clone(this.prefs);
+		//Mixin the new properties:
+		enyo.mixin(prefs, object);
+		//Put the values:
+		this._put(prefs);
 	},
-	//Sets one item of the preferences, which is handy if you don't want to set multiple values.
+	//Sets one item of the preferences, which is handy if you don't care to set multiple values.
 	setOne: function(key, val){
-		
+		var setter = {};
+		setter[key] = val;
+		this.set(setter);
 	},
 	deviceready: function(){
 		this.getPrefs();
@@ -44,6 +65,7 @@ enyo.singleton({
 		
 	    if (result.length > 1) {
 			console.log("Too Many Results");
+			return;
            var latestPrefIndex = 0;
            var latestPrefRev = results[0]._rev;
            var idsToDelete = [results[0]._id];
@@ -68,13 +90,9 @@ enyo.singleton({
 	},
 	//First time setup:
 	_first: function(){
-		//TODO: Defaults
-		this.prefs = {
-			_kind: "org.webosports.calendarprefs:1",
-			firstlaunch: true
-		};
-		this._put(this.prefs);
-	    //this.prefs = enyo.clone(calendar.PrefsManager.defaultPrefs);
+		//Set prefs to the defaults:
+		var prefs = enyo.clone(this.prefDefaults);
+		this._put(prefs);
 	},
 	//Puts the actual settings object into the database and calls the signal so that all listening elements get the update.
 	//This should only be called internally. The implementation of this is hidden a few layers up.
@@ -82,20 +100,18 @@ enyo.singleton({
 		if(!prefs){
 			return false;
 		}
+		//TODO: Use schema to validate preferences/preference values
 		this.prefs = prefs;
 		
 		if(this.prefs._id){
 			console.log("ID ALREADY EXISTS, MERGE");
-			return;
 			//The preferences already exist, call merge:
 			navigator.service.Request("palm://com.palm.db/", {
 				"method": "merge",
 				"parameters": {
-					"query": {
-						"from": "org.webosports.calendarprefs:1"
-					}
+					"objects": [prefs]
 				},
-				onSuccess: enyo.bind(this, "gotPrefs"),
+				onSuccess: enyo.bind(this, "savedPrefs"),
 				onFailure: function(inSender){
 					console.log("FAILED MERGE");
 					console.log(JSON.stringify(inSender));
@@ -123,6 +139,7 @@ enyo.singleton({
 		if(inSender && inSender.returnValue){
 			console.log("PREFERENCES SET!");
 			this.prefs._id = inSender.results[0]._id || null;
+			this.prefs._rev = inSender.results[0]._rev || null;
 		}
 	}
 });
