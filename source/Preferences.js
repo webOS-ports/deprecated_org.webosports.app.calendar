@@ -6,6 +6,14 @@ enyo.singleton({
 	components: [
 		{kind: "Signals", ondeviceready: "deviceready"}
 	],
+	//Sets multiple properties from the object by mixing them into the current preferences.
+	set: function(object){
+		
+	},
+	//Sets one item of the preferences, which is handy if you don't want to set multiple values.
+	setOne: function(key, val){
+		
+	},
 	deviceready: function(){
 		this.getPrefs();
 	},
@@ -55,6 +63,8 @@ enyo.singleton({
            //delete the spares
            this.databaseManager.deleteByIds(idsToDelete, this.deleteCB, this.deleteCB);
        }
+	   //Send a signal out to everybody telling them that we've loaded the settings.
+	   enyo.Signals.send("onSettingsLoad", this.prefs);
 	},
 	//First time setup:
 	_first: function(){
