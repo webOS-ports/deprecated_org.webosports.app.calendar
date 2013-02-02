@@ -2,27 +2,16 @@ enyo.kind({
 	name: "App",
 	kind: "FittableRows",
 	classes: "onyx",
-
 	handlers: {
 		onFirstUseDone: "doneFirstUse"
 	},
-
 	components: [
-		{kind: "Signals",
-		ondeviceready: "deviceready",
-		onbackbutton: "handleBackGesture",
-		onCoreNaviDragStart: "handleCoreNaviDragStart",
-		onCoreNaviDrag: "handleCoreNaviDrag",
-		onCoreNaviDragFinish: "handleCoreNaviDragFinish",
-		onSettingsLoad: "loadSettings"},
+		{kind: "Signals", onSettingsLoad: "loadSettings"},
 
 		{kind: "Panels", draggable: false, name: "raw", fit: true, components: [
-			//TODO: Splash:
-			{fit: true, name: "splash", components: [
-				{kind: "Image", src: "assets/icon-256x256.png", style: "margin: 0px auto; display: block; position: relative; top: 50%; margin-top: -128px;"}
-			]},
+			{name: "splash", kind: "calendar.Splash", fit: true},
 			{name: "firstuse", kind: "calendar.FirstUse", fit: true},
-			{name: "MainApp", kind: "calendar.MainApp", fit: true}
+			{name: "mainapp", kind: "calendar.MainApp", fit: true}
 		]},
 
 		{kind: "CoreNavi", fingerTracking: true}
@@ -40,6 +29,14 @@ enyo.kind({
 		}else{
 			//Databased have already been set up.
 			this.$.raw.setIndex(2);
+		}
+	},
+	
+	create: function(){
+		this.inherited(arguments);
+		//Used for browser debugging:
+		if(!window.PalmSystem){
+			this.$.raw.setIndex(1);
 		}
 	}
 });

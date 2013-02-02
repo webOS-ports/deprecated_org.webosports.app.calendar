@@ -13,13 +13,13 @@ enyo.kind({
 		{kind: "Signals", onSettingsLoad: "settingsLoad"}
 	],
 	firstUseDone: function(){
+		//Let the parent know that we've completed the first use and can now navigate to the main panels kind:
+		this.bubble("onFirstUseDone");
 		//This is no longer the first launch, let the preferences know:
-		calendar.Preferences.setOne("firstlaunch", false);
+		window.PalmSystem && calendar.Preferences.setOne("firstlaunch", false);
 		//Show an alert just for debugging reasons.
 		//TODO: Remove:
 		this.showAlert();
-		//Let the parent know that we've completed the first use and can now navigate to the main panels kind:
-		this.bubble("onFirstUseDone");
 	},
 	//Called when the settings are first loaded:
 	settingsLoad: function(inSender, inPrefs){
@@ -31,5 +31,12 @@ enyo.kind({
 	showAlert: function(){
 		//navigator.notification.beep(1);
 		navigator.notification.openWindow("assets/reminders/Reminder.html", "PopupAlert", {}, {"window": "popupalert"}, "height=120");
+	},
+	//Used for debugging:
+	create: function(){
+		this.inherited(arguments);
+		if(!window.PalmSystem){
+			this.settingsLoad();
+		}
 	}
 });

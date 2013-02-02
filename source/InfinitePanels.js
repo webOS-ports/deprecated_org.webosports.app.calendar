@@ -8,7 +8,7 @@ enyo.kind({
 	//Current keeps track of where we are
 	current: 0,
 	published: {
-		coreNavi: true
+		coreNavi: false
 	},
 	events: {
 		onNext: "",

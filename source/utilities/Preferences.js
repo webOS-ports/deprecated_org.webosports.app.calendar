@@ -3,20 +3,23 @@
 enyo.singleton({
 	name: "calendar.Preferences",
 	kind: "Control",
+	//The default preferences:
     prefDefaults: {
-        _kind                     : "org.webosports.calendarprefs:1",
-        alarmSoundOn              : 1, // systemSound
-        autoDefaultCalendarID     : 0,
+        _kind: "org.webosports.calendarprefs:1",
+        alarmSoundOn: 1, // systemSound
+		
         defaultAllDayEventReminder: "-P1D",
-        defaultCalendarID         : 0,
-        defaultEventDuration      : 60,
-        defaultEventReminder      : "-PT15M",
-        endTimeOfDay              : -111599994, // This is based on UTC
+		
+		//Note that these aren't really needed because we don't have multi-calendar support yet:
+        defaultCalendarID: 0,
+		autoDefaultCalendarID: 0,
+		
+        defaultEventDuration: 60,
+        defaultEventReminder: "-PT15M",
         firstlaunch: true,
-        startOfWeek               : 1, // Sunday
-        startTimeOfDay            : -226799992, // This is based on UTC
-        userChangedStartOfWeek    : false
+        startOfWeek: -1, // Auto, 0 = Sunday, 1 = Monday, etc.
     },
+	//The actual preferences get dumped in here:
 	prefs: {},
 	components: [
 		{kind: "Signals", ondeviceready: "deviceready"}
@@ -38,6 +41,7 @@ enyo.singleton({
 	deviceready: function(){
 		this.getPrefs();
 	},
+	//Loads the preferences from the database into this.prefs.
 	getPrefs: function(){
 		navigator.service.Request("palm://com.palm.db/", {
 			"method": "find",
@@ -53,6 +57,7 @@ enyo.singleton({
 			}
 		});
 	},
+	//Called once the preferences are loaded.
 	gotPrefs: function(inSender){
 		var result = inSender && inSender.results;
 		console.log(JSON.stringify(inSender));
@@ -60,10 +65,10 @@ enyo.singleton({
 			this._first();
 		}else{
 			this.prefs = result[0];
-			console.log("GOT PREFS!  ===   " + JSON.stringify(this.prefs));
 		}
 		
 	    if (result.length > 1) {
+			//TODO:
 			console.log("Too Many Results");
 			return;
            var latestPrefIndex = 0;
@@ -137,7 +142,7 @@ enyo.singleton({
 	},
 	savedPrefs: function(inSender){
 		if(inSender && inSender.returnValue){
-			console.log("PREFERENCES SET!");
+			//Store ID so that we can do further operations with it.
 			this.prefs._id = inSender.results[0]._id || null;
 			this.prefs._rev = inSender.results[0]._rev || null;
 		}
