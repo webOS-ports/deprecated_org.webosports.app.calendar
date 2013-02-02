@@ -46,6 +46,12 @@ enyo.kind({
 		this.$.inf.render();
 	},
 	
+	//Called when the app is loaded the first time:
+	first: function(){
+		//Because the scroll position is lost on render, we have reset it after we view ourselves.
+		this.$.inf.callAll("significantScroll");
+	},
+	
 	//Load up different days based on where we are in the panels:
 	loadNext: function(inSender, inEvent){
 		this.$.inf.provideNext({kind: "calendar.DayPage", date: moment(this.now).add("days", inEvent.current+1)});
@@ -62,7 +68,7 @@ enyo.kind({
 	classes: "day-page",
 	published: {
 		date: "",
-		//TODO: Adjust for smaller screens:
+		//TODO: Adjust for smaller screens?
 		rowHeight: 56
 	},
 	components: [
@@ -189,8 +195,6 @@ enyo.kind({
 			this.$.allday.show();
 		}
 	},
-	//This let's us only scroll to the day once:
-	hasScrolled: -1,
 	rendered: function(){
 		this.inherited(arguments);
 		//Set the time bar initially
@@ -200,13 +204,7 @@ enyo.kind({
 		}else{
 			this.$.CurrentTime.hide();
 		}
-		//Scroll the current time into view:
-		//TODO: Only do this if the date is today?
-		if(this.hasScrolled < 1){
-			//The render method gets called a little bit more than I would like, so we have to do it this way.
-			this.hasScrolled++;
-			this.scrollToDay();
-		}
+		this.significantScroll();
 	},
 	setTimeBar: function(){
 		//Don't keep setting the time bar if the date moves off this day:
@@ -230,14 +228,32 @@ enyo.kind({
 		window.clearTimeout(this.timer);
 		this.inherited(arguments);
 	},
-	scrollToDay: function(){
-		var c = this.$.times.getClientControls();
-		var ts = this.$.times;
-		ts.scrollToControl(c[moment().hours() + 3], true);
-		var st = ts.getScrollTop();
-		ts.setScrollTop(st+1);
-		if(st !== ts.getScrollTop()){
-			ts.setScrollTop(ts.getScrollTop()-15);
+	sigScroll: 0,
+	//Scrolls to the most significant time of the day:
+	significantScroll: function(){
+		if(this.sigScroll < 2){
+			this.sigScroll++;
+			if(moment().diff(this.date, "days") === 0){
+				//Scroll to current time:
+				var c = this.$.times.getClientControls();
+				var ts = this.$.times;
+				ts.scrollToControl(c[moment().hours() + 3], true);
+				var st = ts.getScrollTop();
+				ts.setScrollTop(st+1);
+				if(st !== ts.getScrollTop()){
+					ts.setScrollTop(ts.getScrollTop()-15);
+				}
+			}else{
+				//Scroll to current time:
+				var c = this.$.times.getClientControls();
+				var ts = this.$.times;
+				ts.scrollToControl(c[8 + 3], true);
+				var st = ts.getScrollTop();
+				ts.setScrollTop(st+1);
+				if(st !== ts.getScrollTop()){
+					ts.setScrollTop(ts.getScrollTop()-15);
+				}
+			}
 		}
 	}
 });

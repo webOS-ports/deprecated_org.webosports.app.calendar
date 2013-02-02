@@ -18,7 +18,7 @@ enyo.kind({
 	],
 
 	doneFirstUse: function(){
-		this.$.raw.setIndex(2);
+		this.showMainApp();
 	},
 	
 	loadSettings: function(inSender, inPrefs){
@@ -28,8 +28,13 @@ enyo.kind({
 			this.$.raw.setIndex(1);
 		}else{
 			//Databased have already been set up.
-			this.$.raw.setIndex(2);
+			this.showMainApp();
 		}
+	},
+	
+	showMainApp: function(){
+		this.$.raw.setIndex(2);
+		this.$.mainapp.navigated();
 	},
 	
 	create: function(){

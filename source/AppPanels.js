@@ -39,6 +39,13 @@ enyo.kind({
 			this.$.timeViews.setArrangerKind("CardArranger");
 		}
 	},
+	navigated: function(){
+		//Called when the control is first navigated to:
+		var a = this.$.timeViews.getActive();
+		if(a && a.first){
+			a.first();
+		}
+	},
 	swapView: function(inSender, inEvent){
 		this.changeView(inEvent, {});
 		this.jumpTo({}, inEvent.inEvent);

@@ -139,6 +139,15 @@ enyo.kind({
 		//Set index:
 		this.si(1);
 	},
+	//Call a method on all controls. A poor man's waterfall.
+	callAll: function(method){
+		var c = this.getControls();
+		for(var i = 0; i < c.length; i++){
+			if(c[i] && c[i][method]){
+				c[i][method]();
+			}
+		}
+	},
 	//This function makes sure that there are only 3 panels at any given time.
 	manageMemory: function(){
 		var i = this.getIndex();

@@ -18,8 +18,6 @@ enyo.kind({
 		//This is no longer the first launch, let the preferences know:
 		window.PalmSystem && calendar.Preferences.setOne("firstlaunch", false);
 		//Show an alert just for debugging reasons.
-		//TODO: Remove:
-		this.showAlert();
 	},
 	//Called when the settings are first loaded:
 	settingsLoad: function(inSender, inPrefs){
