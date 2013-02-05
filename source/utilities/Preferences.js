@@ -68,37 +68,52 @@ enyo.singleton({
 		}
 		
 	    if (result.length > 1) {
-			//TODO:
-			console.log("Too Many Results");
-			return;
-			
-           var latestPrefIndex = 0;
-           var latestPrefRev = results[0]._rev;
-           var idsToDelete = [results[0]._id];
-           //find the latest one
-           for (var i = 1; i < resultsLength; i++) {
-               var rev = results[i]._rev;
-               idsToDelete.push(results[i]._id);
-               if (rev > latestPrefRev) {
-                   latestPrefIndex = i;
-                   latestPrefRev = rev;
-               }
-           }
-           this.prefs = results[latestPrefIndex];
-           //this.plog("gotPrefs: spare prefs in the db!");
-           idsToDelete.splice(latestPrefIndex, 1);
+			console.log("Stripping Results");			
+			var latestPrefIndex = 0;
+			var latestPrefRev = result[0]._rev;
+			var idsToDelete = [result[0]._id];
+			//find the latest one
+			for (var i = 1; i < result.length; i++) {
+				var rev = result[i]._rev;
+				idsToDelete.push(result[i]._id);
+				if (rev > latestPrefRev) {
+					latestPrefIndex = i;
+					latestPrefRev = rev;
+				}
+			}
+			this.prefs = result[latestPrefIndex];
+			idsToDelete.splice(latestPrefIndex, 1);
 
-           //delete the spares
-           this.databaseManager.deleteByIds(idsToDelete, this.deleteCB, this.deleteCB);
+			//delete the spares
+			this.deleteByIds(idsToDelete);
        }
 	   //Send a signal out to everybody telling them that we've loaded the settings.
 	   enyo.Signals.send("onSettingsLoad", this.prefs);
+	   
+	   //TODO: REMOVE WHEN DONE DEBUGGING
+	   this.setOne("firstlaunch", true);
 	},
 	//First time setup:
 	_first: function(){
 		//Set prefs to the defaults:
 		var prefs = enyo.clone(this.prefDefaults);
 		this._put(prefs);
+	},
+	deleteByIds: function(idsArray){
+		navigator.service.Request("palm://com.palm.db/", {
+			"method": "del",
+			"parameters": {
+				"ids": idsArray
+			},
+			onSuccess: enyo.bind(this, "deletedIDs"),
+			onFailure: function(inSender){
+				console.log("FAILED DELETE");
+				console.log(JSON.stringify(inSender));
+			}
+		});
+	},
+	deletedIDs: function(inSender){
+		console.log(JSON.stringify(inSender));
 	},
 	//Puts the actual settings object into the database and calls the signal so that all listening elements get the update.
 	//This should only be called internally. The implementation of this is hidden a few layers up.
@@ -110,7 +125,6 @@ enyo.singleton({
 		this.prefs = prefs;
 		
 		if(this.prefs._id){
-			console.log("ID ALREADY EXISTS, MERGE");
 			//The preferences already exist, call merge:
 			navigator.service.Request("palm://com.palm.db/", {
 				"method": "merge",

@@ -33,17 +33,14 @@ enyo.kind({
 	create: function(){
 		this.inherited(arguments);
 		var params = enyo.getWindowParams();
-		if(params && !params.firstLaunch){
+		if(params && !params.firstlaunch){
 			this.showMainApp();
 		}else{
-			this.$.raw.setIndex(2);
+			this.$.raw.setIndex(1);
 		}
 		//Used for browser debugging:
 		if(!window.PalmSystem){
 			this.$.raw.setIndex(1);
 		}
-		
-		//TODO: REMOVE WHEN DONE DEBUGGING!!!
-		//calendar.Preferences._first();
 	}
 });

@@ -8,9 +8,19 @@
 	</head>
 	<body>
 		<script>
-		console.log("R")
 			window.calendarApp = null;
-			document.addEventListener("deviceready", function(){
+			
+			document.addEventListener("relaunch", function(){
+				if (window.calendarApp && window.calendarApp.PalmSystem) {
+					window.calendarApp.PalmSystem.activate();
+				}else {
+					firstLaunch();
+				}
+			}, false);
+			
+			document.addEventListener("deviceready", firstLaunch, false);
+			
+			function firstLaunch(){
 				navigator.service.Request("palm://com.palm.db/", {
 					"method": "find",
 					"parameters": {
@@ -20,7 +30,7 @@
 					},
 					onSuccess: function(inSender){
 						var result = inSender && inSender.results;
-						if(result.length === 0){
+						if(!result || result.length === 0){
 							var firstLaunch = true;
 						}else{
 							var firstLaunch = result[0].firstlaunch;
@@ -32,18 +42,13 @@
 						openApp({firstlaunch: true});
 					}
 				});
-			}, false);
+			}
 			
 			function openApp(inPrefs){
 				var launchParams = (PalmSystem.launchParams && navigator.window.launchParams()) || {};
 				inPrefs = enyo.mixin(inPrefs, launchParams);
 				window.calendarApp = navigator.notification.openWindow("../index.html?launchParams=" + encodeURIComponent(JSON.stringify(inPrefs)), "Calendar", {}, {"window": "card"}, "");
 			}
-			
-			//This window captures all of these events, so trigger them in the app:
-			document.addEventListener("menubutton", function(){
-				window.calendarApp && window.calendarApp.PalmSystem && window.calendarApp.enyo.Signals.send("onmenubutton", {});
-			}, false);
 		</script>
 	</body>
 </html>
