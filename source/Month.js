@@ -33,6 +33,12 @@ enyo.kind({
 	away: function(){
 		this.$.inf.setCoreNavi(false);
 	},
+	
+	create: function(){
+		this.inherited(arguments);
+		//Request the applicable events between the viewed ranges. These get stored in the Events manager memory for faster retrieval.
+		//calendar.Events.requestEvents({from: moment(), to: moment()});
+	},
 
 	//Jumps to a specific month:
 	jumpToDate: function(date){
@@ -48,6 +54,7 @@ enyo.kind({
 	
 	//Load up different months based on where we are in the panels:
 	loadNext: function(inSender, inEvent){
+		//TODO: Request events for the next month.
 		this.$.inf.provideNext({kind: "calendar.MonthPage", date: moment(this.now).add("months", inEvent.current+1)});
 	},
 	loadPrev: function(inSender, inEvent){
@@ -72,7 +79,8 @@ enyo.kind({
 			{tag: "tbody", classes: "month-tbody", name: "monthView", components: [
 				//Dynamically generated rows.
 			]}
-		]}
+		]},
+		{kind: "Signals", onSettingsChange: "settingsUpdated", onSettingsLoad: "settingsUpdated"}
 	],
 	create: function(){
 		this.inherited(arguments);
@@ -100,6 +108,18 @@ enyo.kind({
 		this.displayEvents();
 	},
 	
+	settingsUpdated: function(inSender, inPrefs){
+		//Set the start of the week if it's not set to auto.
+		if(inPrefs.startOfWeek !== -1){
+			var c = this.$.monthView.getControls();
+			for(var x in c){
+				if(c.hasOwnProperty(x)){
+					c[x].updateSettings && c[x].updateSettings(inPrefs);
+				}
+			}
+		}
+	},
+	
 	displayEvents: function(){
 		
 	}
@@ -120,34 +140,50 @@ enyo.kind({
 		if(enyo.Panels.isScreenNarrow()){
 			if(this.isHeader){
 				enyo.forEach(this.getControls(), function(c, i){
-					c.setContent(this.smallFormatter.format(moment().day(this.smallFormatter.getFirstDayOfWeek() + i).toDate()));
+					c.setContent(this.smallFormatter.format(moment().day(this.firstDayInWeek + i).toDate()));
 				}, this);
 			}
 			this.addClass("month-row-narrow");
 		}else{
 			if(this.isHeader){
 				enyo.forEach(this.getControls(), function(c, i){
-					c.setContent(this.formatter.format(moment().day(this.formatter.getFirstDayOfWeek() + i).toDate()));
+					c.setContent(this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()));
 				}, this);
 			}
 			this.removeClass("month-row-narrow");
 		}
 	},
+	updateSettings: function(inPrefs){
+		if(inPrefs.startOfWeek !== -1){
+			this.firstDayInWeek = inPrefs.startOfWeek;
+		}else{
+			var formatter = new enyo.g11n.DateFmt({format: "EEEE"});
+			this.firstDayInWeek = formatter.getFirstDayOfWeek();
+		}
+		this.destroyClientControls();
+		this.generateView();
+		this.render();
+	},
 	create: function(){
 		this.inherited(arguments);
+		//Load first with startOfWeek at -1:
+		this.updateSettings({startOfWeek: -1});
+		this.generateView();
+	},
+	generateView: function(){
 		if(this.isHeader){
 			this.removeClass("month-row");
 			//Get date formatter:
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
 			this.smallFormatter = new enyo.g11n.DateFmt({format: "E"});
 			for(var i = 0; i < 7; i++){
-				this.createComponent({content: this.formatter.format(moment().day(this.formatter.getFirstDayOfWeek() + i).toDate()), tag: "th", classes: "month-item-header"});
+				this.createComponent({content: this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()), tag: "th", classes: "month-item-header"});
 			}
 		}else{
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
 			var temp = moment(this.date).startOf("month").add("weeks", this.row);
 			var start;
-			if(this.formatter.getFirstDayOfWeek() === 0){
+			if(this.firstDayInWeek === 0){
 				start = temp.day();
 			}else{
 				start = temp.isoday() - 1;
