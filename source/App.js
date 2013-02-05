@@ -12,6 +12,7 @@ enyo.kind({
 		]},
 		
 		{kind: "Panels", draggable: false, name: "raw", fit: true, components: [
+		//TODO: Do we really need the splash page anymore?
 			{name: "splash", kind: "calendar.Splash", fit: true},
 			{name: "firstuse", kind: "calendar.FirstUse", fit: true},
 			{name: "mainapp", kind: "calendar.MainApp", fit: true}
@@ -31,8 +32,7 @@ enyo.kind({
 	
 	create: function(){
 		this.inherited(arguments);
-		var params = (PalmSystem.launchParams && navigator.window.launchParams()) || {};
-		console.log(PalmSystem.launchParams);
+		var params = enyo.getWindowParams();
 		if(params && !params.firstLaunch){
 			this.showMainApp();
 		}else{
@@ -42,5 +42,8 @@ enyo.kind({
 		if(!window.PalmSystem){
 			this.$.raw.setIndex(1);
 		}
+		
+		//TODO: REMOVE WHEN DONE DEBUGGING!!!
+		//calendar.Preferences._first();
 	}
 });

@@ -8,6 +8,7 @@
 	</head>
 	<body>
 		<script>
+		console.log("R")
 			window.calendarApp = null;
 			document.addEventListener("deviceready", function(){
 				navigator.service.Request("palm://com.palm.db/", {
@@ -36,14 +37,12 @@
 			function openApp(inPrefs){
 				var launchParams = (PalmSystem.launchParams && navigator.window.launchParams()) || {};
 				inPrefs = enyo.mixin(inPrefs, launchParams);
-				console.log(JSON.stringify(inPrefs));
-				window.calendarApp = navigator.notification.openWindow("../index.html?launchParams=" + JSON.stringify(inPrefs), "Calendar", {}, {"window": "card"}, "");
+				window.calendarApp = navigator.notification.openWindow("../index.html?launchParams=" + encodeURIComponent(JSON.stringify(inPrefs)), "Calendar", {}, {"window": "card"}, "");
 			}
 			
+			//This window captures all of these events, so trigger them in the app:
 			document.addEventListener("menubutton", function(){
-				console.log("FIRING");
-				window.calendarApp.enyo.Signals.send("onmenubutton", {});
-				console.log("HOPEFULLY IT GOT IT!");
+				window.calendarApp && window.calendarApp.PalmSystem && window.calendarApp.enyo.Signals.send("onmenubutton", {});
 			}, false);
 		</script>
 	</body>
