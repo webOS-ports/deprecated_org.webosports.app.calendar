@@ -6,8 +6,11 @@ enyo.kind({
 		onFirstUseDone: "doneFirstUse"
 	},
 	components: [
-		{kind: "Signals", onSettingsLoad: "loadSettings"},
-
+		
+		{kind: "AppMenu", components: [
+			{content: "Preferences"}
+		]},
+		
 		{kind: "Panels", draggable: false, name: "raw", fit: true, components: [
 			{name: "splash", kind: "calendar.Splash", fit: true},
 			{name: "firstuse", kind: "calendar.FirstUse", fit: true},
@@ -21,17 +24,6 @@ enyo.kind({
 		this.showMainApp();
 	},
 	
-	loadSettings: function(inSender, inPrefs){
-		//TODO: Move this outside to the nowindow manager?
-		if(inPrefs.firstlaunch){
-			//First Launch:
-			this.$.raw.setIndex(1);
-		}else{
-			//Databased have already been set up.
-			this.showMainApp();
-		}
-	},
-	
 	showMainApp: function(){
 		this.$.raw.setIndex(2);
 		this.$.mainapp.navigated();
@@ -39,6 +31,13 @@ enyo.kind({
 	
 	create: function(){
 		this.inherited(arguments);
+		var params = (PalmSystem.launchParams && navigator.window.launchParams()) || {};
+		console.log(PalmSystem.launchParams);
+		if(params && !params.firstLaunch){
+			this.showMainApp();
+		}else{
+			this.$.raw.setIndex(2);
+		}
 		//Used for browser debugging:
 		if(!window.PalmSystem){
 			this.$.raw.setIndex(1);

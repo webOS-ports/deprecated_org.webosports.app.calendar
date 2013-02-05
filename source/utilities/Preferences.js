@@ -71,6 +71,7 @@ enyo.singleton({
 			//TODO:
 			console.log("Too Many Results");
 			return;
+			
            var latestPrefIndex = 0;
            var latestPrefRev = results[0]._rev;
            var idsToDelete = [results[0]._id];

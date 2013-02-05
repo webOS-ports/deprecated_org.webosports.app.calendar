@@ -17,6 +17,9 @@ enyo.depends(
 	"App.js",
 	"AppPanels.js",
 	
+	//Preferences View:
+	"PreferencesView.js",
+	
 	//Splash Scrren:
 	"Splash.js",
 

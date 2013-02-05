@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Calendar Window Manager</title>
+		<!-- js -->
+		<script src="../cordova.js"></script>
+		<script src="../build/enyo.js"></script>
+	</head>
+	<body>
+		<script>
+			window.calendarApp = null;
+			document.addEventListener("deviceready", function(){
+				navigator.service.Request("palm://com.palm.db/", {
+					"method": "find",
+					"parameters": {
+						"query": {
+							"from": "org.webosports.calendarprefs:1"
+						}
+					},
+					onSuccess: function(inSender){
+						var result = inSender && inSender.results;
+						if(result.length === 0){
+							var firstLaunch = true;
+						}else{
+							var firstLaunch = result[0].firstlaunch;
+						}
+						openApp({firstlaunch: firstLaunch});
+					},
+					onFailure: function(inSender){
+						//If we get a DB error, assume that it's the first launch.
+						openApp({firstlaunch: true});
+					}
+				});
+			}, false);
+			
+			function openApp(inPrefs){
+				var launchParams = (PalmSystem.launchParams && navigator.window.launchParams()) || {};
+				inPrefs = enyo.mixin(inPrefs, launchParams);
+				console.log(JSON.stringify(inPrefs));
+				window.calendarApp = navigator.notification.openWindow("../index.html?launchParams=" + JSON.stringify(inPrefs), "Calendar", {}, {"window": "card"}, "");
+			}
+			
+			document.addEventListener("menubutton", function(){
+				console.log("FIRING");
+				window.calendarApp.enyo.Signals.send("onmenubutton", {});
+				console.log("HOPEFULLY IT GOT IT!");
+			}, false);
+		</script>
+	</body>
+</html>
