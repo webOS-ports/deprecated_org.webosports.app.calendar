@@ -89,10 +89,6 @@ enyo.singleton({
        }
 	   //Send a signal out to everybody telling them that we've loaded the settings.
 	   enyo.Signals.send("onSettingsLoad", this.prefs);
-	   
-	   //TODO: REMOVE WHEN DONE DEBUGGING
-	   this.setOne("firstlaunch", true);
-	   this.setOne("startOfWeek", 5);
 	},
 	//First time setup:
 	_first: function(){
