@@ -74,7 +74,7 @@ enyo.kind({
 		{name: "title", classes: "day-title", content: ""},
 		{tag: "table", classes: "month-table", fit: true, components: [
 			{tag: "thead", name: "monthViewHeader", components: [
-				{kind: "calendar.MonthRow", isHeader: true}
+				{kind: "calendar.MonthRow", name: "headerView", isHeader: true}
 			]},
 			{tag: "tbody", classes: "month-tbody", name: "monthView", components: [
 				//Dynamically generated rows.
@@ -111,6 +111,9 @@ enyo.kind({
 	settingsUpdated: function(inSender, inPrefs){
 		//Set the start of the week if it's not set to auto.
 		if(inPrefs.startOfWeek !== -1){
+			//Set Header:
+			this.$.headerView.updateSettings(inPrefs);
+			//Set client controls:
 			var c = this.$.monthView.getControls();
 			for(var x in c){
 				if(c.hasOwnProperty(x)){
@@ -166,9 +169,7 @@ enyo.kind({
 	},
 	create: function(){
 		this.inherited(arguments);
-		//Load first with startOfWeek at -1:
-		this.updateSettings({startOfWeek: -1});
-		this.generateView();
+		this.updateSettings({startOfWeek: calendar.Preferences.prefs.startOfWeek || 5});
 	},
 	generateView: function(){
 		if(this.isHeader){
@@ -186,7 +187,10 @@ enyo.kind({
 			if(this.firstDayInWeek === 0){
 				start = temp.day();
 			}else{
-				start = temp.isoday() - 1;
+				start = temp.isoday() - this.firstDayInWeek;
+				if(start < 0){
+					start = temp.subtract("weeks", 1).isoday() - this.firstDayInWeek;
+				}
 			}
 			for(var i = 0; i < 7; i++){
 				var now = moment(temp).add("days", i - start);

@@ -92,6 +92,7 @@ enyo.singleton({
 	   
 	   //TODO: REMOVE WHEN DONE DEBUGGING
 	   this.setOne("firstlaunch", true);
+	   this.setOne("startOfWeek", 5);
 	},
 	//First time setup:
 	_first: function(){
