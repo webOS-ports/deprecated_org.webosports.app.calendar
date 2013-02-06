@@ -81,8 +81,13 @@ enyo.singleton({
 	},
 	queryResults: [],
 	
-	//Prepare events from a specific range and load them into the cache.
+	//Calls _prepareEvents with ranges that are missing from the currently cached days. This is used so that we don't call prepare events on ranges that we have already prepared.
 	prepareEvents: function(range){
+		
+	},
+	
+	//Prepare events from a specific range and load them into the cache.
+	_prepareEvents: function(range){
 		//TODO: We may have some JS Execution Timeout issues here, so we'll have to look into chunking the processing like webOS 3.0 does.
 		
 		//Array of the occurences of events in this range:
@@ -123,6 +128,7 @@ enyo.singleton({
 	},
 	
 	//TODO: What happens if the events aren't ready when this is called?
+	//Loads the events from the memory for one specific day.
 	getEvents: function(date){
 		//Get events out of the memory, if it exists. If it does not, then request it, and then send it back.
 		if(this.memevt[moment(date).startOf("day")]){
@@ -132,7 +138,11 @@ enyo.singleton({
 		this.prepareEvents({from: moment.unix(date).subtract("months", 1), to: moment.unix(date).add("months", 1)});
 		return this.memevt[moment.unix(date).startOf("day").unix()]
 	},
-	
+	//Loads the events from memory for a range of days, which can be helpful if you don't want to call getEvents multiple time.
+	//This should be used for calendar and month views. The day view doesn't really need this, it only needs one day, so it should call getEvents.
+	getEventsRange: function(range){
+		
+	},
 	
 	
 	createEvent: function(){
