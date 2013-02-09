@@ -9,10 +9,20 @@ enyo.depends(
 	
 	//Main app css. Views have their own CSS files too.
 	"App.css",
+	
+	//Load up the utilities to save events, preferences, etc:
+	"utilities",
 
 	//Core UI JavaScript:
 	"App.js",
 	"AppPanels.js",
+	
+	//Other View:
+	"PreferencesView.js",
+	"NewEvent.js",
+	
+	//Splash Scrren:
+	"Splash.js",
 
 	//First Use Manager:
 	"firstuse",

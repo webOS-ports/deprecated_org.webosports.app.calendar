@@ -1,6 +1,6 @@
 //The day layout is easy. There's always 24 hours, and it's just a list.
 enyo.kind({
-	name: "Month",
+	name: "calendar.Month",
 	kind: "FittableRows",
 	handlers: {
 		onNext: "loadNext",
@@ -8,9 +8,9 @@ enyo.kind({
 	},
 	components: [
 		{kind: "vi.Inf", name: "inf", fit: true, coreNavi: true, style: "background: white;", components: [
-			{kind: "MonthPage", date: moment().subtract("months", 1)},
-			{kind: "MonthPage", date: moment()},
-			{kind: "MonthPage", date: moment().add("months", 1)}
+			{kind: "calendar.MonthPage", date: moment().subtract("months", 1)},
+			{kind: "calendar.MonthPage", date: moment()},
+			{kind: "calendar.MonthPage", date: moment().add("months", 1)}
 		]}
 	],
 
@@ -33,31 +33,38 @@ enyo.kind({
 	away: function(){
 		this.$.inf.setCoreNavi(false);
 	},
+	
+	create: function(){
+		this.inherited(arguments);
+		//Request the applicable events between the viewed ranges. These get stored in the Events manager memory for faster retrieval.
+		//calendar.Events.requestEvents({from: moment(), to: moment()});
+	},
 
 	//Jumps to a specific month:
 	jumpToDate: function(date){
 		this.$.inf.setCoreNavi(true);
 		this.now = moment(date);
 		this.$.inf.reset([
-			{kind: "MonthPage", date: moment(this.now).subtract("months", 1)},
-			{kind: "MonthPage", date: moment(this.now)},
-			{kind: "MonthPage", date: moment(this.now).add("months", 1)}
+			{kind: "calendar.MonthPage", date: moment(this.now).subtract("months", 1)},
+			{kind: "calendar.MonthPage", date: moment(this.now)},
+			{kind: "calendar.MonthPage", date: moment(this.now).add("months", 1)}
 		]);
 		this.$.inf.render();
 	},
 	
 	//Load up different months based on where we are in the panels:
 	loadNext: function(inSender, inEvent){
-		this.$.inf.provideNext({kind: "MonthPage", date: moment(this.now).add("months", inEvent.current+1)});
+		//TODO: Request events for the next month.
+		this.$.inf.provideNext({kind: "calendar.MonthPage", date: moment(this.now).add("months", inEvent.current+1)});
 	},
 	loadPrev: function(inSender, inEvent){
-		this.$.inf.providePrev({kind: "MonthPage", date: moment(this.now).add("months", inEvent.current-1)});
+		this.$.inf.providePrev({kind: "calendar.MonthPage", date: moment(this.now).add("months", inEvent.current-1)});
 	}
 });
 
 //The actual page for one day.
 enyo.kind({
-	name: "MonthPage",
+	name: "calendar.MonthPage",
 	kind: "FittableRows",
 	classes: "month-page",
 	published: {
@@ -67,12 +74,13 @@ enyo.kind({
 		{name: "title", classes: "day-title", content: ""},
 		{tag: "table", classes: "month-table", fit: true, components: [
 			{tag: "thead", name: "monthViewHeader", components: [
-				{kind: "MonthRow", isHeader: true}
+				{kind: "calendar.MonthRow", name: "headerView", isHeader: true}
 			]},
 			{tag: "tbody", classes: "month-tbody", name: "monthView", components: [
 				//Dynamically generated rows.
 			]}
-		]}
+		]},
+		{kind: "Signals", onSettingsChange: "settingsUpdated", onSettingsLoad: "settingsUpdated"}
 	],
 	create: function(){
 		this.inherited(arguments);
@@ -93,11 +101,26 @@ enyo.kind({
 
 		//Create all of the month rows:
 		for(var i = 0; i < 6; i++){
-			this.$.monthView.createComponent({kind: "MonthRow", date: this.date, row: i});
+			this.$.monthView.createComponent({kind: "calendar.MonthRow", date: this.date, row: i});
 		}
 
 		//TODO: Should call this somehow to update the events
 		this.displayEvents();
+	},
+	
+	settingsUpdated: function(inSender, inPrefs){
+		//Set the start of the week if it's not set to auto.
+		if(inPrefs.startOfWeek !== -1){
+			//Set Header:
+			this.$.headerView.updateSettings(inPrefs);
+			//Set client controls:
+			var c = this.$.monthView.getControls();
+			for(var x in c){
+				if(c.hasOwnProperty(x)){
+					c[x].updateSettings && c[x].updateSettings(inPrefs);
+				}
+			}
+		}
 	},
 	
 	displayEvents: function(){
@@ -107,7 +130,7 @@ enyo.kind({
 
 //The row for the list.
 enyo.kind({
-	name: "MonthRow",
+	name: "calendar.MonthRow",
 	classes: "month-row",
 	tag: "tr",
 	published: {
@@ -120,41 +143,58 @@ enyo.kind({
 		if(enyo.Panels.isScreenNarrow()){
 			if(this.isHeader){
 				enyo.forEach(this.getControls(), function(c, i){
-					c.setContent(this.smallFormatter.format(moment().day(this.smallFormatter.getFirstDayOfWeek() + i).toDate()));
+					c.setContent(this.smallFormatter.format(moment().day(this.firstDayInWeek + i).toDate()));
 				}, this);
 			}
 			this.addClass("month-row-narrow");
 		}else{
 			if(this.isHeader){
 				enyo.forEach(this.getControls(), function(c, i){
-					c.setContent(this.formatter.format(moment().day(this.formatter.getFirstDayOfWeek() + i).toDate()));
+					c.setContent(this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()));
 				}, this);
 			}
 			this.removeClass("month-row-narrow");
 		}
 	},
+	updateSettings: function(inPrefs){
+		if(inPrefs.startOfWeek !== -1){
+			this.firstDayInWeek = inPrefs.startOfWeek;
+		}else{
+			var formatter = new enyo.g11n.DateFmt({format: "EEEE"});
+			this.firstDayInWeek = formatter.getFirstDayOfWeek();
+		}
+		this.destroyClientControls();
+		this.generateView();
+		this.render();
+	},
 	create: function(){
 		this.inherited(arguments);
+		this.updateSettings({startOfWeek: calendar.Preferences.prefs.startOfWeek || 0});
+	},
+	generateView: function(){
 		if(this.isHeader){
 			this.removeClass("month-row");
 			//Get date formatter:
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
 			this.smallFormatter = new enyo.g11n.DateFmt({format: "E"});
 			for(var i = 0; i < 7; i++){
-				this.createComponent({content: this.formatter.format(moment().day(this.formatter.getFirstDayOfWeek() + i).toDate()), tag: "th", classes: "month-item-header"});
+				this.createComponent({content: this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()), tag: "th", classes: "month-item-header"});
 			}
 		}else{
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
 			var temp = moment(this.date).startOf("month").add("weeks", this.row);
 			var start;
-			if(this.formatter.getFirstDayOfWeek() === 0){
+			if(this.firstDayInWeek === 0){
 				start = temp.day();
 			}else{
-				start = temp.isoday() - 1;
+				start = temp.isoday() - this.firstDayInWeek;
+				if(start < 0){
+					start = temp.subtract("weeks", 1).isoday() - this.firstDayInWeek;
+				}
 			}
 			for(var i = 0; i < 7; i++){
 				var now = moment(temp).add("days", i - start);
-				var el = this.createComponent({kind: "MonthItem", date: now, viewed: this.date, number: now.format("D")});
+				var el = this.createComponent({kind: "calendar.MonthItem", date: now, viewed: this.date, number: now.format("D")});
 				
 				el.addEvent();
 				el.addEvent();
@@ -174,7 +214,7 @@ enyo.kind({
 });
 
 enyo.kind({
-	name: "MonthItem",
+	name: "calendar.MonthItem",
 	tag: "td",
 	classes: "month-item enyo-border-box",
 	published: {
@@ -204,7 +244,7 @@ enyo.kind({
 		//You can only create events on the viewed month:
 		if(this.date.month() === this.viewed.month()){
 			if(this.$.eventLayer.getControls().length < this.threshold){
-				this.$.eventLayer.createComponent({kind: "MonthEvent", evt: evt, date: this.date});
+				this.$.eventLayer.createComponent({kind: "calendar.MonthEvent", evt: evt, date: this.date});
 			}else{
 				this.other++;
 				this.$.other.show();
@@ -227,7 +267,7 @@ enyo.kind({
 //An event for the day.
 //Note that this is only visual right now. We'll probably have to rework this based on the calendar data is actually formatted on webOS.
 enyo.kind({
-	name: "MonthEvent",
+	name: "calendar.MonthEvent",
 	classes: "month-event enyo-border-box",
 	published: {
 		evt: {},
