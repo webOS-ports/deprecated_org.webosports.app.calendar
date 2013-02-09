@@ -3,7 +3,9 @@ enyo.kind({
 	kind: "FittableRows",
 	classes: "onyx",
 	handlers: {
-		onFirstUseDone: "doneFirstUse"
+		onFirstUseDone: "doneFirstUse",
+		onNewEvent: "showNewEvent",
+		onShowCalendar: "showCalendar",
 	},
 	components: [
 		
@@ -12,10 +14,12 @@ enyo.kind({
 		]},
 		
 		{kind: "Panels", draggable: false, name: "raw", fit: true, components: [
-		//TODO: Do we really need the splash page anymore?
+			//TODO: Do we really need the splash page anymore?
 			{name: "splash", kind: "calendar.Splash", fit: true},
 			{name: "firstuse", kind: "calendar.FirstUse", fit: true},
-			{name: "mainapp", kind: "calendar.MainApp", fit: true}
+			{name: "mainapp", kind: "calendar.MainApp", fit: true},
+			{name: "newevent", kind: "calendar.NewEvent"},
+			{name: "prefview", kind: "calendar.PreferencesView"}
 		]},
 
 		{kind: "CoreNavi", fingerTracking: true}
@@ -25,9 +29,17 @@ enyo.kind({
 		this.showMainApp();
 	},
 	
+	showNewEvent: function(){
+		this.$.raw.setIndex(3);
+	},
+	
 	showMainApp: function(){
 		this.$.raw.setIndex(2);
 		this.$.mainapp.navigated();
+	},
+	
+	showCalendar: function(){
+		this.$.raw.setIndex(2);
 	},
 	
 	create: function(){

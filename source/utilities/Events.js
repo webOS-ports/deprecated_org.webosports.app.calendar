@@ -81,14 +81,11 @@ enyo.singleton({
 	},
 	queryResults: [],
 	
-	//Calls _prepareEvents with ranges that are missing from the currently cached days. This is used so that we don't call prepare events on ranges that we have already prepared.
-	prepareEvents: function(range){
-		
-	},
-	
 	//Prepare events from a specific range and load them into the cache.
-	_prepareEvents: function(range){
+	prepareEvents: function(range){
 		//TODO: We may have some JS Execution Timeout issues here, so we'll have to look into chunking the processing like webOS 3.0 does.
+		//TODO: Allow batch processing so that this function doesn't get called multiple times and thus so we do not loop through the entire queryResults array multiple times? We ideally don't need to do this because batch results really should not happen. But in the events that they do, we should avoid looping that much.
+		return;
 		
 		//Array of the occurences of events in this range:
 		var occurrences = [];
@@ -136,7 +133,7 @@ enyo.singleton({
 		}
 		//Pad the prepare by a month in each direction.
 		this.prepareEvents({from: moment.unix(date).subtract("months", 1), to: moment.unix(date).add("months", 1)});
-		return this.memevt[moment.unix(date).startOf("day").unix()]
+		return this.memevt[moment.unix(date).startOf("day").unix()];
 	},
 	//Loads the events from memory for a range of days, which can be helpful if you don't want to call getEvents multiple time.
 	//This should be used for calendar and month views. The day view doesn't really need this, it only needs one day, so it should call getEvents.
@@ -145,8 +142,23 @@ enyo.singleton({
 	},
 	
 	
-	createEvent: function(){
-		
+	createEvent: function(evt){
+		//Add in the kind:
+		evt._kind = "";
+		//Create a new event based on the one we just passed:
+		var nevt = new CalendarEvent(evt);
+		//Put it in the database:
+		navigator.service.Request("palm://com.palm.db/", {
+			"method": "put",
+			"parameters": {
+				"objects": [nevt]
+			},
+			onSuccess: enyo.bind(this, "loadEventsHandler"),
+			onFailure: function(inSender){
+				console.log("FAILED PUT");
+				console.log(JSON.stringify(inSender));
+			}
+		});
 	},
 	deleteEvent: function(){
 		

@@ -13,7 +13,7 @@ enyo.kind({
 			{kind: "calendar.Month"},
 		]},
 		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout",  /*Fix a bug in Enyo 2 that causes a bottom gap:*/ style: "height: 56px;", components: [
-			{kind: "onyx.Button", name: "newevent", content: "New Event"},
+			{kind: "onyx.Button", name: "newevent", content: "New Event", ontap: "createEvent"},
 			{fit: true, components: [
 				{kind: "onyx.RadioGroup", name: "viewSelect", classes: "view-select", controlClasses: "view-select-button", components: [
 					{content: "Day", index: 0, ontap: "changeView", active: true},
@@ -38,6 +38,29 @@ enyo.kind({
 			this.$.newevent.show();
 			this.$.timeViews.setArrangerKind("CardArranger");
 		}
+	},
+	createEvent: function(){
+		this.bubble("onNewEvent");
+		/*
+		calendar.Events.createEvent({
+			subject: 'Take daily medicine',  // string
+			dtstart: '1290711600000', // string representing the start date/time as timestamp in milliseconds
+			dtend: '1290718800000',  // string representing the end date/time as timestamp in milliseconds
+			location: 'Wherever I am!', // string
+			rrule: null, 
+			tzId: new enyo.g11n.TzFmt().getCurrentTimeZone(),
+			alarm: [
+			    {
+			        alarmTrigger: {
+			            valueType: "DURATION",
+			            value: "-PT15M"
+			        }
+			    }
+			],
+			note: 'Take alergy medicine, 1 pill',  // string
+			allDay: false  // boolean
+        });
+		*/
 	},
 	navigated: function(){
 		//Called when the control is first navigated to:

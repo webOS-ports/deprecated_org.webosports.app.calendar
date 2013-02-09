@@ -169,7 +169,7 @@ enyo.kind({
 	},
 	create: function(){
 		this.inherited(arguments);
-		this.updateSettings({startOfWeek: calendar.Preferences.prefs.startOfWeek || 5});
+		this.updateSettings({startOfWeek: calendar.Preferences.prefs.startOfWeek || 0});
 	},
 	generateView: function(){
 		if(this.isHeader){

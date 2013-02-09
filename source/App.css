@@ -27,3 +27,13 @@
 	height: 256px;
 	background-size: contain;
 }
+
+.newevent-innerblock {
+	margin: 0px auto;
+	width: 100%;
+	padding: 30px;
+	max-width: 600px;
+}
+.newevent-row {
+	margin-top: 10px;
+}
