@@ -1,45 +1,45 @@
 {
-	"id"             : "org.webosports.app.calendar",
-	"title"          : "Calendar",
-	"version"        : "0.0.3",
-	"vendor"         : "WebOS Ports",
+	"id": "org.webosports.app.calendar",
+	"title": "Calendar",
+	"version": "0.0.3",
+	"vendor": "WebOS Ports",
 	"vendor_url": "https://github.com/webOS-ports/org.webosports.app.calendar",
-	"noWindow"       : false,
-	"uiRevision"     : 2,
-	"main"           : "index.html",
-	"icon"           : "icon.png",
-	"splashicon"     : "images/icon-256x256.png",
-	"type"           : "web",
-	"removable"      : true,
-	"keywords"       : ["Anniversaries", "Appointments", "Birthdays", "Datebook", "Events", "Meetings", "Reminders"],
+	"noWindow": true,
+	"uiRevision": 2,
+	"main": "assets/nowindow.html",
+	"icon": "icon.png",
+	"splashicon": "assets/icon-256x256.png",
+	"type": "web",
+	"removable": true,
+	"keywords": ["Anniversaries", "Appointments", "Birthdays", "Datebook", "Events", "Meetings", "Reminders"],
 	"universalSearch": {
-		"action"  : {
+		"action": {
 			"displayName": "New Event",
 			"launchParam": "quickLaunchText",
-			"url"        : "org.webosports.app.calendar"
+			"url": "org.webosports.app.calendar"
 		},
 		"dbsearch": {
-			"displayName"       : "Calendar Events",
-			"url"               : "org.webosports.app.calendar",
-			"launchParam"       : "showEventDetail",
+			"displayName": "Calendar Events",
+			"url": "org.webosports.app.calendar",
+			"launchParam": "showEventDetail",
 			"launchParamDbField": "_id",
-			"displayFields"     : ["subject", {
+			"displayFields": ["subject", {
 				"name": "dtstart",
 				"type": "timestamp"
 			}],
-			"dbQuery"           : {
-				"from"   : "com.palm.calendarevent:1",
-				"where"  : [
+			"dbQuery": {
+				"from": "com.palm.calendarevent:1",
+				"where": [
 					{
-						"prop"   : "searchText",
-						"op"     : "?",
-						"val"    : "",
+						"prop": "searchText",
+						"op": "?",
+						"val": "",
 						"collate": "primary"
 					}
 				],
 				"orderBy": "subject",
-				"desc"   : false,
-				"limit"  : 20
+				"desc": false,
+				"limit": 20
 			}
 		}
 	}

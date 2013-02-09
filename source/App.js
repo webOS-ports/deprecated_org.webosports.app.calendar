@@ -2,42 +2,57 @@ enyo.kind({
 	name: "App",
 	kind: "FittableRows",
 	classes: "onyx",
-
 	handlers: {
-		onFirstUseDone: "doneFirstUse"
+		onFirstUseDone: "doneFirstUse",
+		onNewEvent: "showNewEvent",
+		onShowCalendar: "showCalendar",
 	},
-
 	components: [
-		{kind: "Signals",
-		ondeviceready: "deviceready",
-		onbackbutton: "handleBackGesture",
-		onCoreNaviDragStart: "handleCoreNaviDragStart",
-		onCoreNaviDrag: "handleCoreNaviDrag",
-		onCoreNaviDragFinish: "handleCoreNaviDragFinish"},
-
+		
+		{kind: "AppMenu", components: [
+			{content: "Preferences"}
+		]},
+		
 		{kind: "Panels", draggable: false, name: "raw", fit: true, components: [
-			//TODO: Splash?
-			{name: "firstuse", kind: "FirstUse", fit: true},
-			{name: "MainApp", kind: "MainApp", fit: true}
+			//TODO: Do we really need the splash page anymore?
+			{name: "splash", kind: "calendar.Splash", fit: true},
+			{name: "firstuse", kind: "calendar.FirstUse", fit: true},
+			{name: "mainapp", kind: "calendar.MainApp", fit: true},
+			{name: "newevent", kind: "calendar.NewEvent"},
+			{name: "prefview", kind: "calendar.PreferencesView"}
 		]},
 
 		{kind: "CoreNavi", fingerTracking: true}
 	],
 
 	doneFirstUse: function(){
-		this.$.raw.setIndex(1);
+		this.showMainApp();
 	},
-
+	
+	showNewEvent: function(){
+		this.$.raw.setIndex(3);
+	},
+	
+	showMainApp: function(){
+		this.$.raw.setIndex(2);
+		this.$.mainapp.navigated();
+	},
+	
+	showCalendar: function(){
+		this.$.raw.setIndex(2);
+	},
+	
 	create: function(){
 		this.inherited(arguments);
-		//TODO: First launch logic:
-		if(true){
-			//First Launch:
-			this.$.raw.setIndex(0);
+		var params = enyo.getWindowParams();
+		if(params && !params.firstlaunch){
+			this.showMainApp();
 		}else{
-			//Databased have already been set up.
+			this.$.raw.setIndex(1);
+		}
+		//Used for browser debugging:
+		if(!window.PalmSystem){
 			this.$.raw.setIndex(1);
 		}
 	}
-
 });

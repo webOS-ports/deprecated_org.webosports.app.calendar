@@ -1,3 +1,3 @@
 enyo.depends(
-	"firstuse.js"
+	"FirstUse.js"
 );
