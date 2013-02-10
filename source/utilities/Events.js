@@ -27,6 +27,7 @@ enyo.singleton({
 		if(q && q.page){
 			query.page = q.page;
 		}
+		this._query = query;
 		navigator.service.Request("palm://com.palm.db/", {
 			"method": "find",
 			"parameters": {
@@ -45,12 +46,12 @@ enyo.singleton({
 		console.log(JSON.stringify(inSender));
 
 
-		if(!reponse){
+		if(!response){
 			console.error("Event Manager: query failed");
 			return false;
 		}
 		
-		this.queryResults = query.page ? this.queryResults.concat(response) : response;
+		this.queryResults = this._query.page ? this.queryResults.concat(response) : response;
 		
 		if (inSender.next) {
             this.loadEvents({page: inSender.page});
