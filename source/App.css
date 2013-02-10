@@ -37,3 +37,13 @@
 .newevent-row {
 	margin-top: 10px;
 }
+.newevent-item {
+	padding: 10px;
+}
+.newevent-item > * {
+	display: inline-block;
+}
+.newevent-notes {
+	width: 100%;
+	margin-top: 10px;
+}
