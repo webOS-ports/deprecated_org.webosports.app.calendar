@@ -30,6 +30,7 @@ enyo.kind({
 	},
 	
 	showNewEvent: function(){
+		this.$.newevent.resetView();
 		this.$.raw.setIndex(3);
 	},
 	
