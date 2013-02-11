@@ -46,12 +46,12 @@ enyo.kind({
 							{content: "Alerts"},
 							{kind: "onyx.PickerDecorator", style: "padding: 5px;", components: [
 								{style: "width: 150px;"},
-								{kind: "onyx.Picker", components: [
-									{content: "No Repeat", active: true},
-									{content: "Daily"},
-									{content: "Weekdays"},
-									{content: "Weekly"},
-									{content: "Custom"}
+								{kind: "onyx.Picker", name: "alarmTrigger", components: [
+									{content: "No Alert", value: false, active: true},
+									{content: "Daily", value: "-PT15M"},
+									{content: "Weekdays", value: "-PT15M"},
+									{content: "Weekly", value: "-PT15M"},
+									{content: "Custom", value: "-PT15M"}
 								]}
 							]}
 						]}
@@ -78,6 +78,7 @@ enyo.kind({
 	createEvent: function(){
 		var stdt = moment(this.$.fromDate.getValue()).startOf("day").hours(this.$.fromTime.getValue().getHours()).minutes(this.$.fromTime.getValue().getMinutes());
 		var endt = moment(this.$.toDate.getValue()).startOf("day").hours(this.$.toTime.getValue().getHours()).minutes(this.$.toTime.getValue().getMinutes());
+		var alarm = this.$.alarmTrigger.getSelected().value ? [{alarmTrigger: {valueType: "DURATION", value: this.$.alarmTrigger.getSelected().value}}] : [];
 		var evt = {
 			subject: this.$.eventName.getValue(),
 			dtstart: stdt.valueOf(),
@@ -87,8 +88,7 @@ enyo.kind({
 			rrule: null,
 			//TODO: Investigate:
 			tzId: new enyo.g11n.TzFmt().getCurrentTimeZone(),
-			//TODO:
-			alarm: [],
+			alarm: alarm,
 			note: this.$.eventNotes.getValue(),
 			allDay: this.$.allDayEvent.getChecked()
 		};

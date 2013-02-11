@@ -86,6 +86,8 @@ enyo.singleton({
 	prepareEvents: function(range){
 		//TODO: We may have some JS Execution Timeout issues here, so we'll have to look into chunking the processing like webOS 3.0 does.
 		//TODO: Allow batch processing so that this function doesn't get called multiple times and thus so we do not loop through the entire queryResults array multiple times? We ideally don't need to do this because batch results really should not happen. But in the events that they do, we should avoid looping that much.
+		
+		//TODO: We may want to keep an arry of processed time ranges so that we can load them up instead of looping. Either that or use getEvents/getEventsRange exclusively.
 		return;
 		
 		//Array of the occurences of events in this range:
@@ -148,6 +150,9 @@ enyo.singleton({
 		evt._kind = "";
 		//Create a new event based on the one we just passed:
 		var nevt = new CalendarEvent(evt);
+		console.log("Creating New Event...");
+		console.log(nevt);
+		return;
 		//Put it in the database:
 		navigator.service.Request("palm://com.palm.db/", {
 			"method": "put",
