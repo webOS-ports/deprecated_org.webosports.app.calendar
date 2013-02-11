@@ -29,7 +29,32 @@ enyo.kind({
 						{style: "margin-right: 15px;", name: "toDate", kind:"onyx.DatePicker"}, {style: "margin-left: 15px;", name: "toTime", kind:"onyx.TimePicker"}
 					]},
 					{classes: "newevent-item", components: [
-						{content: "Repeat"}
+						{style: "margin-right: 30px;",components: [
+							{content: "Repeat"},
+							{kind: "onyx.PickerDecorator", style: "padding: 5px;", components: [
+								{style: "width: 150px;"},
+								{kind: "onyx.Picker", components: [
+									{content: "No Repeat", active: true},
+									{content: "Daily"},
+									{content: "Weekdays"},
+									{content: "Weekly"},
+									{content: "Custom"}
+								]}
+							]}
+						]},
+						{components: [
+							{content: "Alerts"},
+							{kind: "onyx.PickerDecorator", style: "padding: 5px;", components: [
+								{style: "width: 150px;"},
+								{kind: "onyx.Picker", components: [
+									{content: "No Repeat", active: true},
+									{content: "Daily"},
+									{content: "Weekdays"},
+									{content: "Weekly"},
+									{content: "Custom"}
+								]}
+							]}
+						]}
 					]}
 				]},
 				{kind: "onyx.InputDecorator", classes: "newevent-notes enyo-border-box", alwaysLooksFocused: true, components: [

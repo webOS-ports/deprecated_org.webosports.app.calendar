@@ -45,14 +45,17 @@ enyo.kind({
 	
 	create: function(){
 		this.inherited(arguments);
+		
+		//Used for browser debugging:
+		if(!window.PalmSystem){
+			this.$.raw.setIndex(1);
+			return;
+		}
+		
 		var params = enyo.getWindowParams();
 		if(params && !params.firstlaunch){
 			this.showMainApp();
 		}else{
-			this.$.raw.setIndex(1);
-		}
-		//Used for browser debugging:
-		if(!window.PalmSystem){
 			this.$.raw.setIndex(1);
 		}
 	}
