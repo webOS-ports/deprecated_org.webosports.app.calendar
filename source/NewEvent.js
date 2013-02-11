@@ -7,10 +7,10 @@ enyo.kind({
 			{classes: "enyo-border-box newevent-innerblock", components: [
 				{kind: "onyx.Groupbox", components: [
 					{kind: "onyx.InputDecorator", components: [
-						{kind: "onyx.Input", name: "eventName", placeholder: "Event Name"}
+						{kind: "onyx.Input", name: "eventName", placeholder: "Event Name", style: "width: 100%;"}
 					]},
 					{kind: "onyx.InputDecorator", components: [
-						{kind: "onyx.Input", name: "eventLocation", placeholder: "Event Location"}
+						{kind: "onyx.Input", name: "eventLocation", placeholder: "Event Location", style: "width: 100%;"}
 					]}
 					//TODO: Calendar Selector Here:
 					//Right now there's one calendar so this isn't really needed.
@@ -33,14 +33,14 @@ enyo.kind({
 					]}
 				]},
 				{kind: "onyx.InputDecorator", classes: "newevent-notes enyo-border-box", alwaysLooksFocused: true, components: [
-				    {kind: "onyx.TextArea", name: "eventNotes", placeholder: "Event Notes", onchange: "inputChange"}
+				    {kind: "onyx.TextArea", name: "eventNotes", style: "width: 100%;", placeholder: "Event Notes", onchange: "inputChange"}
 				]}
 			]}
 		]},
 		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
 			{style: "margin: 0 auto; text-align: center;", fit: true, components: [
 				{kind: "onyx.Button", content: "Cancel", ontap: "cancelEvent", style: "width: 150px; margin-right: 10px;"},
-				{kind: "onyx.Button", content: "Create", style: "background-color: green; width: 150px; margin-left: 10px;"}
+				{kind: "onyx.Button", content: "Create", ontap: "createEvent", style: "background-color: green; width: 150px; margin-left: 10px;"}
 			]}
 		]},
 	],
@@ -49,6 +49,45 @@ enyo.kind({
 	},
 	cancelEvent: function(){
 		this.bubble("onShowCalendar");
+	},
+	createEvent: function(){
+		var stdt = moment(this.$.fromDate.getValue()).startOf("day").hours(this.$.fromTime.getValue().getHours()).minutes(this.$.fromTime.getValue().getMinutes());
+		var endt = moment(this.$.toDate.getValue()).startOf("day").hours(this.$.toTime.getValue().getHours()).minutes(this.$.toTime.getValue().getMinutes());
+		var evt = {
+			subject: this.$.eventName.getValue(),
+			dtstart: stdt.valueOf(),
+			dtend: endt.valueOf(),
+			location: this.$.eventLocation.getValue(),
+			//TODO:
+			rrule: null,
+			//TODO: Investigate:
+			tzId: new enyo.g11n.TzFmt().getCurrentTimeZone(),
+			//TODO:
+			alarm: [],
+			note: this.$.eventNotes.getValue(),
+			allDay: this.$.allDayEvent.getChecked()
+		};
+		console.log(evt);
+		/*
+		calendar.Events.createEvent({
+			subject: 'Take daily medicine',  // string
+			dtstart: '1290711600000', // string representing the start date/time as timestamp in milliseconds
+			dtend: '1290718800000',  // string representing the end date/time as timestamp in milliseconds
+			location: 'Wherever I am!', // string
+			rrule: null, 
+			tzId: new enyo.g11n.TzFmt().getCurrentTimeZone(),
+			alarm: [
+			    {
+			        alarmTrigger: {
+			            valueType: "DURATION",
+			            value: "-PT15M"
+			        }
+			    }
+			],
+			note: 'Take alergy medicine, 1 pill',  // string
+			allDay: false  // boolean
+        });
+		*/
 	},
 	//TODO: Accept parameters from the calendar.
 	resetView: function(){
