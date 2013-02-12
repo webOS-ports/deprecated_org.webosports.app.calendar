@@ -17,12 +17,12 @@ enyo.kind({
 				]},
 				{kind: "onyx.Groupbox", classes: "newevent-row", components: [
 					{classes: "newevent-item", components: [
-						{kind: "onyx.Checkbox", name: "allDayEvent"},
+						{kind: "onyx.Checkbox", name: "allDayEvent", onchange: "updateAlldayView"},
 						{content: "All Day Event", style: "font-size: 1.1em; padding-left: 10px;", ontap: "checkboxWrapper"}
 					]},
 					{classes: "newevent-item", components: [
 						{content: "From", style: "display: block;"},
-						{style: "margin-right: 15px;", name: "fromDate", kind:"onyx.DatePicker"}, {style: "margin-left: 15px;", name: "fromTime", kind:"onyx.TimePicker"}
+						{style: "margin-right: 15px;", name: "fromDate", onSelect: "moveToDate", kind:"onyx.DatePicker"}, {style: "margin-left: 15px;", name: "fromTime", kind:"onyx.TimePicker"}
 					]},
 					{classes: "newevent-item", components: [
 						{content: "To", style: "display: block;"},
@@ -32,8 +32,8 @@ enyo.kind({
 						{style: "margin-right: 30px;",components: [
 							{content: "Repeat"},
 							{kind: "onyx.PickerDecorator", style: "padding: 5px;", components: [
-								{style: "width: 150px;"},
-								{kind: "onyx.Picker", components: [
+								{style: "width: 180px;"},
+								{kind: "onyx.Picker", name: "rrule", components: [
 									{content: "No Repeat", active: true},
 									{content: "Daily"},
 									{content: "Weekdays"},
@@ -44,14 +44,10 @@ enyo.kind({
 						]},
 						{components: [
 							{content: "Alerts"},
+							//TODO: Change for all day events.
 							{kind: "onyx.PickerDecorator", style: "padding: 5px;", components: [
-								{style: "width: 150px;"},
+								{style: "width: 180px;"},
 								{kind: "onyx.Picker", name: "alarmTrigger", components: [
-									{content: "No Alert", value: false, active: true},
-									{content: "Daily", value: "-PT15M"},
-									{content: "Weekdays", value: "-PT15M"},
-									{content: "Weekly", value: "-PT15M"},
-									{content: "Custom", value: "-PT15M"}
 								]}
 							]}
 						]}
@@ -69,13 +65,69 @@ enyo.kind({
 			]}
 		]},
 	],
+	_alarmsEvent: {
+		"false": "No Reminder",
+		"+PT0M": "At start time",
+		"-PT5M": "5 minutes before",
+		"-PT10M": "10 minutes before",
+		"-PT15M": "15 minutes before",
+		"-PT30M": "30 minutes before",
+		"-PT1H": "1 hour before",
+		"-P1D": "1 day before"
+	},
+	_alarmsDay: {
+		"false": "No Reminder",
+		"+PT0M": "At start time",
+		"-P1D": "1 day before",
+		"-P2D": "2 days before",
+		"-P3D": "3 days before",
+		"-P1W": "1 week before"
+	},
 	checkboxWrapper: function(){
 		this.$.allDayEvent.setChecked(!this.$.allDayEvent.getChecked());
+		this.updateAlldayView();
+	},
+	moveToDate: function(inSender, inEvent){
+		if(inEvent.value.getTime() > this.$.toDate.getValue().getTime()){
+			var moveTo = new Date(inEvent.value);
+			var std = moment(moveTo).startOf("day");
+			std.hours(this.$.fromTime.getValue().getHours()).minutes(this.$.fromTime.getValue().getMinutes());
+			std.add("minutes", calendar.Preferences.prefs.defaultEventDuration || 60);
+			
+			this.$.toDate.setValue(std.toDate());
+			this.$.toTime.setValue(std.toDate());
+		}
+	},
+	updateAlldayView: function(){
+		if(this.$.allDayEvent.getChecked()){
+			this.$.fromTime.hide();
+			this.$.toTime.hide();
+			this.$.alarmTrigger.destroyClientControls();
+			for(var x in this._alarmsDay){
+				if(this._alarmsDay.hasOwnProperty(x)){
+					this.$.alarmTrigger.createComponent({content: this._alarmsDay[x], value: x});
+				}
+			}
+			this.$.alarmTrigger.render();
+			this.$.alarmTrigger.setSelected(this.$.alarmTrigger.getClientControls()[enyo.keys(this._alarmsDay).indexOf(calendar.Preferences.prefs.defaultAllDayEventReminder || "-P1D")]);
+		}else{
+			this.$.fromTime.show();
+			this.$.toTime.show();
+			this.$.alarmTrigger.destroyClientControls();
+			for(var x in this._alarmsEvent){
+				if(this._alarmsEvent.hasOwnProperty(x)){
+					this.$.alarmTrigger.createComponent({content: this._alarmsEvent[x], value: x});
+				}
+			}
+			this.$.alarmTrigger.render();
+			this.$.alarmTrigger.setSelected(this.$.alarmTrigger.getClientControls()[enyo.keys(this._alarmsEvent).indexOf(calendar.Preferences.prefs.defaultEventReminder || "-PT15M")]);
+		}
 	},
 	cancelEvent: function(){
 		this.bubble("onShowCalendar");
 	},
 	createEvent: function(){
+		//TODO: do we need to change this for all day events?
 		var stdt = moment(this.$.fromDate.getValue()).startOf("day").hours(this.$.fromTime.getValue().getHours()).minutes(this.$.fromTime.getValue().getMinutes());
 		var endt = moment(this.$.toDate.getValue()).startOf("day").hours(this.$.toTime.getValue().getHours()).minutes(this.$.toTime.getValue().getMinutes());
 		var alarm = this.$.alarmTrigger.getSelected().value ? [{alarmTrigger: {valueType: "DURATION", value: this.$.alarmTrigger.getSelected().value}}] : [];
@@ -131,5 +183,7 @@ enyo.kind({
 		this.$.eventNotes.setValue("");
 		
 		this.$.allDayEvent.setChecked(false);
+		this.updateAlldayView();
+		this.$.rrule.setSelected(this.$.rrule.getClientControls()[0]);
 	}
 });
