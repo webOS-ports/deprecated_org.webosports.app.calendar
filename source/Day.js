@@ -136,7 +136,7 @@ enyo.kind({
 			//Clone date:
 			var checker = moment(this.date);
 			//Check to make sure that this day fits in the event range:
-			if(checker.sod().diff(moment.unix(evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment.unix(evt.dtend).sod(), "days") === 0){
+			if(checker.sod().diff(moment(evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment(evt.dtend).sod(), "days") === 0){
 				//Render all day events: 
 				if(evt.allDay){
 					showAllDay = true;
@@ -147,8 +147,8 @@ enyo.kind({
 					var el = this.$.eventLayer.createComponent({kind: "calendar.DayEvent", date: this.date, evt: evt});
 					
 					//Create a moment for the event start time and end time:
-					var elstart = moment.unix(evt.dtstart);
-					var elend = moment.unix(evt.dtend);
+					var elstart = moment(evt.dtstart);
+					var elend = moment(evt.dtend);
 
 					var top, height;
 					//Set up the top of the event:
@@ -322,7 +322,7 @@ enyo.kind({
 		this.inherited(arguments);
 		var checker = moment(this.date);
 		//Make sure that either the start time or end time are on the same day as the page:
-		if(checker.sod().diff(moment.unix(this.evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment.unix(this.evt.dtend).sod(), "days") === 0){
+		if(checker.sod().diff(moment(this.evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment(this.evt.dtend).sod(), "days") === 0){
 			if(this.evt.allDay){
 				this.removeClass("day-event-container");
 				this.$.event.removeClass("day-event");
@@ -398,7 +398,7 @@ var eventsforday = [
 		"classification": "PUBLIC",
 		"comment": "",
 		"contact": "",
-		"created": moment().unix(),
+		"created": moment.unix(),
 		"dtend": moment().add("hours", 1).unix(),
 		"dtstart": moment().unix(),
 		"dtstamp": "",

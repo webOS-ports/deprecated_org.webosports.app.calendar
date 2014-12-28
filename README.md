@@ -1,21 +1,21 @@
 Calendar
 ========
 
-The Calendar app, built with Enyo2, for webOS Ports.
+The Calendar app for webOS Ports, built with Enyo2.
 
 Info
 ----
 
-Don't mind me. Yet...
+This application is built from scratch using 
 
 Building
 --------
 
-A makefile is included for easing the building processes. The makefile assumes you have Node installed, as well as the Palm/HP webOS command-line tools. The makefile also provides some utilities that are just aimed at 
+A makefile is included for easing the building processes. The makefile assumes you have Node installed, as well as the Palm/HP webOS command-line tools. The makefile also provides some utilities that are just aimed at testing the application on a connected webOS device.
 
 #### make build
 
-Runs the standard Enyo2 minification and deployment process
+Runs the standard Enyo2 minification and deployment process. This also creates an IPK for the app.
 
 #### make run
 
@@ -25,15 +25,24 @@ First, runs `build`, then installs and launches the application on a connected d
 
 Runs `build` and `make`, and then follows logs on the device the application launched on.
 
+#### make clean
+
+Removes the build and deploy directories and uninstalls the application from the connected device. 
+
 #### make db8
 
 Installs the db8 configurations on the currently connected webOS device. The configurations are set up when the operating system is built, and are not established by the app itself. Because of this, you will need to install the db kinds and permissions separately. 
 
 Todo
 ----
-Figure out the appinfo.json values.
-Nowindow?
-Make everything work.
-Week view.
-First use DB setup.
-Reminders.
+
+There are several elements of the application that are still in development. Below is an incomplete list of the functionality that has yet to be added to the app.
+
+- Finalize core functionality (event handling, db management, event display).
+- Solidify nowindow handling.
+- Accept "Just Type" launch arguments as well as app icon change.
+- Make sure that activities work.
+- Week view.
+- Manage reminders, build out reminder service.
+- Localize the entire application (am/pm too).
+- Figure out the multi-calendar situation with account manager.
