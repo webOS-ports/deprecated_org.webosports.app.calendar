@@ -1,0 +1,10 @@
+enyo.depends(
+	"AppPanels.js",
+	"Day.js",
+	"InfinitePanels.js",
+	"Month.js",
+	"NewEvent.js",
+	"PreferencesView.js",
+	"Splash.js",
+	"Calendar.js"
+);
