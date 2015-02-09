@@ -95,7 +95,6 @@ enyo.kind({
 	fit: true,
 	published: {
 		date: "",
-		firstDayInWeek: ""
 	},
 		
 	//Set up current viewed date:
@@ -200,12 +199,12 @@ enyo.kind({
 	},
 	generateView: function(){
 		if(this.isHeader){
-			this.removeClass("month-row");
+			this.removeClass("week-row");
 			//Get date formatter:
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
 			this.smallFormatter = new enyo.g11n.DateFmt({format: "E"});
 			for(var i = 0; i < 7; i++){
-				this.createComponent({content: this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()), tag: "th", classes: "month-item-header"});
+				this.createComponent({content: this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()), tag: "th", classes: "week-item-header"});
 			}
 		}else{
 			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
@@ -221,7 +220,7 @@ enyo.kind({
 			}
 			for(var i = 0; i < 7; i++){
 				var now = moment(temp).add("days", i - start);
-				var el = this.createComponent({kind: "calendar.MonthItem", date: now, viewed: this.date, number: now.format("D")});
+				var el = this.createComponent({kind: "calendar.WeekItem", date: now, viewed: this.date, number: now.format("D")});
 				
 				el.addEvent();
 				el.addEvent();
@@ -229,11 +228,11 @@ enyo.kind({
 				el.addEvent();
 					
 				if(this.date.month() !== now.month()){
-					el.addClass("month-other");
+					el.addClass("week-other");
 				}
 
 				if(moment().diff(now, "days") === 0){
-					el.addClass("month-active");
+					el.addClass("week-active");
 				}
 			}
 		}
@@ -259,7 +258,6 @@ enyo.kind({
 
 	create: function(){
 		this.inherited(arguments);
-
 	},
 	//Set up current viewed date:
 	now: moment(),
@@ -294,19 +292,12 @@ enyo.kind({
 
 	},
 	
-	//Called when the app is loaded the first time:
-	first: function(){
-		//Because the scroll position is lost on render, we have reset it after we view ourselves.
-		this.$.inf.callAll("significantScroll");
-	},
-	
+
 	//Load up different days based on where we are in the panels:
 	loadNext: function(inSender, inEvent){
 		this.$.inf.provideNext({kind: "calendar.WeekPage", date: moment(this.now).add("weeks", inEvent.current + 1)});
 	},
 	loadPrev: function(inSender, inEvent){
-		console.log("back",inEvent.current);
-		console.log("index", this.$.inf.getIndex() );
 		this.$.inf.providePrev({kind: "calendar.WeekPage", date: moment(this.now).add("weeks", inEvent.current - 1)});
 	}
 });

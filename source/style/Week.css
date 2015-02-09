@@ -4,8 +4,13 @@
 	width: 100%;
 	background-color: #00FF00;
 }
-
-
+.week-active {
+	background: #E4EDF2 !important;
+	color: rgba(0, 0, 0, 0.9) !important;
+}
+.week-other {
+	color: rgba(0, 0, 0, 0.2) !important;
+}
 .week-table {
 	border-spacing: 0;
 	border-collapse: collapse;
@@ -28,7 +33,6 @@
 	font-weight: 300;
 	text-transform: uppercase;
 	font-size: 0.75em;
-	width: 14.28%;
 }
 .week-item {
 	font-size: 0.9em;
@@ -48,7 +52,6 @@
 	right: 0px;
 	bottom: 0px;
 	color: gray;
-	width: 14.28%;
 }
 .week-event-layer {
 	padding: 0px 4px;
@@ -57,7 +60,7 @@
 	display: block;
 }
 .week-view-header  {
-
+	background-color:	gray;
 	text-align: center;
 }
 .week-row-narrow > td {
