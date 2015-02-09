@@ -1,6 +1,6 @@
 enyo.depends(
-	//"Calendars.js",
-	"Preferences.js"
+	"Preferences.js",
 //	"CalendarEvent.js",
-//	"Events.js"
+	"Events.js"
+//	"CalEvent.js"
 );

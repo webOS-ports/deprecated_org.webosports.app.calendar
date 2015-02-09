@@ -1,5 +1,6 @@
 enyo.depends(
 	"App.css",
 	"Day.css",
-	"Month.css"
+	"Month.css",
+	"Week.css"
 );

@@ -6,5 +6,6 @@ enyo.depends(
 	"NewEvent.js",
 	"PreferencesView.js",
 	"Splash.js",
-	"Calendar.js"
+	"Calendar.js",
+	"Week.js"
 );
