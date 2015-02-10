@@ -1,38 +1,23 @@
 enyo.depends(
 	//Include Libraries:
-	"$lib/layout",
 	"$lib/g11n",
-	"$lib/onyx",
-	"$lib/webos-lib",
 	"$lib/util",
+	"$lib/layout",
 	"$lib/moment",
-	
-	//Main app css. Views have their own CSS files too.
-	"App.css",
-	
+	"$lib/onyx",	// To theme Onyx using Theme.less, change this line to $lib/onyx/source,
+	//"Theme.less",	// uncomment this line, and follow the steps described in Theme.less
+	"$lib/webos-lib",
+
+	// CSS/LESS style files
+	"style",
+	// Model and data definitions
+	"data",
+	// View kind definitions
+	"views",
 	//Load up the utilities to save events, preferences, etc:
 	"utilities",
-
-	//Core UI JavaScript:
-	"App.js",
-	"AppPanels.js",
-	
-	//Other View:
-	"PreferencesView.js",
-	"NewEvent.js",
-	
-	//Splash Scrren:
-	"Splash.js",
-
-	//First Use Manager:
+	// Frist Use
 	"firstuse",
-
-	//The kind used to manage displaying an infinite amount of panels:
-	"InfinitePanels.js",
-
-	//Now the different view type kinds:
-	"Day.js",
-	"Day.css",
-	"Month.js",
-	"Month.css"
+	// Include our default entry point
+	"app.js"
 );
