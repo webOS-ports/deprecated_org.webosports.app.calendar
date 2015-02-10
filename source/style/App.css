@@ -1,0 +1,49 @@
+/* The main panels kind that holds day/week/month views: */
+.main {
+	background-color: #555;
+}
+/* Classes for the view selector at the bottom: */
+.view-select {
+	text-align: center;
+	margin: 0px auto;
+}
+.view-select-button {
+	width: 80px;
+}
+
+/*Fixes bugs: */
+.pickerFix {
+    z-index: 999 !important;
+}
+
+.app-splash {
+	margin: 0px auto;
+	display: block;
+	position: relative;
+	top: 50%;
+	margin-top: -128px;
+	background-image: url(../../assets/icon-256x256.png);
+	width: 256px;
+	height: 256px;
+	background-size: contain;
+}
+
+.newevent-innerblock {
+	margin: 0px auto;
+	width: 100%;
+	padding: 30px;
+	max-width: 600px;
+}
+.newevent-row {
+	margin-top: 10px;
+}
+.newevent-item {
+	padding: 10px;
+}
+.newevent-item > * {
+	display: inline-block;
+}
+.newevent-notes {
+	width: 100%;
+	margin-top: 10px;
+}
