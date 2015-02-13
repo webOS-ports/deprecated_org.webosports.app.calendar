@@ -2,4 +2,3 @@ build/
 deploy/
 *.ipk
 .DS_Store
-cordova.js
