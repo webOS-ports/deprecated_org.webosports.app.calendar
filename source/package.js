@@ -19,5 +19,5 @@ enyo.depends(
 	// Frist Use
 	"firstuse",
 	// Include our default entry point
-	"app.js"
+	"App.js"
 );
