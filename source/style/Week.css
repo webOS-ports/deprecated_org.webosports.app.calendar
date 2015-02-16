@@ -1,73 +1,10 @@
-
+.week-title {
+	font-size: 2em;
+	font-weight: 100;
+/*	background-color: gray; */
+}
 .week-view   {
 	height: 100%;
 	width: 100%;
 	background-color: #00FF00;
-}
-.week-active {
-	background: #E4EDF2 !important;
-	color: rgba(0, 0, 0, 0.9) !important;
-}
-.week-other {
-	color: rgba(0, 0, 0, 0.2) !important;
-}
-.week-table {
-	border-spacing: 0;
-	border-collapse: collapse;
-	width: 100%;
-}
-.week-title {
-	font-size: 2em;
-	font-weight: 100;
-	background-color: gray;
-}
-.week-tbody {
-	table-layout: fixed;
-}
-.week-row {
-	height: 15%;
-}
-.week-item-header {
-	text-align: left;
-	height: 30px;
-	font-weight: 300;
-	text-transform: uppercase;
-	font-size: 0.75em;
-}
-.week-item {
-	font-size: 0.9em;
-	color: rgba(0, 0, 0, 0.6);
-	background-color: #F5F5F5;
-	border: 1px solid #c4c4c4;
-	box-shadow: inset 0px 1px 0px #fff;
-	vertical-align: top;
-	text-align: left;
-	padding: 5px;
-	padding-bottom: 0px;
-	width: 14.28%;
-}
-.week-and-other {
-	font-size: 0.5em;
-	float: right;
-	right: 0px;
-	bottom: 0px;
-	color: gray;
-}
-.week-event-layer {
-	padding: 0px 4px;
-	overflow-x: hidden;
-	overflow-y: visible;
-	display: block;
-}
-.week-view-header  {
-	background-color:	gray;
-	text-align: center;
-}
-.week-row-narrow > td {
-	text-align: center;
-	font-weight: bold;
-	vertical-align: middle;
-}
-.week-row-narrow > th {
-	text-align: center;
 }
