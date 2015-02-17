@@ -3,8 +3,17 @@
 	font-weight: 100;
 /*	background-color: gray; */
 }
-.week-view   {
-	height: 100%;
+.week-title-narrow  {
+	font-size: 1.500em;
+	font-weight: 100;
+}
+.week-view    {
+	height: 40px;
 	width: 100%;
 	background-color: #00FF00;
+	margin-top: 10px;
 }
+.week-tbody {
+	table-layout: fixed;
+}
+

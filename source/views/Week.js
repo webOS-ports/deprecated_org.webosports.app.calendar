@@ -12,11 +12,7 @@ enyo.kind({
 	components: [
 		{classes: "day-page-inner", kind: "FittableRows", fit: true, components: [
 		{name: "d", content: "date :)" + this.date, style: "width: 100%;"},
-			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
-				{style: "height: 20px"},
-				//Dynamically loaded.
-				//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
-			]}	
+
 		]}
 	],
 	date: "",
@@ -42,7 +38,6 @@ enyo.kind({
 	},
 	
 	generateView: function(){
-		var is12Hour = this.formatter.isAmPm();
 		//Get date formatter:
 		
 		if(enyo.Panels.isScreenNarrow()){
@@ -50,10 +45,6 @@ enyo.kind({
 		}else{
 			//Display the title:
 			this.$.d.setContent(this.formatter.format(this.date.toDate()));
-		}
-		//Create all of the date rows:
-		for(var i = 0; i < 24; i++){
-			this.$.times.createComponent({kind: "calendar.DayRow", time: i, is12Hour: is12Hour});
 		}
 	}
 });
@@ -68,21 +59,32 @@ enyo.kind({
 	},
 
 	components: [
-		{name: "title", classes: "week-title", content: ""},
-		{kind: "enyo.FittableColumns", style: "width: 14.28%;", classes: "week-view", components: [
-			{name: "weekView", tag: "tbody", classes: "week-tbody", components: [
-				//Dynamically generated rows.
-				//	{kind: "calendar.WeekItem"},
+		{classes: "day-page-inner", kind: "FittableRows", fit: true, components: [
+			{name: "title", classes: "week-title", content: ""},
+			{kind: "enyo.FittableColumns", style: "width: 14.28%;", classes: "week-view", components: [
+				{name: "weekView", tag: "tbody", classes: "week-tbody", components: [
+					//Dynamically generated rows.
+					//	{kind: "calendar.WeekItem"},
+				]},
+				
+			]},
+			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
+				{style: "height: 20px"},
+				{name: "CurrentTime", classes: "day-current-time", showing: false},
+				//Dynamically loaded.
+				//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
 			]}
-		]},
+		]}
 	],
-
+	
+	sigScroll: 0,
 	//Set up current viewed date:
 	now: moment(),
 	
 	create: function() {
 		this.inherited(arguments);
-	
+		this.formatter = new enyo.g11n.DateFmt({format: "EEE, d,"});
+		this.formatterNarrow = new enyo.g11n.DateFmt({format: "EE d"});	
 		//If no date is provided, create a new moment:
 		if(!this.date){
 			this.date = moment();
@@ -91,15 +93,30 @@ enyo.kind({
 			this.date = moment(this.date);
 		}
 		this.generateView();
-},
+	//	this.setTimeBar();
+	},
+	
+	rendered: function(){
+		this.inherited(arguments);
+		//Set the time bar initially
+		if(moment().diff(this.date, "days") === 0){
+			this.$.CurrentTime.show();
+			this.setTimeBar();
+		}else{
+			this.$.CurrentTime.hide();
+		}
+		this.significantScroll();
+	},
 	
 	generateView: function(){
+		var is12Hour = this.formatter.isAmPm();
 		//Get date formatter:
 		this.formatterWide = new enyo.g11n.DateFmt({format: "MMMM yyyy"});
 		this.formatterNarrow = new enyo.g11n.DateFmt({format: "MMM yy"});
 		
 		if(enyo.Panels.isScreenNarrow()){
 			this.$.title.setContent(this.formatterNarrow.format(this.date.toDate()));	// the month and year title
+			this.$.title.addClass("week-title-narrow");
 		}else{
 			this.$.title.setContent(this.formatterWide.format(this.date.toDate()));	// the month and year title
 		}
@@ -107,6 +124,58 @@ enyo.kind({
 		for(var i = 0; i < 7; i++){
 			var n = moment(this.date).day(i);
 			this.$.weekView.createComponent({kind: "calendar.WeekItem", date: n, number: n.format("D")  });
+		}
+			//Create all of the hour rows:
+		for(var j = 0; j < 24; j++){
+			console.log("looping", j);
+			this.$.times.createComponent({kind: "calendar.DayRow", time: j, is12Hour: is12Hour});
+		}
+	},
+
+	//Scrolls to the most significant time of the day:
+	significantScroll: function(){
+		if(this.sigScroll < 2){
+			this.sigScroll++;
+			if(moment().diff(this.date, "days") === 0){
+				//Scroll to current time:
+				var c = this.$.times.getClientControls();
+				var ts = this.$.times;
+				ts.scrollToControl(c[moment().hours() + 3], true);
+				var st = ts.getScrollTop();
+				ts.setScrollTop(st+1);
+				if(st !== ts.getScrollTop()){
+					ts.setScrollTop(ts.getScrollTop()-15);
+				}
+			}else{
+				//Scroll to current time:
+				var c = this.$.times.getClientControls();
+				var ts = this.$.times;
+				ts.scrollToControl(c[8 + 3], true);
+				var st = ts.getScrollTop();
+				ts.setScrollTop(st+1);
+				if(st !== ts.getScrollTop()){
+					ts.setScrollTop(ts.getScrollTop()-15);
+				}
+			}
+		}
+	},
+	
+	setTimeBar: function(){
+		//Don't keep setting the time bar if the date moves off this day:
+		if(moment().diff(this.date, "days") === 0){
+			//Set Bar:
+			var height = moment().hours() * this.getRowHeight();
+			height += Math.floor((this.getRowHeight())*((moment().minutes()/60)));
+			this.$.CurrentTime.applyStyle("top", height + "px");
+			if(this.timer){
+				window.clearTimeout(this.timer);
+			}
+			this.timer = window.setTimeout(enyo.bind(this, "setTimeBar"), 120000);
+		}else{
+			if(this.timer){
+				window.clearTimeout(this.timer);
+			}
+			this.$.CurrentTime.hide();
 		}
 	},
 });
