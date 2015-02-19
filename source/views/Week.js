@@ -19,8 +19,12 @@ enyo.kind({
 	number: "",
 	create: function(){
 		this.inherited(arguments);
-		this.formatter = new enyo.g11n.DateFmt({format: "EEE, d,"});
-		this.formatterNarrow = new enyo.g11n.DateFmt({format: "EE d"});		
+		var options = {};		
+		options.date = "dm";
+		options.length = "full";
+		this.fmtWide = new ilib.DateFmt(options);
+		options.length = "long";
+		this.fmtNarrow = new ilib.DateFmt(options);
 		
 		//If no date is provided, create a new moment:
 		if(!this.date){
@@ -41,10 +45,10 @@ enyo.kind({
 		//Get date formatter:
 		
 		if(enyo.Panels.isScreenNarrow()){
-			this.$.d.setContent(this.formatterNarrow.format(this.date.toDate()));
+			this.$.d.setContent(this.fmtNarrow.format(this.date.toDate()));
 		}else{
 			//Display the title:
-			this.$.d.setContent(this.formatter.format(this.date.toDate()));
+			this.$.d.setContent(this.fmtWide.format(this.date.toDate()));
 		}
 	}
 });
@@ -56,6 +60,7 @@ enyo.kind({
 	style: "width: 100%;",
 	published: {
 		date: "",
+		rowHeight: 56
 	},
 
 	components: [
@@ -83,8 +88,14 @@ enyo.kind({
 	
 	create: function() {
 		this.inherited(arguments);
-		this.formatter = new enyo.g11n.DateFmt({format: "EEE, d,"});
-		this.formatterNarrow = new enyo.g11n.DateFmt({format: "EE d"});	
+		var options = {};		
+		options.date = "dm";
+		options.length = "full";
+		this.fmtWide = new ilib.DateFmt(options);
+		options.length = "long";
+		this.fmtNarrow = new ilib.DateFmt(options);
+	
+		
 		//If no date is provided, create a new moment:
 		if(!this.date){
 			this.date = moment();
@@ -109,16 +120,20 @@ enyo.kind({
 	},
 	
 	generateView: function(){
-		var is12Hour = this.formatter.isAmPm();
-		//Get date formatter:
-		this.formatterWide = new enyo.g11n.DateFmt({format: "MMMM yyyy"});
-		this.formatterNarrow = new enyo.g11n.DateFmt({format: "MMM yy"});
-		
+		var is12Hour = "";
+
+		if(this.fmtWide.getClock() === "12"){
+			is12Hour = true;
+		}else{
+			is12Hour = false;
+		}
+	
 		if(enyo.Panels.isScreenNarrow()){
-			this.$.title.setContent(this.formatterNarrow.format(this.date.toDate()));	// the month and year title
+			this.$.title.setContent(this.fmtNarrow.format(this.date.toDate() ));	// the month and year title
 			this.$.title.addClass("week-title-narrow");
 		}else{
-			this.$.title.setContent(this.formatterWide.format(this.date.toDate()));	// the month and year title
+			
+			this.$.title.setContent(this.fmtWide.format(this.date.toDate()));	// the month and year title
 		}
 			//Create all of the week days:
 		for(var i = 0; i < 7; i++){
@@ -127,7 +142,6 @@ enyo.kind({
 		}
 			//Create all of the hour rows:
 		for(var j = 0; j < 24; j++){
-			console.log("looping", j);
 			this.$.times.createComponent({kind: "calendar.DayRow", time: j, is12Hour: is12Hour});
 		}
 	},
