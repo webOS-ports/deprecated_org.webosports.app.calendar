@@ -1,19 +1,36 @@
-.week-title {
+.week-page {
+	width: 100%;
+	padding: 15px;
+}
+.week-title  {
 	font-size: 2em;
 	font-weight: 100;
 /*	background-color: gray; */
+	padding-top: 5px;
+	padding-left: 5px;
 }
 .week-title-narrow  {
 	font-size: 1.500em;
 	font-weight: 100;
 }
-.week-view    {
+.week-view      {
 	height: 40px;
 	width: 100%;
 	background-color: #00FF00;
 	margin-top: 10px;
 }
-.week-tbody {
+.week-tbody   {
 	table-layout: fixed;
+	padding-left: 10px;
+}
+.week-page-inner  {
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	background-color: #F5F5F5;
+	box-shadow: inset 0px 2px 0px #fff;
 }
 
+.week-days   {
+	width: 100%;
+	padding-left: 10px;
+	padding-top: 10px;
+}

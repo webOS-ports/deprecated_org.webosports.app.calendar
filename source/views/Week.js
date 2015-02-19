@@ -10,8 +10,8 @@ enyo.kind({
 	
 	},
 	components: [
-		{classes: "day-page-inner", kind: "FittableRows", fit: true, components: [
-		{name: "d", content: "date :)" + this.date, style: "width: 100%;"},
+		{classes: "week-page-inner", kind: "FittableRows", fit: true, components: [
+		{name: "d", content: "date :)" + this.date, classes: "week-days"},
 
 		]}
 	],
@@ -53,18 +53,48 @@ enyo.kind({
 	}
 });
 
+//The row for the list.
+enyo.kind({
+	name: "calendar.WeekRow",
+	classes: "day-row",
+	published: {
+		time: 0,
+		is12Hour: true
+	},
+	components: [
+		{classes: "day-row-half"},
+		{classes: "day-row-label", components: [
+			{content: "", name: "time"},
+			{content: "", name: "ampm", classes: "day-row-label-ampm"}
+		]}
+	],
+	create: function(){
+		this.inherited(arguments);
+		if(this.is12Hour){
+			var time = this.time % 12;
+			if(time === 0){
+				time = 12;
+			}
+			this.$.time.setContent(time);
+			this.$.ampm.setContent(this.time >= 12 ? "pm" : "am");
+		}else{
+			this.$.time.setContent(((this.time + "").length > 1 ? this.time : "0" + this.time) + ":00");
+		}
+	}
+});
+
 enyo.kind({
 	name: "calendar.WeekPage",
 	kind: "enyo.FittableRows",
 	fit: true,
-	style: "width: 100%;",
+	classes: "week-page",
 	published: {
 		date: "",
 		rowHeight: 56
 	},
 
 	components: [
-		{classes: "day-page-inner", kind: "FittableRows", fit: true, components: [
+		{classes: "week-page-inner", kind: "FittableRows", fit: true, components: [
 			{name: "title", classes: "week-title", content: ""},
 			{kind: "enyo.FittableColumns", style: "width: 14.28%;", classes: "week-view", components: [
 				{name: "weekView", tag: "tbody", classes: "week-tbody", components: [
@@ -74,10 +104,24 @@ enyo.kind({
 				
 			]},
 			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
-				{style: "height: 20px"},
-				{name: "CurrentTime", classes: "day-current-time", showing: false},
-				//Dynamically loaded.
-				//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
+				{name: "allDayContainer", className: "allday-header", kind: "enyo.FittableColumns", components: [
+				//	{style: "height: 20px"},
+					{name: "CurrentTime", style: "width: 20px;", showing: false},
+				//	{name: "sun", content: "sun", style: "width: 14.28%; height: 100%; background-color: red;"},
+                 //   {name: "allDayLabel0", className: "label enyo-text-ellipsis events-header"}
+                
+		   			
+               // 	{name: "CurrentTime", classes: "day-current-time", showing: false},
+                	//	{name: "hourLabels", className: "hours", kind: "calendar.day.DayHours"},
+                //	{name: "week", className: "days enyo-fit", kind: HJSFlex, defaultKind: "calendar.day.DayView"},
+				
+				
+			
+				
+					//Dynamically loaded.
+					//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
+				]}
+		
 			]}
 		]}
 	],
@@ -142,7 +186,7 @@ enyo.kind({
 		}
 			//Create all of the hour rows:
 		for(var j = 0; j < 24; j++){
-			this.$.times.createComponent({kind: "calendar.DayRow", time: j, is12Hour: is12Hour});
+			this.$.times.createComponent({kind: "calendar.WeekRow", time: j, is12Hour: is12Hour});
 		}
 	},
 
