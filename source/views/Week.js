@@ -20,8 +20,7 @@ enyo.kind({
 	create: function(){
 		this.inherited(arguments);
 		var options = {};		
-		options.date = "dm";
-		options.length = "full";
+		options.template ="EEEd",
 		this.fmtWide = new ilib.DateFmt(options);
 		options.length = "long";
 		this.fmtNarrow = new ilib.DateFmt(options);
