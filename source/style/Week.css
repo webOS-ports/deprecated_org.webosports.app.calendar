@@ -40,13 +40,13 @@
 	max-height: 60px;
 	min-height: 40px;
 	height: 55px; */
-	border-top: 1px solid #000;
+	border-top: 1px solid rgba(0, 0, 0, 0.3);
 	border-right: 1px solid #000; 
 }
 .week-row-half {
 	position: relative;
 	top: 50%;
-	border-top: 1px dashed rgba(0, 0, 0, 1);
+	border-top: 1px dashed rgba(0, 0, 0, 0.07);
 }
 .week-row-label {
 	font-size: 0.8em;
