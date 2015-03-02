@@ -1,4 +1,4 @@
-
+// build the sun+date  mon+date........  across the top
 enyo.kind({
 	name: "calendar.WeekItem",
 	kind: "enyo.FittableColumns",
@@ -11,7 +11,7 @@ enyo.kind({
 	},
 	components: [
 		{classes: "week-page-inner", kind: "FittableRows", fit: true, components: [
-		{name: "d", content: "date :)" + this.date, classes: "week-days"},
+			{name: "d", content: "date :)" + this.date, classes: "week-days"},
 
 		]}
 	],
@@ -20,7 +20,7 @@ enyo.kind({
 	create: function(){
 		this.inherited(arguments);
 		var options = {};		
-		options.template ="EEEd",
+		options.template ="EEE d",
 		this.fmtWide = new ilib.DateFmt(options);
 		options.length = "long";
 		this.fmtNarrow = new ilib.DateFmt(options);
@@ -52,20 +52,58 @@ enyo.kind({
 	}
 });
 
-//The row for the list.
+//The hour/half and hour rows across the screen for the list.
 enyo.kind({
 	name: "calendar.WeekRow",
-	classes: "day-row",
+	kind: "enyo.FittableColumns",
+	classes: "week-container",
+	fit: true,
 	published: {
 		time: 0,
 		is12Hour: true
 	},
 	components: [
-		{classes: "day-row-half"},
-		{classes: "day-row-label", components: [
-			{content: "", name: "time"},
-			{content: "", name: "ampm", classes: "day-row-label-ampm"}
-		]}
+//		{classes: "week-row-half"},
+		{classes: "week-row",
+		components: [
+			{classes: "week-row-half", fit : true},
+			{classes: "week-row-label", components: [
+				{content: "", name: "time"},
+				{content: "", name: "ampm", classes: "week-row-label-ampm"}
+			]},
+//			{classes: "week-row-half", fit: true},
+		]},
+	
+		{kind: "enyo.Control", classes: "week-row", components: [
+			{classes: "week-row-half"},
+//			{content: " I'am here", classes: "week-row-label"}
+		]},
+		
+		{kind: "enyo.Control", classes: "week-row", components: [
+			{classes: "week-row-half"},
+//			{content: " I'am here", classes: "week-row-label"}
+		]},
+		
+		{kind: "enyo.Control", classes: "week-row", components: [
+			{classes: "week-row-half"},
+//			{content: " I'am here", classes: "week-row-label"}
+		]},
+		
+		{kind: "enyo.Control", classes: "week-row", components: [
+			{classes: "week-row-half"},
+//			{content: " I'am here", classes: "week-row-label"}
+		]},
+		
+		{kind: "enyo.Control", classes: "week-row", components: [
+			{classes: "week-row-half"},
+//			{content: " I'am here", classes: "week-row-label"}
+		]},
+		
+		{kind: "enyo.Control", classes: "week-row", components: [
+			{classes: "week-row-half"},
+//			{content: " I'am here", classes: "week-row-label"}
+		]},
+		
 	],
 	create: function(){
 		this.inherited(arguments);
@@ -82,6 +120,7 @@ enyo.kind({
 	}
 });
 
+// the view or layout of the week
 enyo.kind({
 	name: "calendar.WeekPage",
 	kind: "enyo.FittableRows",
@@ -100,21 +139,24 @@ enyo.kind({
 					//Dynamically generated rows.
 					//	{kind: "calendar.WeekItem"},
 				]},
+						//		{kind: "enyo.FittableColumns", fit: true, compontents:[
 				
+			///		{kind: "onyx.Button", content: 'Negative', classes: 'onyx-negative'},
+			//	]},
 			]},
 			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
-				{name: "allDayContainer", className: "allday-header", kind: "enyo.FittableColumns", components: [
-				//	{style: "height: 20px"},
-					{name: "CurrentTime", style: "width: 20px;", showing: false},
-				//	{name: "sun", content: "sun", style: "width: 14.28%; height: 100%; background-color: red;"},
-                 //   {name: "allDayLabel0", className: "label enyo-text-ellipsis events-header"}
-                
-		   			
-               // 	{name: "CurrentTime", classes: "day-current-time", showing: false},
-                	//	{name: "hourLabels", className: "hours", kind: "calendar.day.DayHours"},
-                //	{name: "week", className: "days enyo-fit", kind: HJSFlex, defaultKind: "calendar.day.DayView"},
-				
-				
+				{name: "weekContainer", className: "week-container", kind: enyo.Control, components: [
+					{name: "allDayContainer", className: "allday-header", kind: "enyo.FittableColumns", components: [
+						{name: "allDayLabel", className: "label enyo-text-ellipsis events-header"}
+					]},
+				//	{name: "hourLabels", className: "hours", kind: "calendar.day.DayHours"},
+					{name: "CurrentTime", style: "width: 100%;", showing: false},
+					{name: "week", className: "days enyo-fit", kind: "enyo.FittableColumns"}
+					
+					
+						//	{style: "height: 20px"},
+					//{name: "CurrentTime", style: "width: 20px;", showing: false},
+			
 			
 				
 					//Dynamically loaded.
@@ -132,7 +174,7 @@ enyo.kind({
 	create: function() {
 		this.inherited(arguments);
 		var options = {};		
-		options.date = "dm";
+		options.date = "d m";
 		options.length = "full";
 		this.fmtWide = new ilib.DateFmt(options);
 		options.length = "long";
@@ -147,7 +189,7 @@ enyo.kind({
 			this.date = moment(this.date);
 		}
 		this.generateView();
-	//	this.setTimeBar();
+		this.setTimeBar();
 	},
 	
 	rendered: function(){
@@ -182,6 +224,7 @@ enyo.kind({
 		for(var i = 0; i < 7; i++){
 			var n = moment(this.date).day(i);
 			this.$.weekView.createComponent({kind: "calendar.WeekItem", date: n, number: n.format("D")  });
+//			this.$.week.createComponent({kind: "enyo.Control", style: "height: 100%; background-color: blue;"});
 		}
 			//Create all of the hour rows:
 		for(var j = 0; j < 24; j++){
@@ -191,24 +234,22 @@ enyo.kind({
 
 	//Scrolls to the most significant time of the day:
 	significantScroll: function(){
+		var c = this.$.times.getClientControls();
+		var ts = this.$.times;
+		var st = ts.getScrollTop();
+		
 		if(this.sigScroll < 2){
 			this.sigScroll++;
 			if(moment().diff(this.date, "days") === 0){
 				//Scroll to current time:
-				var c = this.$.times.getClientControls();
-				var ts = this.$.times;
 				ts.scrollToControl(c[moment().hours() + 3], true);
-				var st = ts.getScrollTop();
 				ts.setScrollTop(st+1);
 				if(st !== ts.getScrollTop()){
 					ts.setScrollTop(ts.getScrollTop()-15);
 				}
 			}else{
 				//Scroll to current time:
-				var c = this.$.times.getClientControls();
-				var ts = this.$.times;
 				ts.scrollToControl(c[8 + 3], true);
-				var st = ts.getScrollTop();
 				ts.setScrollTop(st+1);
 				if(st !== ts.getScrollTop()){
 					ts.setScrollTop(ts.getScrollTop()-15);
