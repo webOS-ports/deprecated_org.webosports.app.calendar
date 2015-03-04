@@ -146,7 +146,7 @@ enyo.kind({
 			//Clone date:
 			var checker = moment(this.date);
 			//Check to make sure that this day fits in the event range:
-			if(checker.sod().diff(moment(evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment(evt.dtend).sod(), "days") === 0){
+			if(checker.startOf().diff(moment(evt.dtstart).startOf(), "days") === 0 || checker.startOf().diff(moment(evt.dtend).startOf(), "days") === 0){
 				//Render all day events: 
 				if(evt.allDay){
 					showAllDay = true;

@@ -146,7 +146,7 @@ enyo.kind({
 		if(enyo.Panels.isScreenNarrow()){
 			if(this.isHeader){
 				enyo.forEach(this.getControls(), function(c, i){
-					c.setContent(this.smallFormatter.format(moment().day(this.firstDayInWeek + i).toDate()));
+					c.setContent(this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()));
 				}, this);
 			}
 			this.addClass("month-row-narrow");
@@ -172,19 +172,22 @@ enyo.kind({
 	},
 	create: function(){
 		this.inherited(arguments);
+
 		this.updateSettings({startOfWeek: calendar.Preferences.prefs.startOfWeek || 0});
 	},
 	generateView: function(){
+		var options = {};
+		options.template = "EEE";
 		if(this.isHeader){
 			this.removeClass("month-row");
 			//Get date formatter:
-			this.formatter = new ilib.DateFmt({format: "EEEE"});
-			this.smallFormatter = new ilib.DateFmt({format: "E"});
+			this.formatter = new ilib.DateFmt(options);
 			
 			for(var i = 0; i < 7; i++){
 				this.createComponent({content: this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()), tag: "th", classes: "month-item-header"});
 			}
 		}else{
+		
 			this.formatter = new ilib.DateFmt({format: "EEEE"});
 			var temp = moment(this.date).startOf("month").add("weeks", this.row);
 			var start;

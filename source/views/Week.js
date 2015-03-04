@@ -20,9 +20,10 @@ enyo.kind({
 	create: function(){
 		this.inherited(arguments);
 		var options = {};		
-		options.template ="EEE d",
+		options.template = "EEE d",
 		this.fmtWide = new ilib.DateFmt(options);
 		options.length = "long";
+		options.template = "E d",
 		this.fmtNarrow = new ilib.DateFmt(options);
 		
 		//If no date is provided, create a new moment:
@@ -139,10 +140,6 @@ enyo.kind({
 					//Dynamically generated rows.
 					//	{kind: "calendar.WeekItem"},
 				]},
-						//		{kind: "enyo.FittableColumns", fit: true, compontents:[
-				
-			///		{kind: "onyx.Button", content: 'Negative', classes: 'onyx-negative'},
-			//	]},
 			]},
 			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
 				{name: "weekContainer", className: "week-container", kind: enyo.Control, components: [
@@ -152,14 +149,7 @@ enyo.kind({
 				//	{name: "hourLabels", className: "hours", kind: "calendar.day.DayHours"},
 					{name: "CurrentTime", style: "width: 100%;", showing: false},
 					{name: "week", className: "days enyo-fit", kind: "enyo.FittableColumns"}
-					
-					
-						//	{style: "height: 20px"},
-					//{name: "CurrentTime", style: "width: 20px;", showing: false},
-			
-			
-				
-					//Dynamically loaded.
+						//Dynamically loaded.
 					//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
 				]}
 		
@@ -176,10 +166,14 @@ enyo.kind({
 		var options = {};		
 		options.date = "d m";
 		options.length = "full";
-		this.fmtWide = new ilib.DateFmt(options);
+		options.week = "E";
 		options.length = "long";
-		this.fmtNarrow = new ilib.DateFmt(options);
+		
+		this.fmtWide = new ilib.DateFmt(options);
+		
 	
+		this.fmtNarrow = new ilib.DateFmt(options);
+		this.we = new ilib.DateFmt(options);
 		
 		//If no date is provided, create a new moment:
 		if(!this.date){
@@ -206,7 +200,9 @@ enyo.kind({
 	
 	generateView: function(){
 		var is12Hour = "";
-
+		var options = {};
+		var v =	moment(this.date).day(0);
+		var ve = moment(this.date).day(6);
 		if(this.fmtWide.getClock() === "12"){
 			is12Hour = true;
 		}else{
@@ -214,17 +210,19 @@ enyo.kind({
 		}
 	
 		if(enyo.Panels.isScreenNarrow()){
-			this.$.title.setContent(this.fmtNarrow.format(this.date.toDate() ));	// the month and year title
+			options.template = "E d",
+			this.fmtNarrow = new ilib.DateFmt(options);
+				this.$.title.setContent( v.format("MMM") + " " +  v.format("D") + "-" + ve.format("D") + ", " +   v.format("YYYY"));	// the month and year title
 			this.$.title.addClass("week-title-narrow");
 		}else{
-			
-			this.$.title.setContent(this.fmtWide.format(this.date.toDate()));	// the month and year title
+			options.template = "E d",
+			this.$.title.setContent( v.format("MMMM") + " " +  v.format("D") + "-" + ve.format("D") + ", " +   v.format("YYYY"));	// the month and year title
+//			this.$.title.setContent(this.fmtWide.format(this.date.toDate()));	// the month and year title
 		}
 			//Create all of the week days:
 		for(var i = 0; i < 7; i++){
 			var n = moment(this.date).day(i);
 			this.$.weekView.createComponent({kind: "calendar.WeekItem", date: n, number: n.format("D")  });
-//			this.$.week.createComponent({kind: "enyo.Control", style: "height: 100%; background-color: blue;"});
 		}
 			//Create all of the hour rows:
 		for(var j = 0; j < 24; j++){
