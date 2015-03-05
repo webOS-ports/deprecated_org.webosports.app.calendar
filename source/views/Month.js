@@ -178,6 +178,7 @@ enyo.kind({
 	generateView: function(){
 		var options = {};
 		options.template = "EEE";
+	
 		if(this.isHeader){
 			this.removeClass("month-row");
 			//Get date formatter:
@@ -211,8 +212,7 @@ enyo.kind({
 				if(this.date.month() !== now.month()){
 					el.addClass("month-other");
 				}
-
-				if(moment().diff(now, "days") === 0){
+				if(moment().isSame(now, 'days') === true){
 					el.addClass("month-active");
 				}
 			}
