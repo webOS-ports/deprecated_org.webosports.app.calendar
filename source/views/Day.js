@@ -97,7 +97,7 @@ enyo.kind({
 //		this.formatter = new enyo.g11n.DateFmt({format: "EEEE, MMMM d, yyyy"});
 		
 		var options = {};		
-		options.date = "dm";
+		options.date = "d m y";
 		options.length = "full";
 		this.fmt = new ilib.DateFmt(options);
 

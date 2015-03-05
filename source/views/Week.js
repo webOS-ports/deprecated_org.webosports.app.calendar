@@ -212,7 +212,7 @@ enyo.kind({
 		if(enyo.Panels.isScreenNarrow()){
 			options.template = "E d",
 			this.fmtNarrow = new ilib.DateFmt(options);
-				this.$.title.setContent( v.format("MMM") + " " +  v.format("D") + "-" + ve.format("D") + ", " +   v.format("YYYY"));	// the month and year title
+				this.$.title.setContent( v.format("MMMM") + " " +  v.format("D") + "-" + ve.format("D") + ", " +   v.format("YYYY"));	// the month and year title
 			this.$.title.addClass("week-title-narrow");
 		}else{
 			options.template = "E d",
