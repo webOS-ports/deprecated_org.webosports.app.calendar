@@ -86,7 +86,10 @@ enyo.kind({
 		this.inherited(arguments);
 
 		//Get date formatter:
-		this.formatter = new enyo.g11n.DateFmt({format: "MMMM yyyy"});
+		var options = {};		
+		options.date = "d m y";
+		options.length = "full";
+		this.formatter = new ilib.DateFmt(options);
 
 		//If no date is provided, create a new moment:
 		if(!this.date){
@@ -143,7 +146,7 @@ enyo.kind({
 		if(enyo.Panels.isScreenNarrow()){
 			if(this.isHeader){
 				enyo.forEach(this.getControls(), function(c, i){
-					c.setContent(this.smallFormatter.format(moment().day(this.firstDayInWeek + i).toDate()));
+					c.setContent(this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()));
 				}, this);
 			}
 			this.addClass("month-row-narrow");
@@ -160,8 +163,8 @@ enyo.kind({
 		if(inPrefs.startOfWeek !== -1){
 			this.firstDayInWeek = inPrefs.startOfWeek;
 		}else{
-			var formatter = new enyo.g11n.DateFmt({format: "EEEE"});
-			this.firstDayInWeek = formatter.getFirstDayOfWeek();
+			var fmt = new ilib.DateFmt({format: "EEEE"});
+			this.firstDayInWeek = fmt.getFirstDayOfWeek();
 		}
 		this.destroyClientControls();
 		this.generateView();
@@ -169,19 +172,24 @@ enyo.kind({
 	},
 	create: function(){
 		this.inherited(arguments);
+
 		this.updateSettings({startOfWeek: calendar.Preferences.prefs.startOfWeek || 0});
 	},
 	generateView: function(){
+		var options = {};
+		options.template = "EEE";
+	
 		if(this.isHeader){
 			this.removeClass("month-row");
 			//Get date formatter:
-			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
-			this.smallFormatter = new enyo.g11n.DateFmt({format: "E"});
+			this.formatter = new ilib.DateFmt(options);
+			
 			for(var i = 0; i < 7; i++){
 				this.createComponent({content: this.formatter.format(moment().day(this.firstDayInWeek + i).toDate()), tag: "th", classes: "month-item-header"});
 			}
 		}else{
-			this.formatter = new enyo.g11n.DateFmt({format: "EEEE"});
+		
+			this.formatter = new ilib.DateFmt({format: "EEEE"});
 			var temp = moment(this.date).startOf("month").add("weeks", this.row);
 			var start;
 			if(this.firstDayInWeek === 0){
@@ -204,8 +212,7 @@ enyo.kind({
 				if(this.date.month() !== now.month()){
 					el.addClass("month-other");
 				}
-
-				if(moment().diff(now, "days") === 0){
+				if(moment().isSame(now, 'days') === true){
 					el.addClass("month-active");
 				}
 			}

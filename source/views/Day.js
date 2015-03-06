@@ -94,7 +94,12 @@ enyo.kind({
 		this.inherited(arguments);
 
 		//Get date formatter:
-		this.formatter = new enyo.g11n.DateFmt({format: "EEEE, MMMM d, yyyy"});
+//		this.formatter = new enyo.g11n.DateFmt({format: "EEEE, MMMM d, yyyy"});
+		
+		var options = {};		
+		options.date = "d m y";
+		options.length = "full";
+		this.fmt = new ilib.DateFmt(options);
 
 		//If no date is provided, create a new moment:
 		if(!this.date){
@@ -111,10 +116,15 @@ enyo.kind({
 		}
 
 		//Display the title:
-		this.$.title.setContent(this.formatter.format(this.date.toDate()));
+		this.$.title.setContent(this.fmt.format(this.date.toDate()));
 
-		var is12Hour = this.formatter.isAmPm();
-
+		var is12Hour = "";
+		if(this.fmt.getClock() === "12"){
+			is12Hour = true;
+		}else{
+			is12Hour = false;
+		}
+		
 		//Create all of the date rows:
 		for(var i = 0; i < 24; i++){
 			this.$.times.createComponent({kind: "calendar.DayRow", time: i, is12Hour: is12Hour});
@@ -136,7 +146,7 @@ enyo.kind({
 			//Clone date:
 			var checker = moment(this.date);
 			//Check to make sure that this day fits in the event range:
-			if(checker.sod().diff(moment(evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment(evt.dtend).sod(), "days") === 0){
+			if(checker.startOf().diff(moment(evt.dtstart).startOf(), "days") === 0 || checker.startOf().diff(moment(evt.dtend).startOf(), "days") === 0){
 				//Render all day events: 
 				if(evt.allDay){
 					showAllDay = true;
@@ -336,18 +346,6 @@ enyo.kind({
 		}
 	}
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 var eventsforday = [

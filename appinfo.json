@@ -1,7 +1,7 @@
 {
 	"id": "org.webosports.app.calendar",
 	"title": "Calendar",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"vendor": "WebOS Ports",
 	"vendor_url": "https://github.com/webOS-ports/org.webosports.app.calendar",
 	"noWindow": true,

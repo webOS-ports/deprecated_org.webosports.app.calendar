@@ -1,6 +1,6 @@
 enyo.depends(
 	//Include Libraries:
-	"$lib/g11n",
+	"$lib/enyo-ilib/full-package.js",
 	"$lib/util",
 	"$lib/layout",
 	"$lib/moment",

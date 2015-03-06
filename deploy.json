@@ -2,5 +2,5 @@
 	"enyo": "./enyo",
 	"packagejs": "./package.js",
 	"assets": ["./icon.png", "./index.html", "./assets", "./appinfo.json", "./framework_config.json"],
-	"libs": ["./lib/layout", "./lib/onyx", "./lib/webos-lib", "./lib/util", "./lib/moment", "./lib/g11n"]
+	"libs": ["./lib/layout", "./lib/onyx", "./lib/webos-lib", "./lib/util", "./lib/moment", "./lib/enyo-ilib"]
 }
