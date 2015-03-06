@@ -18,19 +18,3 @@ else
 	echo "No node found in path"
 	exit 1
 fi
-
-# copy files and package if deploying to cordova webos
-while [ "$1" != "" ]; do
-	case $1 in
-		-w | --cordova-webos )
-														# copy appinfo.json and cordova*.js files
-														SRC="$TOOLS/../"
-														DEST="$TOOLS/../deploy/"${PWD##*/}
-														
-														cp "$SRC"appinfo.json $DEST
-														cp "$SRC"cordova*.js $DEST
-														
-														;;
-	esac
-	shift
-done
