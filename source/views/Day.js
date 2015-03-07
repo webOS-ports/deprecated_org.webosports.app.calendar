@@ -111,10 +111,9 @@ enyo.kind({
 
 		//Check to see if this day is today:
 		var today = moment();
-		if(today.diff(this.date, "days") === 0){
+		if(today.isSame(this.date, "days") === true){
 			this.$.istoday.show();
 		}
-
 		//Display the title:
 		this.$.title.setContent(this.fmt.format(this.date.toDate()));
 

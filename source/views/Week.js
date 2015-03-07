@@ -46,6 +46,8 @@ enyo.kind({
 		
 		if(enyo.Panels.isScreenNarrow()){
 			this.$.d.setContent(this.fmtNarrow.format(this.date.toDate()));
+			this.$.d.addClass("week-days-narrow");
+			console.log("here");
 		}else{
 			//Display the title:
 			this.$.d.setContent(this.fmtWide.format(this.date.toDate()));
@@ -212,12 +214,11 @@ enyo.kind({
 		if(enyo.Panels.isScreenNarrow()){
 			options.template = "E d",
 			this.fmtNarrow = new ilib.DateFmt(options);
-				this.$.title.setContent( v.format("MMMM") + " " +  v.format("D") + "-" + ve.format("D") + ", " +   v.format("YYYY"));	// the month and year title
+				this.$.title.setContent( v.format("MMMM D") + " " + "-" + " "+ ve.format("MMMM D") + ", " +   v.format("YYYY"));	// the month and year title
 			this.$.title.addClass("week-title-narrow");
 		}else{
 			options.template = "E d",
-			this.$.title.setContent( v.format("MMMM") + " " +  v.format("D") + "-" + ve.format("D") + ", " +   v.format("YYYY"));	// the month and year title
-//			this.$.title.setContent(this.fmtWide.format(this.date.toDate()));	// the month and year title
+			this.$.title.setContent( v.format("MMMM D") +  "-" + ve.format("MMMM D") + ", " +   v.format("YYYY"));	// the month and year title
 		}
 			//Create all of the week days:
 		for(var i = 0; i < 7; i++){
