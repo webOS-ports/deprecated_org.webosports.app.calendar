@@ -211,14 +211,14 @@ enyo.kind({
 			is12Hour = false;
 		}
 	
+		if(v.format("MMMM") === ve.format("MMMM")){
+			this.$.title.setContent( v.format("MMMM D") + " " + "- " + ve.format("D") + ", " + v.format("YYYY"));	// the month and year title
+		}else {
+			this.$.title.setContent( v.format("MMMM D") + " " + "- " + " "+ ve.format("MMMM D") + ", " +   v.format("YYYY"));	// the month and year title
+		}
+	
 		if(enyo.Panels.isScreenNarrow()){
-			options.template = "E d",
-			this.fmtNarrow = new ilib.DateFmt(options);
-				this.$.title.setContent( v.format("MMMM D") + " " + "-" + " "+ ve.format("MMMM D") + ", " +   v.format("YYYY"));	// the month and year title
 			this.$.title.addClass("week-title-narrow");
-		}else{
-			options.template = "E d",
-			this.$.title.setContent( v.format("MMMM D") +  "-" + ve.format("MMMM D") + ", " +   v.format("YYYY"));	// the month and year title
 		}
 			//Create all of the week days:
 		for(var i = 0; i < 7; i++){
