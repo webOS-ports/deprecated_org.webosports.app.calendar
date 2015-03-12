@@ -7,7 +7,7 @@ enyo.kind({
 		{fit: true, style: "padding-top: 20px;", components: [
 			{style: "display: block; text-align: center; margin: 0px auto;", components: [
 				{content: "Open webOS currently only supports local accounts."},
-				{kind: "onyx.Button", name: "continue", disabled: true, ontap: "firstUseDone", content: "Continue", style: "width: 50%; margin-top: 20px; color: white; background-color: green;"}
+				{kind: "onyx.Button", name: "continue", disabled: false, ontap: "firstUseDone", content: "Continue", style: "width: 50%; margin-top: 20px; color: white; background-color: green;"}
 			]}
 		]},
 		{kind: "Signals", onSettingsLoad: "settingsLoad"}
