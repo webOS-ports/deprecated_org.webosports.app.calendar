@@ -74,7 +74,9 @@ enyo.kind({
 	components: [
 		{classes: "day-page-inner", kind: "FittableRows", fit: true, components: [
 			{classes: "day-header", components: [
+				{name: "isyesterday", showing: false, classes: "day-istoday", content: "Yesterday"},
 				{name: "istoday", showing: false, classes: "day-istoday", content: "Today"},
+				{name: "istomorrow", showing: false, classes: "day-istoday", content: "Tomorrow"},
 				{name: "title", classes: "day-title", content: ""}
 			]},
 			{classes: "day-allday", name: "allday", showing: false, components: [
@@ -113,6 +115,14 @@ enyo.kind({
 		var today = moment();
 		if(today.isSame(this.date, "days") === true){
 			this.$.istoday.show();
+		}
+		
+		if(today.diff(this.date, "days") === 1){
+			this.$.isyesterday.show();
+		}
+		
+		if(today.diff(this.date, "days") === -1){
+			this.$.istomorrow.show();
 		}
 		//Display the title:
 		this.$.title.setContent(this.fmt.format(this.date.toDate()));
