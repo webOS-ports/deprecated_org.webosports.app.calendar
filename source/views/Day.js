@@ -113,17 +113,21 @@ enyo.kind({
 
 		//Check to see if this day is today:
 		var today = moment();
+		var yesterday = moment(this.now).subtract("days", 1);
+		var tomorrow = moment(this.now).add("days", 1);
+		
 		if(today.isSame(this.date, "days") === true){
 			this.$.istoday.show();
 		}
 		
-		if(today.diff(this.date, "days") === 1){
+		if(yesterday.isSame(this.date, "days") === true){
 			this.$.isyesterday.show();
 		}
 		
-		if(today.diff(this.date, "days") === -1){
+		if(tomorrow.isSame(this.date, "days") === true){
 			this.$.istomorrow.show();
 		}
+		
 		//Display the title:
 		this.$.title.setContent(this.fmt.format(this.date.toDate()));
 
