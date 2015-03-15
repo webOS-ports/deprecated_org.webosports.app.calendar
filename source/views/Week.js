@@ -46,6 +46,7 @@ enyo.kind({
 		
 		if(enyo.Panels.isScreenNarrow()){
 			this.$.d.setContent(this.fmtNarrow.format(this.date.toDate()));
+			this.$.d.addClass("week-days-narrow");
 		}else{
 			//Display the title:
 			this.$.d.setContent(this.fmtWide.format(this.date.toDate()));
@@ -163,14 +164,13 @@ enyo.kind({
 	
 	create: function() {
 		this.inherited(arguments);
-		var options = {};		
+		var options = {};
 		options.date = "d m";
 		options.length = "full";
 		options.week = "E";
 		options.length = "long";
 		
 		this.fmtWide = new ilib.DateFmt(options);
-		
 	
 		this.fmtNarrow = new ilib.DateFmt(options);
 		this.we = new ilib.DateFmt(options);
@@ -201,25 +201,27 @@ enyo.kind({
 	generateView: function(){
 		var is12Hour = "";
 		var options = {};
+//		var fmt = new ilib.DateFmt();
 		var v =	moment(this.date).day(0);
 		var ve = moment(this.date).day(6);
+
 		if(this.fmtWide.getClock() === "12"){
 			is12Hour = true;
 		}else{
 			is12Hour = false;
 		}
 	
-		if(enyo.Panels.isScreenNarrow()){
-			options.template = "E d",
-			this.fmtNarrow = new ilib.DateFmt(options);
-				this.$.title.setContent( v.format("MMMM") + " " +  v.format("D") + "-" + ve.format("D") + ", " +   v.format("YYYY"));	// the month and year title
-			this.$.title.addClass("week-title-narrow");
-		}else{
-			options.template = "E d",
-			this.$.title.setContent( v.format("MMMM") + " " +  v.format("D") + "-" + ve.format("D") + ", " +   v.format("YYYY"));	// the month and year title
-//			this.$.title.setContent(this.fmtWide.format(this.date.toDate()));	// the month and year title
+		if(v.format("MMMM") === ve.format("MMMM")){
+			this.$.title.setContent( v.format("MMMM D") + " " + "- " + ve.format("D") + ", " + v.format("YYYY")); // the month and year title
+		}else {
+			this.$.title.setContent( v.format("MMMM D") + " " + "- " + " " + ve.format("MMMM D") + ", " + v.format("YYYY"));	// the month and year title wide format
 		}
-			//Create all of the week days:
+		
+		if(enyo.Panels.isScreenNarrow() ){
+			this.$.title.addClass("week-title-narrow");
+		}
+	
+		//Create all of the week days:
 		for(var i = 0; i < 7; i++){
 			var n = moment(this.date).day(i);
 			this.$.weekView.createComponent({kind: "calendar.WeekItem", date: n, number: n.format("D")  });
@@ -329,4 +331,3 @@ enyo.kind({
 		this.$.inf.providePrev({kind: "calendar.WeekPage", date: moment(this.now).add("weeks", inEvent.current - 1 )});
 	}
 });
-
