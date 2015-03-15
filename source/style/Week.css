@@ -13,6 +13,9 @@
 	font-size: 1.500em;
 	font-weight: 100;
 }
+.week-days-narrow {
+	font-size: .8em;
+}
 .week-view      {
 	height: 40px;
 	width: 100%;
