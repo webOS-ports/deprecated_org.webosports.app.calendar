@@ -66,44 +66,36 @@ enyo.kind({
 	},
 	components: [
 //		{classes: "week-row-half"},
-		{classes: "week-row",
-		components: [
+		{classes: "week-row", components: [
 			{classes: "week-row-half", fit : true},
 			{classes: "week-row-label", components: [
 				{content: "", name: "time"},
 				{content: "", name: "ampm", classes: "week-row-label-ampm"}
 			]},
-//			{classes: "week-row-half", fit: true},
 		]},
 	
-		{kind: "enyo.Control", classes: "week-row", components: [
+		{classes: "week-row", components: [
 			{classes: "week-row-half"},
-//			{content: " I'am here", classes: "week-row-label"}
 		]},
 		
-		{kind: "enyo.Control", classes: "week-row", components: [
+		{classes: "week-row", components: [
 			{classes: "week-row-half"},
-//			{content: " I'am here", classes: "week-row-label"}
 		]},
 		
-		{kind: "enyo.Control", classes: "week-row", components: [
+		{classes: "week-row", components: [
 			{classes: "week-row-half"},
-//			{content: " I'am here", classes: "week-row-label"}
 		]},
 		
-		{kind: "enyo.Control", classes: "week-row", components: [
+		{classes: "week-row", components: [
 			{classes: "week-row-half"},
-//			{content: " I'am here", classes: "week-row-label"}
 		]},
 		
-		{kind: "enyo.Control", classes: "week-row", components: [
+		{classes: "week-row", components: [
 			{classes: "week-row-half"},
-//			{content: " I'am here", classes: "week-row-label"}
 		]},
 		
-		{kind: "enyo.Control", classes: "week-row", components: [
+		{classes: "week-row", components: [
 			{classes: "week-row-half"},
-//			{content: " I'am here", classes: "week-row-label"}
 		]},
 		
 	],
@@ -130,7 +122,7 @@ enyo.kind({
 	classes: "week-page",
 	published: {
 		date: "",
-		rowHeight: 56
+		rowHeight: 55
 	},
 
 	components: [
@@ -142,13 +134,14 @@ enyo.kind({
 					//	{kind: "calendar.WeekItem"},
 				]},
 			]},
-			{kind: "Scroller", name: "times", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
+			{kind: "Scroller", name: "weekTimes", classes: "day-scroller", horizontal: "hidden", fit: true, touch: true, thumb: false, components: [
+				{style: "height: 20px"},
 				{name: "weekContainer", className: "week-container", kind: enyo.Control, components: [
 					{name: "allDayContainer", className: "allday-header", kind: "enyo.FittableColumns", components: [
 						{name: "allDayLabel", className: "label enyo-text-ellipsis events-header"}
 					]},
 				//	{name: "hourLabels", className: "hours", kind: "calendar.day.DayHours"},
-					{name: "CurrentTime", style: "width: 100%;", showing: false},
+					{name: "WeekCurrentTime", classes: "week-current-time", showing: false},
 					{name: "week", className: "days enyo-fit", kind: "enyo.FittableColumns"}
 						//Dynamically loaded.
 					//Note that we don't use a List because that has too much overhead. A simple for loop accomplishes everything we need.
@@ -183,17 +176,17 @@ enyo.kind({
 			this.date = moment(this.date);
 		}
 		this.generateView();
-		this.setTimeBar();
+		this.rendered;
 	},
 	
 	rendered: function(){
 		this.inherited(arguments);
 		//Set the time bar initially
 		if(moment().diff(this.date, "days") === 0){
-			this.$.CurrentTime.show();
+			this.$.WeekCurrentTime.show();
 			this.setTimeBar();
 		}else{
-			this.$.CurrentTime.hide();
+			this.$.WeekCurrentTime.hide();
 		}
 		this.significantScroll();
 	},
@@ -228,31 +221,34 @@ enyo.kind({
 		}
 			//Create all of the hour rows:
 		for(var j = 0; j < 24; j++){
-			this.$.times.createComponent({kind: "calendar.WeekRow", time: j, is12Hour: is12Hour});
+			this.$.weekTimes.createComponent({kind: "calendar.WeekRow", time: j, is12Hour: is12Hour});
 		}
 	},
 
 	//Scrolls to the most significant time of the day:
 	significantScroll: function(){
-		var c = this.$.times.getClientControls();
-		var ts = this.$.times;
-		var st = ts.getScrollTop();
-		
+		console.log("scrolling");
 		if(this.sigScroll < 2){
 			this.sigScroll++;
 			if(moment().diff(this.date, "days") === 0){
 				//Scroll to current time:
+				var c = this.$.weekTimes.getClientControls();
+				var ts = this.$.weekTimes;
 				ts.scrollToControl(c[moment().hours() + 3], true);
+				var st = ts.getScrollTop();
 				ts.setScrollTop(st+1);
 				if(st !== ts.getScrollTop()){
-					ts.setScrollTop(ts.getScrollTop()-15);
+					ts.setScrollTop(ts.getScrollTop() - 10);
 				}
 			}else{
 				//Scroll to current time:
+				var c = this.$.weekTimes.getClientControls();
+				var ts = this.$.weekTimes;
 				ts.scrollToControl(c[8 + 3], true);
+				var st = ts.getScrollTop();
 				ts.setScrollTop(st+1);
 				if(st !== ts.getScrollTop()){
-					ts.setScrollTop(ts.getScrollTop()-15);
+					ts.setScrollTop(ts.getScrollTop() - 10);
 				}
 			}
 		}
@@ -264,16 +260,17 @@ enyo.kind({
 			//Set Bar:
 			var height = moment().hours() * this.getRowHeight();
 			height += Math.floor((this.getRowHeight())*((moment().minutes()/60)));
-			this.$.CurrentTime.applyStyle("top", height + "px");
+			this.$.WeekCurrentTime.applyStyle("top", height + "px");
 			if(this.timer){
 				window.clearTimeout(this.timer);
 			}
 			this.timer = window.setTimeout(enyo.bind(this, "setTimeBar"), 120000);
+			this.$.WeekCurrentTime.show();
 		}else{
 			if(this.timer){
 				window.clearTimeout(this.timer);
 			}
-			this.$.CurrentTime.hide();
+			this.$.WeekCurrentTime.hide();
 		}
 	},
 });
@@ -301,12 +298,10 @@ enyo.kind({
 	//This function is called whenever the page is navigated to using the tab button.
 	navigated: function(reload){
 		this.jumpToDate(moment());
-
 	},
 
 	//Called whenever the function is navigated away:
 	away: function(){
-		this.log("away");
 		this.$.inf.setCoreNavi(false);
 	},
 

@@ -75,3 +75,12 @@
 	width: 70%;
 	height: 55px;
 }
+
+.week-current-time {
+	width: 100%;
+	position: relative;
+	top: 0px;
+	border-top: 2px solid rgba(255, 68, 48, 0.7);
+	height: 0px;
+	z-index: 50;
+}
