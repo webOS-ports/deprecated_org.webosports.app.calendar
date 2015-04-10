@@ -139,7 +139,7 @@ enyo.kind({
 			//TODO:
 			rrule: null,
 			//TODO: Investigate:
-			tzId: new enyo.g11n.TzFmt().getCurrentTimeZone(),
+			tzid: new ilib.LocaleInfo().getTimeZone(),
 			alarm: alarm,
 			note: this.$.eventNotes.getValue(),
 			allDay: this.$.allDayEvent.getChecked()
@@ -152,7 +152,7 @@ enyo.kind({
 			dtend: '1290718800000',  // string representing the end date/time as timestamp in milliseconds
 			location: 'Wherever I am!', // string
 			rrule: null, 
-			tzId: new enyo.g11n.TzFmt().getCurrentTimeZone(),
+			tzId: new ilib.LocaleInfo().getTimeZone(),
 			alarm: [
 			    {
 			        alarmTrigger: {

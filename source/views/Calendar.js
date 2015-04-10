@@ -22,8 +22,6 @@ enyo.kind({
 		{kind: "CoreNavi", fingerTracking: true},
 		
 		{kind: "enyo.AppMenu", components: [
-			{content: "Preferences"},
-			{content: "ttttttt" , ontap: "showPrefview"},
 			{content: $L("Preferences") , ontap: "showPrefview"},
 		]},
 	],
@@ -31,9 +29,6 @@ enyo.kind({
 	doneFirstUse: function(){
 		this.showMainApp();
 	},
-	
-
-	
 	showMainApp: function(){
 		this.$.raw.setIndex(2);
 		this.$.mainapp.navigated();
@@ -47,7 +42,6 @@ enyo.kind({
 	},	
 	showPrefview: function(){
 		this.$.raw.setIndex(4);
-		
 	},
 	
 	create: function(){

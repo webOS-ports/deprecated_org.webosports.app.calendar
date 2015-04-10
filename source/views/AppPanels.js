@@ -48,7 +48,7 @@ enyo.kind({
 			dtend: '1290718800000',  // string representing the end date/time as timestamp in milliseconds
 			location: 'Wherever I am!', // string
 			rrule: null, 
-			tzId: new enyo.g11n.TzFmt().getCurrentTimeZone(),
+			tzId: new ilib.LocaleInfo().getTimeZone(),
 			alarm: [
 			    {
 			        alarmTrigger: {
