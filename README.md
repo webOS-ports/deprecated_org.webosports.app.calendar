@@ -1,3 +1,8 @@
+NO LONGER ACTIVELY DEVELOPED
+========
+
+Pending the uncertain future of Enyo 2, it was decided to no longer actively develop the Enyo 2 version of the Calendar app. It was not having much functionality anyway. We have switched back to the Enyo 1 based Calendar app which seems to behave pretty well nowadays on our UI.
+
 Calendar
 ========
 
