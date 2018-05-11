@@ -96,7 +96,7 @@ enyo.kind({
 		this.inherited(arguments);
 
 		//Get date formatter:
-//		this.formatter = new enyo.g11n.DateFmt({format: "EEEE, MMMM d, yyyy"});
+		//this.formatter = new enyo.g11n.DateFmt({format: "EEEE, MMMM d, yyyy"});
 		
 		var options = {};		
 		options.date = "d m y";
@@ -159,7 +159,7 @@ enyo.kind({
 			//Clone date:
 			var checker = moment(this.date);
 			//Check to make sure that this day fits in the event range:
-			if(checker.startOf().diff(moment(evt.dtstart).startOf(), "days") === 0 || checker.startOf().diff(moment(evt.dtend).startOf(), "days") === 0){
+			if(checker.startOf().diff((moment(evt.dtstart).startOf()), "days") === 0 || checker.startOf().diff((moment(evt.dtend).startOf()), "days") === 0){
 				//Render all day events: 
 				if(evt.allDay){
 					showAllDay = true;
@@ -170,24 +170,24 @@ enyo.kind({
 					var el = this.$.eventLayer.createComponent({kind: "calendar.DayEvent", date: this.date, evt: evt});
 					
 					//Create a moment for the event start time and end time:
-					var elstart = moment(evt.dtstart);
-					var elend = moment(evt.dtend);
+					var elstart = moment(evt.dtstart).format("dddd, MMMM Do YYYY, h:mm:ss a");
+					var elend = moment(evt.dtend).format("dddd, MMMM Do YYYY, h:mm:ss a");
 
 					var top, height;
 					//Set up the top of the event:
-					var dstart = this.date.sod().diff(elstart.sod(), "days");
+					var dstart = this.date.startOf('day').diff(moment(evt.dtstart).startOf('day'), "days");
 					if(dstart === 0){
-						top = (elstart.hours() * this.getRowHeight()) + Math.floor(((elstart.minutes()/60) * this.getRowHeight()));
+						top = (moment(evt.dtstart).hours() * this.getRowHeight()) + Math.floor(((moment(evt.dtstart).minutes()/60) * this.getRowHeight()));
 					}else{
 						//Event started before today, Show it for the entire day:
 						top = 0;
 						//This also breaks the standard height handling: 
-						height = (elend.diff(this.date.sod(), "minutes")/60) * this.getRowHeight();
+						height = (moment(evt.dtend).diff(this.date.startOf('day'), "minutes")/60) * this.getRowHeight();
 					}
 					//Set up the height:
-					var dend = this.date.sod().diff(elend.sod(), "days");
+					var dend = this.date.startOf('day').diff((moment(evt.dtend)).startOf('day'), "days");
 					if(dend === 0 && !height){
-						height = (elend.diff(elstart, "minutes")/60) * this.getRowHeight();
+						height = (moment(evt.dtend).diff(elstart, "minutes")/60) * this.getRowHeight();
 					}else{
 						if(!height){
 							//Event doesn't end today, run to the end:
@@ -345,7 +345,7 @@ enyo.kind({
 		this.inherited(arguments);
 		var checker = moment(this.date);
 		//Make sure that either the start time or end time are on the same day as the page:
-		if(checker.sod().diff(moment(this.evt.dtstart).sod(), "days") === 0 || checker.sod().diff(moment(this.evt.dtend).sod(), "days") === 0){
+		if(checker.startOf('day').diff(moment(this.evt.dtstart).startOf('day'), "days") === 0 || checker.startOf('day').diff(moment(this.evt.dtend).startOf('day'), "days") === 0){
 			if(this.evt.allDay){
 				this.removeClass("day-event-container");
 				this.$.event.removeClass("day-event");
@@ -372,13 +372,13 @@ var eventsforday = [
 		"classification": "PUBLIC",
 		"comment": "",
 		"contact": "",
-		"created": moment().unix(),
-		"dtend": moment().add("hours", 0.5).unix(),
-		"dtstart": moment().subtract("hours", 0.5).unix(),
+		"created": moment().unix()*1000,
+		"dtend": moment().add("hours", 0.5).unix()*1000,
+		"dtstart": moment().subtract("hours", 0.5).unix()*1000,
 		"dtstamp": "",
 		"exdates": [],
 		"geo": "",
-		"lastModified": moment().unix(),
+		"lastModified": moment().unix()*1000,
 		"location": "Olive garden",
 		"note": "",
 		"parentDtstart": 0,
@@ -409,13 +409,13 @@ var eventsforday = [
 		"classification": "PUBLIC",
 		"comment": "",
 		"contact": "",
-		"created": moment.unix(),
-		"dtend": moment().add("hours", 1).unix(),
-		"dtstart": moment().unix(),
+		"created": moment.unix()*1000,
+		"dtend": moment().add("hours", 1).unix()*1000,
+		"dtstart": moment().unix()*1000,
 		"dtstamp": "",
 		"exdates": [],
 		"geo": "",
-		"lastModified": moment().unix(),
+		"lastModified": moment().unix()*1000,
 		"location": "Olive garden",
 		"note": "",
 		"parentDtstart": 0,
@@ -431,7 +431,7 @@ var eventsforday = [
 			"interval": 1
 		},
 		"sequence": 0,
-		"subject": "Some Event",
+		"subject": "Dinner at Olive Garden",
 		"transp": "",
 		"tzId": "",
 		"url": ""
@@ -446,13 +446,13 @@ var eventsforday = [
 		"classification": "PUBLIC",
 		"comment": "",
 		"contact": "",
-		"created": moment().unix(),
-		"dtend": moment().unix(),
-		"dtstart": moment().unix(),
+		"created": moment().unix()*1000,
+		"dtend": moment().unix()*1000,
+		"dtstart": moment().unix()*1000,
 		"dtstamp": "",
 		"exdates": [],
 		"geo": "",
-		"lastModified": moment().unix(),
+		"lastModified": moment().unix()*1000,
 		"location": "Olive garden",
 		"note": "",
 		"parentDtstart": 0,
